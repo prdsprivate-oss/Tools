@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Username To Link</title>
+
+<style>
+#utlApp{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#ececec;
+    max-width:700px;
+    margin:30px auto;
+}
+
+#utlApp .container{
+    width:100%;
+    background:#fff;
+    border:2px solid #444;
+    box-sizing:border-box;
+}
+
+#utlApp .box{
+    border-bottom:2px solid #444;
+    padding:15px;
+}
+
+#utlApp .box:last-child{
+    border-bottom:none;
+}
+
+#utlApp h3{
+    margin:0 0 10px;
+    text-align:center;
+    font-size:20px;
+}
+
+#utlApp textarea{
+    width:100%;
+    box-sizing:border-box;
+    resize:vertical;
+    padding:10px;
+    font-size:15px;
+    border:1px solid #999;
+    border-radius:4px;
+    outline:none;
+}
+
+#utlApp #usernames{
+    height:250px;
+}
+
+#utlApp #hasil{
+    height:250px;
+}
+
+#utlApp .center{
+    text-align:center;
+}
+
+#utlApp button{
+    padding:10px 18px;
+    margin:4px;
+    cursor:pointer;
+    font-size:15px;
+    border:1px solid #666;
+    background:#f5f5f5;
+    border-radius:4px;
+}
+
+#utlApp button:hover{
+    background:#ddd;
+}
+</style>
+
+</head>
+<body>
+
+<div id="utlApp">
+
+<div class="container">
+
+<div class="box">
+
+<h3>USERNAME</h3>
+
+<textarea id="usernames" placeholder="Satu username per baris"></textarea>
+
+</div>
+
+<div class="box center">
+
+<button onclick="buat('facebook')">FACEBOOK</button>
+
+<button onclick="buat('instagram')">INSTAGRAM</button>
+
+<button onclick="buat('threads')">THREADS</button>
+
+<button onclick="copyHasil()">COPY LINK</button>
+
+</div>
+
+<div class="box">
+
+<h3>HASIL LINK</h3>
+
+<textarea id="hasil" readonly></textarea>
+
+</div>
+
+</div>
+
+<script>
+
+function ambilUsername(){
+
+    return document.getElementById("usernames").value
+    .split("\n")
+    .map(x=>x.trim())
+    .filter(x=>x!="");
+
+}
+
+function buat(platform){
+
+    let data=ambilUsername();
+
+    let hasil=[];
+
+    data.forEach(function(user){
+
+        if(platform=="facebook")
+            hasil.push("https://www.facebook.com/"+user);
+
+        if(platform=="instagram")
+            hasil.push("https://www.instagram.com/"+user);
+
+        if(platform=="threads")
+            hasil.push("https://www.threads.com/"+user);
+
+    });
+
+    document.getElementById("hasil").value=hasil.join("\n");
+
+}
+
+function copyHasil(){
+
+    let hasil=document.getElementById("hasil");
+
+    if(hasil.value=="") return;
+
+    navigator.clipboard.writeText(hasil.value);
+
+}
+
+</script>
+
+</body>
+</html>

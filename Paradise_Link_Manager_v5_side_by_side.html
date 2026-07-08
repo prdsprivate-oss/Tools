@@ -1,0 +1,34 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paradise</title><style>
+body{margin:0;padding:20px;background:#08111f;color:#fff;font-family:Arial}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}.box{background:#12203a;border:1px solid #2dd4bf;border-radius:12px;padding:12px}textarea{width:100%;height:220px;background:#0b1730;color:#fff;border:1px solid #38bdf8;border-radius:8px;padding:8px;box-sizing:border-box}#status{height:70px}button{padding:12px 20px;background:#14b8a6;color:#fff;border:0;border-radius:8px}#toast{position:fixed;right:20px;bottom:20px;background:#14b8a6;padding:10px 16px;border-radius:8px;opacity:0;transition:.3s}#toast.show{opacity:1}
+</style></head><body><h2>PARADISE LINK MANAGER</h2><div class="grid"><div class="box"><textarea id="l1"></textarea></div><div class="box"><textarea id="l2"></textarea></div></div><div class="box"><textarea id="status"></textarea><br><label><input type="radio" name="src" id="r1" checked> Link 1</label><label><input type="radio" name="src" id="r2"> Link 2</label><br><label><input type="checkbox" id="inc"> Sertakan Status</label><br><button id="cut">CUT LINK (0)</button></div>
+<div class="box">
+<h3>DATABASE</h3>
+<textarea id="db"></textarea><br>
+Jumlah <input id="jumlah" type="number" value="10" min="1" max="1000" style="width:70px">
+<button id="gas">GAS RANDOM</button>
+<h3>HASIL RANDOM</h3>
+<textarea id="hasil" style="height:140px"></textarea><br>
+<button id="copy">COPY</button>
+<button id="clear">CLEAR HASIL</button>
+</div>
+<div id="toast"></div><script>
+const $=i=>document.getElementById(i);
+['l1','l2','status'].forEach(id=>{let e=$(id);e.value=localStorage.getItem(id)||'';e.oninput=()=>{localStorage.setItem(id,e.value);upd();};});
+$('inc').checked=localStorage.getItem('inc')==='1';if(localStorage.getItem('src')==='2')$('r2').checked=true;
+$('inc').onchange=()=>localStorage.setItem('inc',$('inc').checked?'1':'0');$('r1').onchange=$('r2').onchange=()=>{localStorage.setItem('src',$('r2').checked?'2':'1');upd();};
+function c(id){return $(id).value.split(/\n/).filter(x=>x.trim()).length}
+function upd(){$('cut').textContent='CUT LINK ('+($('r2').checked?c('l2'):c('l1'))+')'}
+function t(m){let o=$('toast');o.textContent=m;o.classList.add('show');clearTimeout(window.x);window.x=setTimeout(()=>o.classList.remove('show'),1500)}
+$('cut').onclick=async()=>{let ta=$('r2').checked?$('l2'):$('l1');let a=ta.value.split(/\n/).filter(x=>x.trim());if(!a.length){t('Link kosong');return;}let link=a.shift();ta.value=a.join('\n');localStorage.setItem(ta.id,ta.value);let out=link;if($('inc').checked&&$('status').value.trim()){out=$('status').value.trim()+' '+link;$('status').value='';localStorage.setItem('status','');}upd();try{await navigator.clipboard.writeText(out);t('Berhasil dicopy');}catch(e){t('Gagal copy');}};
+
+const db=$('db'),hasil=$('hasil'),jumlah=$('jumlah');
+db.value=localStorage.getItem('db')||'';hasil.value=localStorage.getItem('hasil')||'';jumlah.value=localStorage.getItem('jumlah')||10;
+db.oninput=()=>localStorage.setItem('db',db.value);
+hasil.oninput=()=>localStorage.setItem('hasil',hasil.value);
+jumlah.oninput=()=>localStorage.setItem('jumlah',jumlah.value);
+$('gas').onclick=()=>{let a=db.value.split(/\n/).filter(x=>x.trim());let n=Math.min(parseInt(jumlah.value)||1,a.length);a.sort(()=>Math.random()-.5);hasil.value=a.slice(0,n).join('\n');db.value='';localStorage.setItem('db','');localStorage.setItem('hasil',hasil.value);t('Random selesai');};
+$('copy').onclick=async()=>{await navigator.clipboard.writeText(hasil.value);t('Berhasil dicopy');};
+$('clear').onclick=()=>{hasil.value='';localStorage.setItem('hasil','');t('Hasil dibersihkan');};
+
+upd();
+</script></body></html>

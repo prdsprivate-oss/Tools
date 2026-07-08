@@ -1,0 +1,91 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paradise Link Manager</title>
+<style>
+body{font-family:Arial;background:#0b1220;color:#fff;margin:0;padding:20px}
+.wrap{display:flex;gap:20px}.card{flex:1;background:#16233b;border:1px solid #2dd4bf;border-radius:12px;padding:12px;box-shadow:0 0 15px #2dd4bf55}
+textarea{width:100%;height:220px;background:#0f172a;color:#fff;border:1px solid #38bdf8;border-radius:8px;padding:8px;box-sizing:border-box}
+button{padding:10px 18px;margin:6px;border:none;border-radius:8px;background:#06b6d4;color:#fff;cursor:pointer}
+.status{margin-top:20px}
+</style></head><body>
+<h2>PARADISE LINK MANAGER</h2>
+<div class="wrap">
+<div class="card"><h3>Link 1 (<span id=t1>0</span>)</h3><textarea id=l1></textarea></div>
+<div class="card"><h3>Link 2 (<span id=t2>0</span>)</h3><textarea id=l2></textarea></div>
+</div>
+<div class="card status"><h3>Status</h3><textarea id=st style="height:80px"></textarea>
+<label><input type=checkbox id=cb> Sertakan Status</label><br>
+<button id='b1' onclick="cut('l1','b1')">CUT LINK 1 (0)</button>
+<button id='b2' onclick="cut('l2','b2')">CUT LINK 2 (0)</button>
+</div>
+<script>
+function upd(){['l1','l2'].forEach((id,i)=>{let n=document.getElementById(id).value.split(/\n/).filter(x=>x.trim()).length;document.getElementById('t'+(i+1)).textContent=n;});}
+['l1','l2'].forEach(id=>document.getElementById(id).addEventListener('input',upd));
+async function cut(id){
+ let ta=document.getElementById(id);
+ let arr=ta.value.split(/\n/).filter(x=>x.trim());
+ if(!arr.length){alert('Link kosong');return;}
+ let link=arr.shift(); ta.value=arr.join('\n'); upd();
+ let out=document.getElementById('cb').checked?(document.getElementById('st').value.trim()+' '+link).trim():link;
+ try{await navigator.clipboard.writeText(out);alert('Tercopy:\n'+out);}catch(e){prompt('Copy:',out);}
+}
+upd();
+
+function toast(msg){
+ let t=document.getElementById('toast');
+ t.textContent=msg;
+ t.classList.add('show');
+ clearTimeout(window.tt);
+ window.tt=setTimeout(()=>t.classList.remove('show'),2200);
+}
+const _upd=upd;
+upd=function(){
+ ['l1','l2'].forEach((id,i)=>{
+   let n=document.getElementById(id).value.split(/\n/).filter(x=>x.trim()).length;
+   document.getElementById('t'+(i+1)).textContent=n;
+   document.getElementById('b'+(i+1)).textContent='CUT LINK '+(i+1)+' ('+n+')';
+ });
+}
+cut=async function(id){
+ let ta=document.getElementById(id);
+ let arr=ta.value.split(/\n/).filter(x=>x.trim());
+ if(!arr.length){toast('Link kosong');return;}
+ let link=arr.shift(); ta.value=arr.join('\n'); upd();
+ let out=document.getElementById('cb').checked?(document.getElementById('st').value.trim()+' '+link).trim():link;
+ try{await navigator.clipboard.writeText(out);toast('✅ Berhasil dicopy');}
+ catch(e){toast('Clipboard tidak diizinkan');}
+}
+upd();
+</script>
+<div id="toast"></div>
+<style>
+#toast{position:fixed;right:20px;bottom:20px;background:#14b8a6;color:#fff;padding:12px 18px;border-radius:10px;opacity:0;transform:translateY(20px);transition:.3s;box-shadow:0 0 18px #14b8a6}
+#toast.show{opacity:1;transform:translateY(0)}
+</style>
+
+<script>
+['l1','l2','st'].forEach(id=>{
+ const e=document.getElementById(id);
+ e.value=localStorage.getItem(id)||e.value;
+ e.addEventListener('input',()=>localStorage.setItem(id,e.value));
+});
+upd();
+const oldCut=cut;
+cut=async function(id){
+ let ta=document.getElementById(id);
+ let arr=ta.value.split(/\n/).filter(x=>x.trim());
+ if(!arr.length){toast('Link kosong');return;}
+ let link=arr.shift();
+ ta.value=arr.join('\n');
+ localStorage.setItem(id,ta.value);
+ let st=document.getElementById('st');
+ let status=st.value.trim();
+ let out=document.getElementById('cb').checked && status?(status+' '+link):link;
+ if(document.getElementById('cb').checked){
+   st.value='';
+   localStorage.setItem('st','');
+ }
+ upd();
+ try{await navigator.clipboard.writeText(out);toast('✅ Berhasil dicopy');}
+ catch(e){toast('Clipboard gagal');}
+}
+</script>
+</body></html>

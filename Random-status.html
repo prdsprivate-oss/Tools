@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Random Status Generator</title>
+
+<style>
+
+body{
+    background:#ececec;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+    width:750px;
+    margin:30px auto;
+    background:#fff;
+    border:2px solid #444;
+}
+
+.box{
+    border-bottom:2px solid #444;
+    padding:15px;
+}
+
+.box:last-child{
+    border:none;
+}
+
+h3{
+    margin:0 0 10px;
+    text-align:center;
+}
+
+textarea{
+    width:100%;
+    box-sizing:border-box;
+    resize:vertical;
+    font-size:15px;
+    padding:10px;
+}
+
+#statusInput{
+    height:320px;
+}
+
+#hasil{
+    height:180px;
+}
+
+button{
+    padding:12px 30px;
+    font-size:16px;
+    cursor:pointer;
+    margin:5px;
+}
+
+.center{
+    text-align:center;
+}
+
+.info{
+    margin-top:10px;
+    text-align:center;
+    font-weight:bold;
+    color:#444;
+}
+
+/* ===== Toast Notification ===== */
+
+#toast{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#323232;
+    color:#fff;
+    padding:14px 20px;
+    border-radius:8px;
+    font-size:15px;
+    opacity:0;
+    transform:translateX(120%);
+    transition:.35s;
+    z-index:9999;
+    pointer-events:none;
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+
+#toast.show{
+    opacity:1;
+    transform:translateX(0);
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="box">
+
+<h3>Isi Banyak Status</h3>
+
+<textarea id="statusInput" placeholder="Pisahkan setiap status dengan tanda - pada satu baris sendiri."></textarea>
+
+<div class="info">
+Total Status :
+<span id="jumlah">0</span>
+</div>
+
+</div>
+
+<div class="box center">
+
+<button onclick="randomStatus()">🎲 Gas Random</button>
+
+</div>
+
+<div class="box">
+
+<h3>Hasil Random</h3>
+
+<textarea id="hasil" readonly></textarea>
+
+</div>
+
+<div class="box center">
+
+<button onclick="copyStatus()">📋 Copy</button>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const STORAGE_KEY="random_status_generator";
+
+let daftarAcak=[];
+let indexAcak=0;
+
+function notif(text){
+
+    const toast=document.getElementById("toast");
+
+    toast.innerHTML=text;
+
+    toast.classList.add("show");
+
+    clearTimeout(toast.timer);
+
+    toast.timer=setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+function ambilStatus(){
+
+    let text=document.getElementById("statusInput").value.trim();
+
+    if(text=="") return [];
+
+    return text
+    .split(/\n\s*-\s*\n/)
+    .map(item=>item.trim())
+    .filter(item=>item!="");
+
+}
+
+function updateJumlah(){
+
+    document.getElementById("jumlah").innerText=ambilStatus().length;
+
+}
+
+function simpanData(){
+
+    localStorage.setItem(STORAGE_KEY,document.getElementById("statusInput").value);
+
+}
+
+function muatData(){
+
+    let data=localStorage.getItem(STORAGE_KEY);
+
+    if(data!==null){
+
+        document.getElementById("statusInput").value=data;
+
+    }
+
+    updateJumlah();
+
+    resetShuffle();
+
+}
+
+document.getElementById("statusInput").addEventListener("input",function(){
+
+    updateJumlah();
+
+    simpanData();
+
+    resetShuffle();
+
+});
+
+function acakArray(array){
+
+    for(let i=array.length-1;i>0;i--){
+
+        let j=Math.floor(Math.random()*(i+1));
+
+        [array[i],array[j]]=[array[j],array[i]];
+
+    }
+
+}
+
+function resetShuffle(){
+
+    daftarAcak=ambilStatus();
+
+    acakArray(daftarAcak);
+
+    indexAcak=0;
+
+}
+
+function randomStatus(){
+
+    if(daftarAcak.length===0){
+
+        notif("⚠️ Belum ada status.");
+
+        return;
+
+    }
+
+    if(indexAcak>=daftarAcak.length){
+
+        notif("🎉 Semua status sudah digunakan. Mengacak ulang...");
+
+        acakArray(daftarAcak);
+
+        indexAcak=0;
+
+    }
+
+    document.getElementById("hasil").value=daftarAcak[indexAcak];
+
+    indexAcak++;
+
+    navigator.clipboard.writeText(document.getElementById("hasil").value);
+
+    notif("✅ Status berhasil dipilih & dicopy.");
+
+}
+
+function copyStatus(){
+
+    let hasil=document.getElementById("hasil");
+
+    if(hasil.value==""){
+
+        notif("⚠️ Belum ada hasil.");
+
+        return;
+
+    }
+
+    navigator.clipboard.writeText(hasil.value);
+
+    notif("✅ Status berhasil dicopy.");
+
+}
+
+muatData();
+
+</script>
+
+</body>
+</html>

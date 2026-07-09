@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Random Status Generator</title>
+
+<style>
+/*==================================================
+    PARADISE LAB PREMIUM
+    PART 2
+==================================================*/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Segoe UI",Arial,sans-serif;
+
+    min-height:100vh;
+
+    padding:30px;
+
+    color:#fff;
+
+    background:
+    linear-gradient(rgba(5,10,25,.78),rgba(5,10,25,.88)),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1800&auto=format&fit=crop")
+    center center/cover fixed;
+
+}
+
+/*=========================
+        APP
+=========================*/
+
+.app{
+
+    width:100%;
+
+    max-width:850px;
+
+    margin:auto;
+
+}
+
+/*=========================
+      HEADER
+=========================*/
+
+.header{
+
+    position:relative;
+
+    text-align:center;
+
+    margin-bottom:28px;
+
+    padding-top:20px;
+
+}
+
+.badge{
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00d4ff,
+        #006eff
+    );
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:
+    0 0 18px rgba(0,212,255,.45);
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+
+    text-shadow:
+    0 0 15px rgba(0,212,255,.35);
+
+}
+
+.subtitle{
+
+    color:#b9c8de;
+
+    font-size:15px;
+
+}
+
+/*=========================
+      PANEL
+=========================*/
+
+.panel{
+
+    background:rgba(12,22,42,.72);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    margin-bottom:22px;
+
+    box-shadow:
+
+    0 18px 45px rgba(0,0,0,.35),
+
+    0 0 18px rgba(0,180,255,.08);
+
+    transition:.3s;
+
+}
+
+.panel:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+    0 25px 55px rgba(0,0,0,.42),
+
+    0 0 25px rgba(0,212,255,.16);
+
+}
+
+.panel-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:16px;
+
+    color:#fff;
+
+    letter-spacing:1px;
+
+}
+
+/*=========================
+      TEXTAREA
+=========================*/
+
+textarea{
+
+    width:100%;
+
+    resize:none;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:14px;
+
+    background:#081425;
+
+    color:#fff;
+
+    padding:16px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.25s;
+
+}
+
+textarea:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:
+
+    0 0 15px rgba(0,212,255,.35);
+
+}
+
+#statusInput{
+
+    height:320px;
+
+}
+
+#hasil{
+
+    height:180px;
+
+}
+
+/*=========================
+      INFO
+=========================*/
+
+.info-bar{
+
+    margin-top:16px;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.counter{
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    padding:12px 20px;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+}
+
+.counter span{
+
+    color:#00d4ff;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    margin-left:8px;
+
+}
+
+/*=========================
+      BUTTON
+=========================*/
+
+.center{
+
+    text-align:center;
+
+}
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    border-radius:14px;
+
+    padding:15px 35px;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    transition:.25s;
+
+}
+
+#btnRandom{
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #00c853,
+
+        #009245
+
+    );
+
+}
+
+#btnCopy{
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #00c6ff,
+
+        #0072ff
+
+    );
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+    0 12px 25px rgba(0,0,0,.35);
+
+}
+
+button:active{
+
+    transform:scale(.98);
+
+}
+
+/*=========================
+      TOAST
+=========================*/
+
+#toast{
+
+    position:fixed;
+
+    top:20px;
+
+    right:20px;
+
+    background:rgba(10,20,40,.95);
+
+    color:#fff;
+
+    padding:15px 22px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,.35);
+
+    opacity:0;
+
+    transform:translateX(120%);
+
+    transition:.35s;
+
+    z-index:9999;
+
+}
+
+#toast.show{
+
+    opacity:1;
+
+    transform:translateX(0);
+
+}
+
+/*=========================
+      SCROLLBAR
+=========================*/
+
+textarea::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+textarea::-webkit-scrollbar-track{
+
+    background:#081425;
+
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(
+
+        #00d4ff,
+
+        #0072ff
+
+    );
+
+}
+
+/*=========================
+      RESPONSIVE
+=========================*/
+
+@media(max-width:768px){
+
+    body{
+
+        padding:15px;
+
+    }
+
+    .header h1{
+
+        font-size:28px;
+
+    }
+
+    .panel{
+
+        padding:18px;
+
+    }
+
+    button{
+
+        width:100%;
+
+    }
+
+}
+/*==================================================
+    PARADISE LAB PREMIUM
+    PART 3 - FINISHING
+==================================================*/
+
+
+/*==========================
+    FADE IN
+==========================*/
+
+.app{
+
+    animation:fadeUp .6s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/*==========================
+    BADGE GLOW
+==========================*/
+
+.badge{
+
+    animation:badgeGlow 2.5s infinite alternate;
+
+}
+
+@keyframes badgeGlow{
+
+    from{
+
+        box-shadow:
+
+        0 0 10px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        box-shadow:
+
+        0 0 18px rgba(0,212,255,.8),
+
+        0 0 40px rgba(0,212,255,.25);
+
+    }
+
+}
+
+
+/*==========================
+    TITLE GLOW
+==========================*/
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 10px rgba(0,212,255,.25);
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 22px rgba(0,212,255,.8);
+
+    }
+
+}
+
+
+/*==========================
+    PANEL SHINE
+==========================*/
+
+.panel{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.panel::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-150%;
+
+    left:-60%;
+
+    width:60%;
+
+    height:350%;
+
+    transform:rotate(28deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+
+    );
+
+    transition:1.2s;
+
+}
+
+.panel:hover::before{
+
+    left:150%;
+
+}
+
+
+/*==========================
+    PANEL BORDER
+==========================*/
+
+.panel::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:20px;
+
+    pointer-events:none;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+
+/*==========================
+    BUTTON SHINE
+==========================*/
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-80px;
+
+    width:45px;
+
+    height:100%;
+
+    transform:skewX(-25deg);
+
+    background:rgba(255,255,255,.28);
+
+    transition:.7s;
+
+}
+
+button:hover::before{
+
+    left:130%;
+
+}
+
+
+/*==========================
+    TEXTAREA
+==========================*/
+
+textarea:hover{
+
+    border-color:#2ecbff;
+
+}
+
+textarea:focus{
+
+    transform:scale(1.003);
+
+}
+
+
+/*==========================
+    COUNTER
+==========================*/
+
+.counter{
+
+    transition:.3s;
+
+}
+
+.counter:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+    0 10px 22px rgba(0,212,255,.18);
+
+}
+
+
+/*==========================
+    SCROLLBAR
+==========================*/
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#07111f;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(
+
+        #00d4ff,
+
+        #0072ff
+
+    );
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+
+    linear-gradient(
+
+        #37e5ff,
+
+        #0094ff
+
+    );
+
+}
+
+
+/*==========================
+    TEXT SELECTION
+==========================*/
+
+::selection{
+
+    background:#00d4ff;
+
+    color:#081425;
+
+}
+
+
+/*==========================
+    TOAST
+==========================*/
+
+#toast{
+
+    border-left:4px solid #00d4ff;
+
+}
+
+
+/*==========================
+    PLACEHOLDER
+==========================*/
+
+textarea::placeholder{
+
+    color:#9fb4d2;
+
+}
+
+
+/*==========================
+    BUTTON HOVER
+==========================*/
+
+button:hover{
+
+    letter-spacing:.4px;
+
+}
+
+
+/*==========================
+    MOBILE
+==========================*/
+
+@media(max-width:768px){
+
+    .badge{
+
+        font-size:11px;
+
+    }
+
+    .header h1{
+
+        font-size:26px;
+
+    }
+
+}
+</style>
+
+</head>
+<body>
+<body>
+
+<div class="app">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="badge">
+            🚀 Paradise Lab
+        </div>
+
+        <h1>Random Status Generator</h1>
+
+        <p class="subtitle">
+            Random tanpa duplikat • Auto Copy • Auto Save
+        </p>
+
+    </header>
+
+    <!-- ================= STATUS ================= -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+            STATUS DATABASE
+        </div>
+
+        <textarea
+            id="statusInput"
+            placeholder="Pisahkan setiap status dengan tanda - pada satu baris sendiri."></textarea>
+
+        <div class="info-bar">
+
+            <div class="counter">
+
+                Total Status
+
+                <span id="jumlah">0</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= RANDOM ================= -->
+
+    <section class="panel center">
+
+        <button id="btnRandom"
+                onclick="randomStatus()">
+
+            🎲 GAS RANDOM
+
+        </button>
+
+    </section>
+
+    <!-- ================= HASIL ================= -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+
+            HASIL RANDOM
+
+        </div>
+
+        <textarea
+            id="hasil"
+            readonly></textarea>
+
+    </section>
+
+    <!-- ================= COPY ================= -->
+
+    <section class="panel center">
+
+        <button id="btnCopy"
+                onclick="copyStatus()">
+
+            📋 COPY STATUS
+
+        </button>
+
+    </section>
+
+</div>
+
+<div id="toast"></div>
+
+</body>
+
+<script>
+
+const STORAGE_KEY="random_status_generator";
+
+let daftarAcak=[];
+let indexAcak=0;
+
+function notif(text){
+
+    const toast=document.getElementById("toast");
+
+    toast.innerHTML=text;
+
+    toast.classList.add("show");
+
+    clearTimeout(toast.timer);
+
+    toast.timer=setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+function ambilStatus(){
+
+    let text=document.getElementById("statusInput").value.trim();
+
+    if(text=="") return [];
+
+    return text
+    .split(/\n\s*-\s*\n/)
+    .map(item=>item.trim())
+    .filter(item=>item!="");
+
+}
+
+function updateJumlah(){
+
+    document.getElementById("jumlah").innerText=ambilStatus().length;
+
+}
+
+function simpanData(){
+
+    localStorage.setItem(STORAGE_KEY,document.getElementById("statusInput").value);
+
+}
+
+function muatData(){
+
+    let data=localStorage.getItem(STORAGE_KEY);
+
+    if(data!==null){
+
+        document.getElementById("statusInput").value=data;
+
+    }
+
+    updateJumlah();
+
+    resetShuffle();
+
+}
+
+document.getElementById("statusInput").addEventListener("input",function(){
+
+    updateJumlah();
+
+    simpanData();
+
+    resetShuffle();
+
+});
+
+function acakArray(array){
+
+    for(let i=array.length-1;i>0;i--){
+
+        let j=Math.floor(Math.random()*(i+1));
+
+        [array[i],array[j]]=[array[j],array[i]];
+
+    }
+
+}
+
+function resetShuffle(){
+
+    daftarAcak=ambilStatus();
+
+    acakArray(daftarAcak);
+
+    indexAcak=0;
+
+}
+
+function randomStatus(){
+
+    if(daftarAcak.length===0){
+
+        notif("⚠️ Belum ada status.");
+
+        return;
+
+    }
+
+    if(indexAcak>=daftarAcak.length){
+
+        notif("🎉 Semua status sudah digunakan. Mengacak ulang...");
+
+        acakArray(daftarAcak);
+
+        indexAcak=0;
+
+    }
+
+    document.getElementById("hasil").value=daftarAcak[indexAcak];
+
+    indexAcak++;
+
+    navigator.clipboard.writeText(document.getElementById("hasil").value);
+
+    notif("✅ Status berhasil dipilih & dicopy.");
+
+}
+
+function copyStatus(){
+
+    let hasil=document.getElementById("hasil");
+
+    if(hasil.value==""){
+
+        notif("⚠️ Belum ada hasil.");
+
+        return;
+
+    }
+
+    navigator.clipboard.writeText(hasil.value);
+
+    notif("✅ Status berhasil dicopy.");
+
+}
+
+muatData();
+
+</script>
+
+</body>
+</html>

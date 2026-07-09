@@ -1,0 +1,1052 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paradise</title>
+<style>
+/* ==========================================================
+   PARADISE LINK MANAGER
+   Paradise Lab Premium v1
+========================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Segoe UI",Arial,sans-serif;
+
+    min-height:100vh;
+
+    padding:30px;
+
+    color:#fff;
+
+    background:
+    linear-gradient(rgba(3,8,20,.78),rgba(3,8,20,.88)),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1800&auto=format&fit=crop")
+    center center/cover fixed;
+
+}
+
+/*==========================
+      CONTAINER
+===========================*/
+
+.app{
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+/*==========================
+        HEADER
+===========================*/
+
+.header{
+
+    position:relative;
+
+    margin-bottom:28px;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#00d4ff,#0078ff);
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+
+    margin-bottom:16px;
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-align:center;
+
+    text-shadow:0 0 15px rgba(0,212,255,.45);
+
+}
+
+/*==========================
+        ROW
+===========================*/
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+
+    margin-bottom:22px;
+
+}
+
+/*==========================
+        PANEL
+===========================*/
+
+.panel{
+
+    background:rgba(15,24,44,.72);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.10);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    margin-bottom:22px;
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.35),
+
+    0 0 18px rgba(0,180,255,.08);
+
+    transition:.25s;
+
+}
+
+.panel:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+    0 18px 45px rgba(0,0,0,.45),
+
+    0 0 25px rgba(0,212,255,.15);
+
+}
+
+/*==========================
+      PANEL TITLE
+===========================*/
+
+.panel-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:14px;
+
+    color:#ffffff;
+
+    letter-spacing:.5px;
+
+}
+
+/*==========================
+       TEXTAREA
+===========================*/
+
+textarea{
+
+    width:100%;
+
+    resize:none;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:14px;
+
+    background:#081425;
+
+    color:#ffffff;
+
+    padding:16px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.25s;
+
+}
+
+textarea:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:0 0 15px rgba(0,212,255,.35);
+
+}
+
+#l1,
+#l2{
+
+    height:250px;
+
+}
+
+#status{
+
+    height:90px;
+
+}
+
+#db{
+
+    height:230px;
+
+}
+
+#hasil{
+
+    height:150px;
+
+}
+
+/*==========================
+      INPUT NUMBER
+===========================*/
+
+input[type=number]{
+
+    width:80px;
+
+    padding:10px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:10px;
+
+    background:#081425;
+
+    color:#fff;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+/*==========================
+      LABEL
+===========================*/
+
+.option-group{
+
+    display:flex;
+
+    gap:30px;
+
+    margin-top:15px;
+
+    margin-bottom:15px;
+
+}
+
+.check{
+
+    display:block;
+
+    margin-bottom:18px;
+
+}
+
+label{
+
+    color:#fff;
+
+    font-size:14px;
+
+}
+
+input[type=radio],
+input[type=checkbox]{
+
+    margin-right:8px;
+
+}
+
+/*==========================
+        TOOLBAR
+===========================*/
+
+.toolbar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:16px;
+
+    flex-wrap:wrap;
+
+}
+
+.button-row{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:16px;
+
+}
+
+.button-row button{
+
+    flex:1;
+
+}
+
+/*==========================
+        BUTTON
+===========================*/
+
+button{
+
+    padding:13px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    color:#fff;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 22px rgba(0,114,255,.35);
+
+}
+
+button:active{
+
+    transform:scale(.98);
+
+}
+
+/* tombol khusus */
+
+#cut{
+
+    width:100%;
+
+    background:linear-gradient(135deg,#00d26a,#009245);
+
+}
+
+#gas{
+
+    background:linear-gradient(135deg,#ff9800,#ef6c00);
+
+}
+
+#copy{
+
+    background:linear-gradient(135deg,#00c853,#009624);
+
+}
+
+#clear{
+
+    background:linear-gradient(135deg,#ff5252,#d50000);
+
+}
+
+/*==========================
+        TOAST
+===========================*/
+
+#toast{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    background:rgba(10,20,40,.92);
+
+    color:#fff;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    backdrop-filter:blur(12px);
+
+    opacity:0;
+
+    transform:translateY(20px);
+
+    transition:.3s;
+
+    z-index:9999;
+
+}
+
+#toast.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+/*==========================
+      SCROLLBAR
+===========================*/
+
+textarea::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+textarea::-webkit-scrollbar-track{
+
+    background:#081425;
+
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:linear-gradient(#00d4ff,#0072ff);
+
+}
+
+/*==========================
+      MOBILE
+===========================*/
+
+@media(max-width:900px){
+
+    body{
+
+        padding:15px;
+
+    }
+
+    .row{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .toolbar{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .button-row{
+
+        flex-direction:column;
+
+    }
+
+    input[type=number]{
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================================
+   PARADISE LAB PREMIUM
+   PART 3 - FINISHING EFFECT
+========================================================== */
+
+
+/* ==========================
+      PANEL GLOW
+========================== */
+
+.panel{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.panel::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:20px;
+
+    pointer-events:none;
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        rgba(255,255,255,.08),
+
+        transparent 35%,
+
+        transparent 65%,
+
+        rgba(0,212,255,.08)
+
+    );
+
+}
+
+.panel::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60%;
+
+    left:-120%;
+
+    width:70%;
+
+    height:220%;
+
+    transform:rotate(25deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+
+    );
+
+    transition:1.2s;
+
+}
+
+.panel:hover::after{
+
+    left:170%;
+
+}
+
+
+/* ==========================
+      BUTTON PREMIUM
+========================== */
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60px;
+
+    height:100%;
+
+    transform:skewX(-25deg);
+
+    background:rgba(255,255,255,.22);
+
+    transition:.8s;
+
+}
+
+button:hover::before{
+
+    left:160%;
+
+}
+
+
+/* ==========================
+      BADGE EFFECT
+========================== */
+
+.badge{
+
+    animation:badgeGlow 2.5s ease-in-out infinite alternate;
+
+}
+
+@keyframes badgeGlow{
+
+    from{
+
+        box-shadow:
+
+        0 0 12px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        box-shadow:
+
+        0 0 24px rgba(0,212,255,.75),
+
+        0 0 45px rgba(0,212,255,.35);
+
+    }
+
+}
+
+
+/* ==========================
+      TITLE EFFECT
+========================== */
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 8px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 20px rgba(0,212,255,.9),
+
+        0 0 35px rgba(0,212,255,.35);
+
+    }
+
+}
+
+
+/* ==========================
+      TEXTAREA
+========================== */
+
+textarea{
+
+    transition:.25s;
+
+}
+
+textarea:hover{
+
+    border-color:#2ecbff;
+
+    box-shadow:
+
+    0 0 12px rgba(0,212,255,.18);
+
+}
+
+
+/* ==========================
+      INPUT NUMBER
+========================== */
+
+input[type=number]:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:
+
+    0 0 12px rgba(0,212,255,.35);
+
+}
+
+
+/* ==========================
+      SCROLLBAR
+========================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#07111f;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(
+
+        #00d4ff,
+
+        #0072ff
+
+    );
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+
+    linear-gradient(
+
+        #3be7ff,
+
+        #0094ff
+
+    );
+
+}
+
+
+/* ==========================
+      TEXT SELECTION
+========================== */
+
+::selection{
+
+    background:#00d4ff;
+
+    color:#081425;
+
+}
+
+
+/* ==========================
+      PAGE OPEN
+========================== */
+
+.app{
+
+    animation:fadeUp .6s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ==========================
+      TOAST
+========================== */
+
+#toast{
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,.45),
+
+    0 0 25px rgba(0,212,255,.15);
+
+}
+
+
+/* ==========================
+      BUTTON HOVER
+========================== */
+
+button:hover{
+
+    letter-spacing:.5px;
+
+}
+
+</style></head>
+<body>
+<body>
+
+<div class="app">
+
+    <div class="header">
+
+        <div class="badge">
+            🚀 Paradise Lab
+        </div>
+
+        <h1>PARADISE LINK MANAGER</h1>
+
+    </div>
+
+
+    <!-- ==========================
+         LINK
+    =========================== -->
+
+    <div class="row">
+
+        <section class="panel">
+
+            <div class="panel-title">
+                LINK 1
+            </div>
+
+            <textarea id="l1"></textarea>
+
+        </section>
+
+
+        <section class="panel">
+
+            <div class="panel-title">
+                LINK 2
+            </div>
+
+            <textarea id="l2"></textarea>
+
+        </section>
+
+    </div>
+
+
+    <!-- ==========================
+         STATUS
+    =========================== -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+            STATUS
+        </div>
+
+        <textarea id="status"></textarea>
+
+        <div class="option-group">
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="src"
+                    id="r1"
+                    checked>
+
+                Link 1
+
+            </label>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="src"
+                    id="r2">
+
+                Link 2
+
+            </label>
+
+        </div>
+
+
+        <label class="check">
+
+            <input
+                type="checkbox"
+                id="inc">
+
+            Sertakan Status
+
+        </label>
+
+
+        <button id="cut">
+
+            CUT LINK (0)
+
+        </button>
+
+    </section>
+
+
+    <!-- ==========================
+         DATABASE
+    =========================== -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+
+            DATABASE
+
+        </div>
+
+        <textarea id="db"></textarea>
+
+        <div class="toolbar">
+
+            <span>
+
+                Jumlah
+
+            </span>
+
+            <input
+                id="jumlah"
+                type="number"
+                value="10"
+                min="1"
+                max="1000">
+
+            <button id="gas">
+
+                GAS RANDOM
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         HASIL
+    =========================== -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+
+            HASIL RANDOM
+
+        </div>
+
+        <textarea id="hasil"></textarea>
+
+        <div class="button-row">
+
+            <button id="copy">
+
+                COPY
+
+            </button>
+
+            <button id="clear">
+
+                CLEAR HASIL
+
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const $=i=>document.getElementById(i);
+['l1','l2','status'].forEach(id=>{let e=$(id);e.value=localStorage.getItem(id)||'';e.oninput=()=>{localStorage.setItem(id,e.value);upd();};});
+$('inc').checked=localStorage.getItem('inc')==='1';if(localStorage.getItem('src')==='2')$('r2').checked=true;
+$('inc').onchange=()=>localStorage.setItem('inc',$('inc').checked?'1':'0');$('r1').onchange=$('r2').onchange=()=>{localStorage.setItem('src',$('r2').checked?'2':'1');upd();};
+function c(id){return $(id).value.split(/\n/).filter(x=>x.trim()).length}
+function upd(){$('cut').textContent='CUT LINK ('+($('r2').checked?c('l2'):c('l1'))+')'}
+function t(m){let o=$('toast');o.textContent=m;o.classList.add('show');clearTimeout(window.x);window.x=setTimeout(()=>o.classList.remove('show'),1500)}
+$('cut').onclick=async()=>{let ta=$('r2').checked?$('l2'):$('l1');let a=ta.value.split(/\n/).filter(x=>x.trim());if(!a.length){t('Link kosong');return;}let link=a.shift();ta.value=a.join('\n');localStorage.setItem(ta.id,ta.value);let out=link;if($('inc').checked&&$('status').value.trim()){out=$('status').value.trim()+' '+link;$('status').value='';localStorage.setItem('status','');}upd();try{await navigator.clipboard.writeText(out);t('Berhasil dicopy');}catch(e){t('Gagal copy');}};
+
+const db=$('db'),hasil=$('hasil'),jumlah=$('jumlah');
+db.value=localStorage.getItem('db')||'';hasil.value=localStorage.getItem('hasil')||'';jumlah.value=localStorage.getItem('jumlah')||10;
+db.oninput=()=>localStorage.setItem('db',db.value);
+hasil.oninput=()=>localStorage.setItem('hasil',hasil.value);
+jumlah.oninput=()=>localStorage.setItem('jumlah',jumlah.value);
+$('gas').onclick=()=>{let a=db.value.split(/\n/).filter(x=>x.trim());let n=Math.min(parseInt(jumlah.value)||1,a.length);a.sort(()=>Math.random()-.5);hasil.value=a.slice(0,n).join('\n');db.value='';localStorage.setItem('db','');localStorage.setItem('hasil',hasil.value);t('Random selesai');};
+$('copy').onclick=async()=>{await navigator.clipboard.writeText(hasil.value);t('Berhasil dicopy');};
+$('clear').onclick=()=>{hasil.value='';localStorage.setItem('hasil','');t('Hasil dibersihkan');};
+
+upd();
+</script></body></html>

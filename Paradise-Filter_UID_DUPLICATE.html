@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UID Duplicate Filter PRO</title>
+
+<style>
+/* =====================================================
+   PARADISE LAB PREMIUM UI
+   PART 1 - LAYOUT & BACKGROUND
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    min-height:100vh;
+
+    padding:20px;
+
+    color:#fff;
+
+    overflow-x:hidden;
+
+    background:
+    linear-gradient(
+        rgba(5,10,25,.72),
+        rgba(5,10,25,.82)
+    ),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1600&auto=format&fit=crop")
+    center center/cover fixed;
+}
+
+/* ===========================
+   BACKGROUND AURORA
+=========================== */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:-25%;
+
+    z-index:-2;
+
+    pointer-events:none;
+
+    background:
+
+    radial-gradient(circle at 20% 20%,
+    rgba(0,255,255,.18),
+    transparent 28%),
+
+    radial-gradient(circle at 80% 70%,
+    rgba(0,120,255,.18),
+    transparent 30%),
+
+    radial-gradient(circle at 50% 50%,
+    rgba(0,255,170,.12),
+    transparent 35%);
+
+    filter:blur(90px);
+
+    animation:auroraMove 18s linear infinite;
+}
+
+@keyframes auroraMove{
+
+    from{
+
+        transform:rotate(0deg) scale(1.15);
+    }
+
+    to{
+
+        transform:rotate(360deg) scale(1.15);
+    }
+
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+
+.container{
+
+    position:relative;
+
+    width:100%;
+
+    max-width:1700px;
+
+    margin:auto;
+
+    padding:22px;
+
+    border-radius:24px;
+
+    background:rgba(18,25,40,.60);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+
+    0 20px 60px rgba(0,0,0,.45),
+
+    0 0 30px rgba(0,180,255,.10);
+
+    overflow:hidden;
+}
+
+/* Glow Border */
+
+.container::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:24px;
+
+    padding:1px;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        rgba(0,255,255,.45),
+        transparent,
+        rgba(0,120,255,.45)
+    );
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+
+    mask-composite:exclude;
+
+    pointer-events:none;
+}
+
+/* ===========================
+   PARADISE BADGE
+=========================== */
+
+.container::after{
+
+    content:"🚀  PARADISE LAB";
+
+    position:absolute;
+
+    top:18px;
+
+    left:18px;
+
+    padding:8px 18px;
+
+    border-radius:40px;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #00d4ff,
+        #0066ff
+    );
+
+    color:#fff;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    box-shadow:
+
+    0 0 15px rgba(0,212,255,.7),
+
+    0 0 35px rgba(0,212,255,.35);
+
+    animation:badgeGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes badgeGlow{
+
+    from{
+
+        transform:scale(1);
+
+        filter:brightness(1);
+    }
+
+    to{
+
+        transform:scale(1.05);
+
+        filter:brightness(1.25);
+    }
+
+}
+
+/* ===========================
+   TITLE
+=========================== */
+
+.title{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-shadow:
+
+    0 0 15px rgba(0,220,255,.7);
+}
+
+/* ===========================
+   MAIN ROW
+=========================== */
+
+.mainRow{
+
+    display:flex;
+
+    gap:18px;
+
+    align-items:stretch;
+}
+
+/* ===========================
+   BOX
+=========================== */
+
+.box{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    position:relative;
+}
+
+/* ===========================
+   LABEL
+=========================== */
+
+.label{
+
+    margin-bottom:10px;
+
+    color:#ffffff;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+}
+
+/* ===========================
+   COUNTER
+=========================== */
+
+.counter{
+
+    position:absolute;
+
+    top:0;
+
+    right:0;
+
+    padding:6px 12px;
+
+    border-radius:30px;
+
+    background:
+
+    rgba(255,255,255,.08);
+
+    backdrop-filter:blur(10px);
+
+    color:#8fe8ff;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+/* =====================================================
+   PARADISE LAB PREMIUM UI
+   PART 2 - INPUT, BUTTON & PANEL
+===================================================== */
+
+/* ===========================
+   TEXTAREA
+=========================== */
+
+textarea{
+
+    width:100%;
+
+    height:650px;
+
+    resize:none;
+
+    border:none;
+
+    outline:none;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:rgba(10,15,28,.78);
+
+    color:#f8f8f8;
+
+    font-size:14px;
+
+    line-height:1.65;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.25s;
+
+    box-shadow:
+    inset 0 0 18px rgba(0,0,0,.35);
+}
+
+textarea:focus{
+
+    border:1px solid #00d4ff;
+
+    box-shadow:
+    0 0 18px rgba(0,212,255,.35),
+    inset 0 0 15px rgba(0,0,0,.35);
+}
+
+textarea::placeholder{
+
+    color:#8d9cb2;
+}
+
+/* Scrollbar */
+
+textarea::-webkit-scrollbar{
+
+    width:10px;
+}
+
+textarea::-webkit-scrollbar-track{
+
+    background:rgba(255,255,255,.05);
+
+    border-radius:20px;
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    background:linear-gradient(#00d4ff,#0066ff);
+
+    border-radius:20px;
+}
+
+/* ===========================
+   PANEL TENGAH
+=========================== */
+
+.middlePanel{
+
+    width:250px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    color:#fff;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:.4px;
+
+    transition:.25s;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.25);
+}
+
+button:hover{
+
+    transform:translateY(-3px);
+
+    filter:brightness(1.08);
+}
+
+button:active{
+
+    transform:scale(.97);
+}
+
+/* ===========================
+   BUTTON COLOR
+=========================== */
+
+.filterBtn{
+
+    background:linear-gradient(135deg,#2196f3,#1565c0);
+}
+
+.copyBtn{
+
+    background:linear-gradient(135deg,#00c853,#009245);
+}
+
+.clearBtn{
+
+    background:linear-gradient(135deg,#ff5252,#d50000);
+}
+
+.importBtn{
+
+    background:linear-gradient(135deg,#9c27b0,#673ab7);
+}
+
+.exportBtn{
+
+    background:linear-gradient(135deg,#ff9800,#ef6c00);
+}
+
+/* Glow Hover */
+
+.filterBtn:hover{
+
+    box-shadow:0 0 25px rgba(33,150,243,.45);
+}
+
+.copyBtn:hover{
+
+    box-shadow:0 0 25px rgba(0,200,83,.45);
+}
+
+.clearBtn:hover{
+
+    box-shadow:0 0 25px rgba(255,82,82,.45);
+}
+
+.importBtn:hover{
+
+    box-shadow:0 0 25px rgba(156,39,176,.45);
+}
+
+.exportBtn:hover{
+
+    box-shadow:0 0 25px rgba(255,152,0,.45);
+}
+
+/* ===========================
+   CARD STATS
+=========================== */
+
+.stats{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+}
+
+.card{
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    text-align:center;
+
+    transition:.25s;
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    background:rgba(255,255,255,.12);
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.25);
+}
+
+.card h3{
+
+    color:#cfd8dc;
+
+    font-size:13px;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+}
+
+.card p{
+
+    font-size:32px;
+
+    font-weight:800;
+
+    color:#00d4ff;
+
+    text-shadow:
+    0 0 12px rgba(0,212,255,.6);
+}
+
+/* =====================================================
+   PARADISE LAB PREMIUM UI
+   PART 3 - FINISHING & ANIMATION
+===================================================== */
+
+/* ===========================
+   TOAST NOTIFICATION
+=========================== */
+
+.toast{
+
+    position:fixed;
+
+    top:25px;
+    right:25px;
+
+    padding:14px 22px;
+
+    border-radius:14px;
+
+    color:#fff;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    background:rgba(20,25,40,.88);
+
+    backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.35);
+
+    opacity:0;
+
+    transform:translateX(120px);
+
+    transition:.35s;
+
+    z-index:99999;
+}
+
+.toast.show{
+
+    opacity:1;
+
+    transform:translateX(0);
+}
+
+/* ===========================
+   SAVE BAR
+=========================== */
+
+.saveBar{
+
+    position:fixed;
+
+    bottom:25px;
+
+    right:25px;
+
+    padding:14px 22px;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        #00c6ff,
+        #0072ff
+    );
+
+    color:#fff;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    letter-spacing:.5px;
+
+    box-shadow:
+    0 15px 40px rgba(0,114,255,.35);
+
+    opacity:0;
+
+    transform:translateY(50px);
+
+    transition:.35s;
+
+    z-index:99999;
+}
+
+.saveBar.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+}
+
+/* ===========================
+   FADE ANIMATION
+=========================== */
+
+.container{
+
+    animation:fadeUp .6s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(35px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+
+}
+
+/* ===========================
+   CARD HOVER
+=========================== */
+
+.card{
+
+    overflow:hidden;
+
+    position:relative;
+}
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-120%;
+
+    left:-60%;
+
+    width:80px;
+
+    height:260%;
+
+    background:rgba(255,255,255,.15);
+
+    transform:rotate(25deg);
+
+    transition:.7s;
+}
+
+.card:hover::before{
+
+    left:150%;
+}
+
+/* ===========================
+   BUTTON SHINE
+=========================== */
+
+button{
+
+    overflow:hidden;
+
+    position:relative;
+}
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60px;
+
+    height:100%;
+
+    background:rgba(255,255,255,.25);
+
+    transform:skewX(-25deg);
+
+    transition:.6s;
+}
+
+button:hover::before{
+
+    left:140%;
+}
+
+/* ===========================
+   TEXTAREA HOVER
+=========================== */
+
+textarea:hover{
+
+    border-color:#3bc8ff;
+}
+
+/* ===========================
+   COUNTER
+=========================== */
+
+.counter{
+
+    box-shadow:
+    0 0 12px rgba(0,212,255,.25);
+}
+
+/* ===========================
+   LABEL
+=========================== */
+
+.label{
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    color:#9feaff;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:1200px){
+
+    .mainRow{
+
+        flex-direction:column;
+    }
+
+    .middlePanel{
+
+        width:100%;
+
+        flex-direction:row;
+
+        flex-wrap:wrap;
+    }
+
+    .middlePanel button{
+
+        flex:1;
+
+        min-width:180px;
+    }
+
+    textarea{
+
+        height:300px;
+    }
+
+}
+
+@media(max-width:700px){
+
+    body{
+
+        padding:12px;
+    }
+
+    .container{
+
+        padding:15px;
+    }
+
+    .title{
+
+        font-size:24px;
+    }
+
+    .middlePanel{
+
+        flex-direction:column;
+    }
+
+    .middlePanel button{
+
+        width:100%;
+    }
+
+    .card p{
+
+        font-size:26px;
+    }
+
+    textarea{
+
+        height:220px;
+
+        font-size:13px;
+    }
+
+    .container::after{
+
+        font-size:10px;
+
+        padding:6px 12px;
+    }
+
+}
+
+/* ===========================
+   SCROLLBAR PAGE
+=========================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+
+    background:#0b1220;
+}
+
+::-webkit-scrollbar-thumb{
+
+    border-radius:30px;
+
+    background:linear-gradient(
+        #00d4ff,
+        #0072ff
+    );
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:linear-gradient(
+        #42e8ff,
+        #0094ff
+    );
+}
+/* =====================================================
+   PARADISE LAB ULTRA PREMIUM
+   PART 4
+=====================================================*/
+
+
+/* ======================================
+   CONTAINER GLOW ANIMATION
+======================================*/
+
+.container{
+
+    position:relative;
+
+    isolation:isolate;
+
+}
+
+.container::before{
+
+    animation:borderRotate 8s linear infinite;
+}
+
+@keyframes borderRotate{
+
+    0%{
+
+        filter:hue-rotate(0deg);
+
+    }
+
+    100%{
+
+        filter:hue-rotate(360deg);
+
+    }
+
+}
+
+
+/* ======================================
+   GLASS REFLECTION
+======================================*/
+
+.container::selection{
+    background:#00d4ff;
+}
+
+.container::after{
+
+    overflow:hidden;
+
+}
+
+.container:after{
+
+    animation:badgeGlow 2s infinite alternate;
+
+}
+
+/* Reflection */
+
+.container{
+
+    overflow:hidden;
+
+}
+
+.container .glass{
+
+    display:none;
+
+}
+
+.container:before{
+
+    pointer-events:none;
+
+}
+
+.container::marker{
+    color:transparent;
+}
+
+.container:focus{
+    outline:none;
+}
+
+/* Reflection Animation */
+
+.container::after{
+
+    box-shadow:
+
+    0 0 25px rgba(0,212,255,.45),
+
+    0 0 60px rgba(0,212,255,.15);
+
+}
+
+
+/* ======================================
+   BOX HOVER
+======================================*/
+
+.box{
+
+    transition:.35s;
+
+}
+
+.box:hover{
+
+    transform:translateY(-3px);
+
+}
+
+
+/* ======================================
+   TEXTAREA
+======================================*/
+
+textarea{
+
+    transition:.35s;
+
+}
+
+textarea:hover{
+
+    box-shadow:
+
+    inset 0 0 15px rgba(255,255,255,.03),
+
+    0 0 20px rgba(0,212,255,.15);
+
+}
+
+textarea:focus{
+
+    transform:scale(1.01);
+
+}
+
+
+/* ======================================
+   BUTTON
+======================================*/
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+button::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-50%;
+
+    left:-150%;
+
+    width:60px;
+
+    height:220%;
+
+    background:
+
+    rgba(255,255,255,.35);
+
+    transform:rotate(25deg);
+
+    transition:.8s;
+
+}
+
+button:hover::after{
+
+    left:170%;
+
+}
+
+
+/* ======================================
+   CARD
+======================================*/
+
+.card{
+
+    transition:.35s;
+
+}
+
+.card:hover{
+
+    transform:
+
+    translateY(-6px)
+
+    scale(1.02);
+
+}
+
+
+/* ======================================
+   LABEL
+======================================*/
+
+.label{
+
+    text-shadow:
+
+    0 0 12px rgba(0,212,255,.5);
+
+}
+
+
+/* ======================================
+   COUNTER
+======================================*/
+
+.counter{
+
+    animation:pulseCounter 2s infinite;
+
+}
+
+@keyframes pulseCounter{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.08);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+
+/* ======================================
+   TITLE
+======================================*/
+
+.title{
+
+    animation:titleGlow 3s infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 10px #00d4ff,
+
+        0 0 20px #00d4ff;
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 20px #00d4ff,
+
+        0 0 45px #00d4ff,
+
+        0 0 70px #00d4ff;
+
+    }
+
+}
+
+
+/* ======================================
+   PAGE FADE
+======================================*/
+
+body{
+
+    animation:pageFade .7s ease;
+
+}
+
+@keyframes pageFade{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+
+/* ======================================
+   PREMIUM SHADOW
+======================================*/
+
+.container{
+
+    box-shadow:
+
+    0 25px 70px rgba(0,0,0,.55),
+
+    0 0 45px rgba(0,180,255,.12);
+
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="title">
+        UID DUPLICATE FILTER PRO
+    </div>
+
+    <div class="mainRow">
+
+        <!-- DATABASE -->
+        <div class="box">
+
+            <div class="counter" id="count1">
+                0 UID
+            </div>
+
+            <label class="label">
+                DATABASE UID
+            </label>
+
+            <textarea
+                id="oldUid"
+                placeholder="Masukkan database UID lama di sini..."
+            ></textarea>
+
+        </div>
+
+        <!-- PANEL -->
+        <div class="middlePanel">
+
+            <!-- IMPORT DATABASE -->
+            <button
+                class="importBtn"
+                onclick="importDatabaseFile()"
+            >
+                IMPORT DB .TXT
+            </button>
+
+            <!-- IMPORT UID BARU -->
+            <button
+                class="importBtn"
+                onclick="document.getElementById('importNew').click()"
+            >
+                IMPORT UID BARU
+            </button>
+
+            <input
+                type="file"
+                id="importNew"
+                accept=".txt"
+            >
+
+            <!-- FILTER -->
+            <button
+                class="filterBtn"
+                onclick="filterDuplicate()"
+            >
+                FILTER DUPLIKAT
+            </button>
+
+            <!-- EXPORT -->
+            <button
+                class="exportBtn"
+                onclick="exportResult()"
+            >
+                EXPORT HASIL .TXT
+            </button>
+
+            <!-- COPY -->
+            <button
+                class="copyBtn"
+                onclick="copyResult()"
+            >
+                COPY HASIL
+            </button>
+
+            <!-- CLEAR -->
+            <button
+                class="clearBtn"
+                onclick="clearAll()"
+            >
+                CLEAR SEMUA
+            </button>
+
+            <!-- STATS -->
+            <div class="stats">
+
+                <div class="card">
+                    <h3>UID BARU</h3>
+                    <p id="uniqueCount">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>DUPLIKAT</h3>
+                    <p id="dupCount">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>TOTAL DB</h3>
+                    <p id="dbCount">0</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- UID BARU -->
+        <div class="box">
+
+            <div class="counter" id="count2">
+                0 UID
+            </div>
+
+            <label class="label">
+                UID BARU
+            </label>
+
+            <textarea
+                id="newUid"
+                placeholder="Masukkan UID baru di sini..."
+            ></textarea>
+
+        </div>
+
+        <!-- HASIL -->
+        <div class="box">
+
+            <div class="counter" id="count3">
+                0 UID
+            </div>
+
+            <label class="label">
+                HASIL UID BERSIH
+            </label>
+
+            <textarea
+                id="result"
+                placeholder="Hasil filter muncul di sini..."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SAVE BAR -->
+<div class="saveBar" id="saveBar">
+    AUTO SAVED
+</div>
+
+<script>
+
+const oldUid = document.getElementById("oldUid");
+const newUid = document.getElementById("newUid");
+const result = document.getElementById("result");
+
+/* STORAGE KEY */
+const STORAGE_KEY =
+    "uid_duplicate_filter_data";
+
+/* FILE HANDLE */
+let databaseFileHandle = null;
+
+/* NORMALIZE */
+function normalize(text){
+
+    return text
+        .split(/\r?\n/)
+        .map(v => v.trim())
+        .filter(v => v !== "");
+}
+
+/* UPDATE COUNTER */
+function updateCounts(){
+
+    const oldCount =
+        normalize(oldUid.value).length;
+
+    const newCount =
+        normalize(newUid.value).length;
+
+    const resultCount =
+        normalize(result.value).length;
+
+    document.getElementById("count1").innerText =
+        oldCount + " UID";
+
+    document.getElementById("count2").innerText =
+        newCount + " UID";
+
+    document.getElementById("count3").innerText =
+        resultCount + " UID";
+
+    document.getElementById("dbCount").innerText =
+        oldCount;
+}
+
+/* SAVE LOCAL STORAGE */
+function saveToBrowser(){
+
+    const data = {
+
+        database : oldUid.value,
+        newuid   : newUid.value,
+        result   : result.value
+
+    };
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+}
+
+/* LOAD LOCAL STORAGE */
+function loadFromBrowser(){
+
+    const saved =
+        localStorage.getItem(STORAGE_KEY);
+
+    if(!saved) return;
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+        oldUid.value =
+            data.database || "";
+
+        newUid.value =
+            data.newuid || "";
+
+        result.value =
+            data.result || "";
+
+        updateCounts();
+
+        showToast(
+            "Auto restore berhasil!"
+        );
+
+    }catch(err){
+
+        console.log(err);
+    }
+}
+
+/* SHOW TOAST */
+function showToast(text){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.innerText = text;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },2500);
+}
+
+/* SHOW SAVE BAR */
+function showSaveBar(){
+
+    const saveBar =
+        document.getElementById("saveBar");
+
+    const now = new Date();
+
+    const time =
+        now.toLocaleTimeString();
+
+    saveBar.innerText =
+        "AUTO SAVED • " + time;
+
+    saveBar.classList.add("show");
+
+    setTimeout(()=>{
+
+        saveBar.classList.remove("show");
+
+    },2000);
+}
+
+/* IMPORT DATABASE FILE */
+async function importDatabaseFile(){
+
+    try{
+
+        const [fileHandle] =
+            await window.showOpenFilePicker({
+
+            types: [{
+                description: "Text Files",
+                accept: {
+                    "text/plain": [".txt"]
+                }
+            }],
+
+            multiple:false
+
+        });
+
+        databaseFileHandle = fileHandle;
+
+        const file =
+            await fileHandle.getFile();
+
+        const text =
+            await file.text();
+
+        oldUid.value = text;
+
+        updateCounts();
+
+        saveToBrowser();
+
+        showToast(
+            "Database terhubung!"
+        );
+
+    }catch(err){
+
+        console.log(err);
+    }
+}
+
+/* AUTO SAVE DATABASE */
+async function saveDatabaseDirect(){
+
+    if(!databaseFileHandle) return;
+
+    try{
+
+        const writable =
+            await databaseFileHandle.createWritable();
+
+        await writable.write(oldUid.value);
+
+        await writable.close();
+
+        showSaveBar();
+
+        console.log(
+            "Database auto saved"
+        );
+
+    }catch(err){
+
+        console.log(err);
+    }
+}
+
+/* LISTENER AUTO SAVE */
+oldUid.addEventListener("input", () => {
+
+    updateCounts();
+
+    saveToBrowser();
+});
+
+newUid.addEventListener("input", () => {
+
+    updateCounts();
+
+    saveToBrowser();
+});
+
+result.addEventListener("input", () => {
+
+    updateCounts();
+
+    saveToBrowser();
+});
+
+/* FILTER */
+async function filterDuplicate(){
+
+    const oldList = normalize(oldUid.value);
+    const newList = normalize(newUid.value);
+
+    const oldSet = new Set(oldList);
+
+    const clean = [];
+
+    let duplicate = 0;
+
+    for(let uid of newList){
+
+        if(oldSet.has(uid)){
+
+            duplicate++;
+
+        }else{
+
+            clean.push(uid);
+
+            oldSet.add(uid);
+        }
+    }
+
+    /* HASIL */
+    result.value = clean.join("\n");
+
+    /* TAMBAH DATABASE */
+    const updatedDatabase = [
+        ...oldList,
+        ...clean
+    ];
+
+    oldUid.value =
+        updatedDatabase.join("\n");
+
+    /* KOSONGKAN UID BARU */
+    newUid.value = "";
+
+    /* UPDATE STATS */
+    document.getElementById("uniqueCount").innerText =
+        clean.length;
+
+    document.getElementById("dupCount").innerText =
+        duplicate;
+
+    updateCounts();
+
+    saveToBrowser();
+
+    /* AUTO SAVE FILE ASLI */
+    await saveDatabaseDirect();
+
+    showToast(
+        "Selesai! " +
+        clean.length +
+        " UID ditambahkan"
+    );
+}
+
+/* COPY */
+function copyResult(){
+
+    navigator.clipboard.writeText(result.value);
+
+    showToast("Hasil berhasil di copy!");
+}
+
+/* EXPORT TXT */
+function exportResult(){
+
+    const text = result.value;
+
+    if(!text.trim()){
+
+        showToast("Hasil masih kosong!");
+
+        return;
+    }
+
+    const blob = new Blob(
+        [text],
+        {type:"text/plain"}
+    );
+
+    const a = document.createElement("a");
+
+    a.href = URL.createObjectURL(blob);
+
+    a.download =
+        "hasil_uid_bersih.txt";
+
+    a.click();
+
+    showToast("Hasil berhasil di export!");
+}
+
+/* IMPORT UID BARU TXT */
+document
+.getElementById("importNew")
+.addEventListener("change", function(e){
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event){
+
+        newUid.value =
+            event.target.result;
+
+        updateCounts();
+
+        saveToBrowser();
+
+        showToast(
+            "UID baru berhasil di import!"
+        );
+    };
+
+    reader.readAsText(file);
+});
+
+/* CLEAR */
+function clearAll(){
+
+    oldUid.value = "";
+    newUid.value = "";
+    result.value = "";
+
+    document.getElementById("uniqueCount").innerText = 0;
+    document.getElementById("dupCount").innerText = 0;
+    document.getElementById("dbCount").innerText = 0;
+
+    updateCounts();
+
+    saveToBrowser();
+
+    showToast("Semua data dibersihkan!");
+}
+
+/* INIT */
+updateCounts();
+
+/* AUTO LOAD */
+loadFromBrowser();
+
+</script>
+
+</body>
+</html>

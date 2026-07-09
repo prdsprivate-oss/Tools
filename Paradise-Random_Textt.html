@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Paradise Translate Generator</title>
+
+<style>
+/* ===========================
+   PARADISE APP - PREMIUM UI
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow-x:hidden;
+
+    background:
+    linear-gradient(rgba(10,15,30,.55),rgba(5,10,25,.75)),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop")
+    center center/cover no-repeat fixed;
+}
+
+/* Blur Glow */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+    radial-gradient(circle at 15% 20%,rgba(0,255,255,.18),transparent 30%),
+    radial-gradient(circle at 85% 80%,rgba(255,0,255,.15),transparent 30%),
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.05),transparent 45%);
+}
+
+/* APP */
+
+#paradise-app{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:40px 15px;
+}
+
+#paradise-app .container{
+
+    width:100%;
+    max-width:700px;
+
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    border-radius:24px;
+
+    padding:28px;
+
+    box-shadow:
+    0 15px 45px rgba(0,0,0,.45),
+    0 0 40px rgba(0,255,255,.08);
+
+    animation:fadeUp .6s ease;
+}
+
+/* TITLE */
+
+.title{
+    text-align:center;
+    color:#fff;
+    font-size:32px;
+    font-weight:700;
+    letter-spacing:1px;
+    margin-bottom:25px;
+
+    text-shadow:
+    0 0 10px #00d9ff,
+    0 0 25px rgba(0,217,255,.4);
+}
+
+/* INPUT */
+
+select,
+textarea,
+button{
+
+    width:100%;
+    margin-top:14px;
+
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    padding:15px 16px;
+
+    font-size:15px;
+}
+
+select,
+textarea{
+
+    background:rgba(255,255,255,.12);
+
+    color:#fff;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    transition:.25s;
+}
+
+textarea::placeholder{
+    color:#ddd;
+}
+
+select:focus,
+textarea:focus{
+
+    border-color:#00e5ff;
+
+    box-shadow:
+    0 0 15px rgba(0,229,255,.45);
+}
+
+/* BUTTON */
+
+button{
+
+    margin-top:18px;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 8px 25px rgba(0,114,255,.45);
+}
+
+button:active{
+
+    transform:scale(.98);
+}
+
+/* CHECKBOX */
+
+label{
+
+    margin-top:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+}
+
+input[type=checkbox]{
+
+    width:20px;
+    height:20px;
+
+    accent-color:#00d9ff;
+
+    cursor:pointer;
+}
+
+/* NOTIFICATION */
+
+#notif{
+
+    position:fixed;
+
+    top:25px;
+    right:25px;
+
+    background:linear-gradient(135deg,#00c853,#00e676);
+
+    color:#fff;
+
+    padding:14px 22px;
+
+    border-radius:14px;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.35);
+
+    transform:translateX(120%);
+
+    transition:.35s;
+
+    z-index:99999;
+}
+
+#notif.show{
+
+    transform:translateX(0);
+}
+
+/* LOADING */
+
+#loading{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:rgba(0,0,0,.55);
+
+    backdrop-filter:blur(5px);
+
+    color:#fff;
+
+    font-size:22px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.3s;
+
+    z-index:999999;
+}
+
+#loading.show{
+
+    opacity:1;
+
+    pointer-events:auto;
+}
+
+/* SCROLL */
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#00c6ff;
+
+    border-radius:50px;
+}
+
+::-webkit-scrollbar-track{
+
+    background:rgba(255,255,255,.08);
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .container{
+
+        padding:20px;
+    }
+
+    .title{
+
+        font-size:25px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div id="paradise-app">
+
+<div id="notif">Berhasil di copy!</div>
+<div id="loading">Loading...</div>
+
+<div class="container">
+
+<div class="title">RANDOM TEXT</div>
+
+<select id="language">
+<option value="">🌍 Pilih Bahasa</option>
+<option value="id">Indonesia</option>
+<option value="en">English</option>
+<option value="de">German</option>
+<option value="fr">French</option>
+<option value="es">Spanish</option>
+<option value="it">Italian</option>
+<option value="pt">Portuguese</option>
+<option value="ru">Russian</option>
+<option value="uk">Ukrainian</option>
+<option value="pl">Polish</option>
+<option value="tr">Turkish</option>
+<option value="ar">Arabic</option>
+<option value="ja">Japanese</option>
+<option value="ko">Korean</option>
+<option value="zh-CN">Chinese</option>
+<option value="nl">Dutch</option>
+<option value="vi">Vietnamese</option>
+<option value="th">Thai</option>
+<option value="tl">Filipino</option>
+<option value="sk">Slovakia</option>
+<option value="cs">Czech</option>
+<option value="el">Greece (Greek)</option>
+</select>
+
+<select id="category">
+<option value="">📂 Pilih Kategori</option>
+<option value="profile">Profile</option>
+<option value="dm">DM - Inbox</option>
+<option value="dm2">DM - Inbox 02</option>
+<option value="dm3">DM - Inbox 03</option>
+</select>
+
+<!-- EMOJI TOGGLE -->
+<label>
+<input type="checkbox" id="useEmoji" checked>
+Emoji ngawor😁
+</label>
+
+<button onclick="generateText()">Generate</button>
+
+<textarea id="result" placeholder="Hasil generate akan muncul di sini..."></textarea>
+
+<button onclick="copyText()">Copy</button>
+
+</div>
+</div>
+
+<script>
+
+/* DATABASE TEXT */
+const database = {
+dm: [
+"💦 Halo teman!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Nikmati bersamaku 👉",
+"💦 Halo teman!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Klik untuk live snap sext denganku 👉",
+"😜 Hai.: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Ikuti aku 👉",
+"🔞 Hai!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Mencari seks langsung malam ini 👉",
+"🔞 Hai!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Gadis sendirian seks langsung dalam pertunjukan telanjang 👉",
+"💦 Hai teman-teman!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik saya sekarang 👉",
+"💦 Halo teman!: Saya punya payudara dan bokong yang bagus, Anda bisa bermain seks dengannya 🎬🔞 Jemput saya di sini 👉",
+"🔞 Hai!: Saya punya payudara dan bokong yang bagus, Anda bisa bermain seks dengannya 🎬🔞 Lihat di sini 👉",
+"🔞 Hai!: Saya punya payudara dan bokong yang bagus, Anda bisa bermain seks dengannya 🎬🔞 Ikuti saya 👉",
+"👙 Apa kabar?: Saya punya payudara dan bokong yang bagus, Anda bisa bermain seks dengannya 🎬🔞 Klik di sini 👉",
+"👙 Hai!: Saya punya payudara dan bokong yang bagus, Anda bisa bermain seks dengannya 🎬🔞 Temukan beberapa gadis terpanas 👉",
+"💦 Hai, kamu!: Saya tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Nikmati bersamaku 👉",
+"💦 Yo!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"💦 Hai cowok-cowok!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Lihat di sini 👉",
+"💦 Hai,: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Hubungi aku 👉",
+"👙 Apa kabar?: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik aku sekarang 👉",
+"💦 Hei, kamu!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Tonton pertunjukan langsung terpanas 👉",
+"😜 Hai.: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"👙 Apa kabar?: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Lihat profil gadis 👉",
+"💦 Yo!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik di sini 👉",
+"💦 Hai teman-teman!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Temukan beberapa gadis terpanas 👉",
+"💦 Hai para pria!: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kalian Mainkan Seks 🎬🔞 Mencari seks langsung malam ini 👉",
+"👙 Apa kabar?: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klip seks langsung & kamera panas 👉",
+"💦 Hai para pria!: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Bisa Bermain Seks 🎬🔞 Temui wanita lokal untuk seks malam ini 👉",
+"👙 Hai!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Video & foto seks panas 👉",
+"💦 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Halo teman!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Tonton pertunjukan langsung terpanas 👉",
+"💦 Hei, apa kabar?: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Temukan beberapa gadis terpanas 👉",
+"💦 Hai,: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Anda Ajak Bermain Seks 🎬🔞 Lihat profil gadis 👉",
+"👙 Apa kabar?: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Seks langsung terbuka dengan gadis seksi 👉",
+"🔞 Hai!: Aku Tersedia untuk Aktivitas Seksual Apa Pun, Jangka Pendek atau Jangka Panjang 🎬🔞 Lihat profil gadis 👉",
+"😜 Hai.: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Video & foto seks panas 👉",
+"😘 Halo,: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Video & foto seks panas 👉",
+"🔞 Hai,: Aku Tersedia untuk Aktivitas Seksual Apa Pun, Jangka Pendek atau Jangka Panjang 🎬🔞 Tonton pertunjukan langsung terpanas 👉",
+"👙 Hai!: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Video & foto seks panas 👉",
+"💦 Hai, Apa kabar?: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik untuk Sext Langsung di Snapchat dengan Saya 👉",
+"💦 Hai, kamu!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Video & foto seks panas 👉",
+"💦 Halo teman!: Saya Punya Payudara dan Bokong Indah yang Bisa Kamu Mainkan Seks 🎬🔞 Ikuti saya 👉",
+"😜 Hai di sana.: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik saya sekarang 👉",
+"👙 Apa kabar?: Saya Punya Payudara dan Bokong Indah yang Bisa Kamu Mainkan Seks 🎬🔞 Klik untuk Sext Langsung di Snapchat dengan Saya 👉",
+"🔞 Hai!: Saya Punya Payudara dan Bokong Indah yang Bisa Kamu Mainkan Seks 🎬🔞 Temukan Beberapa gadis terpanas 👉",
+"😘 Halo,: Aku punya payudara dan bokong yang bagus, kamu bisa bermain seks dengannya 🎬🔞 Klip seks langsung & kamera panas 👉",
+"👙 Hai!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Tonton pertunjukan langsung terpanas 👉",
+"💦 Hei, kamu!: Aku punya payudara dan bokong yang bagus, kamu bisa bermain seks dengannya 🎬🔞 Klik aku sekarang 👉",
+"👙 Hai!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Lihat di sini 👉",
+"💦 Hai teman-teman!: Aku punya payudara dan bokong yang bagus, kamu bisa bermain seks dengannya 🎬🔞 Seks langsung terbuka dengan gadis seksi 👉",
+"💦 Halo teman!: Aku punya payudara dan bokong yang bagus, kamu bisa bermain seks dengannya 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"💦 Hai semuanya!: Aku punya payudara dan bokong yang bagus, kalian bisa bermain seks dengannya 🎬🔞 Klip seks langsung & kamera panas 👉",
+"👙 Apa kabar?: Aku punya payudara dan bokong yang bagus, kalian bisa bermain seks dengannya 🎬🔞 Lihat di sini 👉",
+"💦 Hei, apa kabar?: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klip seks langsung & kamera panas 👉"
+],
+  
+dm2: [
+"💦 Hai, apa kabar?: Aku punya payudara dan bokong yang indah, kamu bisa bermain-main denganku 🎬🔞 Lihat di sini 👉",
+"😜 Hai.: Aku punya payudara dan bokong yang indah, kamu bisa bermain-main denganku 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"💦 Hai cowok-cowok!: Aku punya payudara dan bokong yang indah, kamu bisa bermain-main denganku 🎬🔞 Temukan beberapa gadis terpanas 👉",
+"💦 Hai, apa kabar?: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Yo!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klip seks langsung & kamera panas 👉",
+"💦 Hai,: Aku punya payudara dan bokong yang indah, kamu bisa bermain-main denganku 🎬🔞 Lihat di sini 👉",
+"💦 Hai para pria!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik saya sekarang 👉",
+"🔞 Hai!: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kalian Mainkan Seks 🎬🔞 Nikmati bersama saya 👉",
+"💦 Hai para pria!: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kalian Mainkan Seks 🎬🔞 Seks langsung terbuka dengan gadis seksi 👉",
+"💦 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Lihat profil gadis 👉",
+"👙 Hai!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Jemput saya di sini 👉",
+"💦 Hai,: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kalian Mainkan Seks 🎬🔞 Nikmati bersamaku 👉",
+"👙 Apa kabar?: Aku Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Hubungi aku 👉",
+"👙 Hai!: Aku Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Ayo kita nakal 👉",
+"👙 Hai!: Aku Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik aku sekarang 👉",
+"💦 Hai teman!: Aku Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Ikuti aku 👉",
+"😜 Hai di sana.: Aku Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Hai, kamu!: Aku Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kamu Mainkan Seks 🎬🔞 Seks langsung terbuka dengan gadis seksi 👉",
+"😘 Halo,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klip seks langsung & kamera panas 👉",
+"💦 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Mari kita nakal 👉",
+"💦 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Seks langsung terbuka dengan gadis seksi 👉",
+"💦 Hei, apa kabar?: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kamu Mainkan Seks 🎬🔞 Mari kita nakal 👉",
+"😘 Halo,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Hubungi saya 👉",
+"😘 Halo,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun Aktivitas, Jangka Pendek Atau Jangka Panjang 🎬🔞 Tonton siaran langsung terpanas 👉",
+"👙 Hai!: Aku Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Klik untuk Siaran Langsung Seks Denganku 👉",
+"💦 Hai, apa kabar?: Aku Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Lihat profil gadis 👉",
+"💦 Hai, kamu!: Aku Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Tonton siaran langsung terpanas 👉",
+"👙 Hai!: Aku Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"💦 Hai, kamu!: Aku Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Nikmati bersamaku 👉",
+"🔞 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik saya sekarang 👉",
+"🔞 Hai!: Saya Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Seks langsung dengan gadis seksi 👉",
+"🔞 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Lihat profil gadis 👉",
+"😘 Halo,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"💦 Hai,: Saya Punya Payudara Dan Bokong Yang Indah Yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Klik di sini 👉",
+"💦 Halo teman!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Ayo kita nakal 👉",
+"💦 Hai cowok-cowok!: Aku punya payudara dan bokong yang bagus, kalian bisa main seks dengannya 🎬🔞 Klik di sini 👉",
+"😘 Halo,: Aku punya payudara dan bokong yang bagus, kalian bisa main seks dengannya 🎬🔞 Temui wanita lokal untuk seks malam ini 👉",
+"🔞 Hai!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Ikuti aku 👉",
+"💦 Yo!: Aku punya payudara dan bokong yang bagus, kalian bisa main seks dengannya 🎬🔞 Klik untuk live snap sext denganku 👉",
+"💦 Hai teman-teman!: Aku punya payudara dan bokong yang bagus, kalian bisa main seks dengannya 🎬🔞 Klik aku sekarang 👉",
+"💦 Halo teman!: Aku punya payudara dan bokong yang bagus, kalian bisa main seks dengannya 🎬🔞 Temukan beberapa Gadis terpanas 👉",
+"💦 Hai, apa kabar?: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Video & foto seks panas 👉",
+"💦 Yo!: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kamu Mainkan Seks 🎬🔞 Video & foto seks panas 👉",
+"💦 Hai semuanya!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Hubungi saya 👉",
+"💦 Halo teman!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik saya sekarang 👉",
+"😘 Halo,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Video & foto seks panas 👉",
+"💦 Hai semuanya!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Video & foto seks panas 👉",
+"👙 Hai!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Nikmati bersama saya 👉",
+"💦 Hai, kamu!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Gadis Sendirian seks langsung dalam pertunjukan telanjang 👉",
+"😘 Halo,: Saya Memiliki Payudara Dan Bokong Yang Indah Yang Bisa Kamu Mainkan Seks 🎬🔞 Klik saya sekarang 👉"
+],
+  
+dm3: [
+"💦 Hai teman!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Ayo kita nakal 👉",
+"💦 Hai, kamu!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Ikuti aku 👉",
+"🔞 Hai,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Seks langsung dengan gadis seksi 👉",
+"💦 Hai, kamu!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Lihat di sini 👉",
+"😘 Halo,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Lihat di sini 👉",
+"💦 Hai,: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik di sini 👉",
+"👙 Apa kabar?: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Jemput aku di sini 👉",
+"💦 Hai!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Ikuti aku 👉",
+"👙 Hai!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Lihat profil gadis 👉",
+"💦 Hai,: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik untuk melakukan sexting langsung denganku 👉",
+"🔞 Hai,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Klik aku sekarang 👉",
+"😘 Halo,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Lihat profil gadis 👉",
+"😘 Halo,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"😜 Hai.: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Tonton pertunjukan langsung terpanas 👉",
+"🔞 Hai,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Ayo kita nakal 👉",
+"💦 Halo teman!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Video & foto seks panas 👉",
+"😘 Halo,: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Jemput aku di sini 👉",
+"💦 Yo!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Klik di sini 👉",
+"👙 Hai!: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Klik di sini 👉",
+"💦 Hai,: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Gadis Sendirian, Seks Langsung dalam Pertunjukan Telanjang 👉",
+"💦 Yo!: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Ikuti aku 👉",
+"🔞 Hai!: Aku Tersedia untuk Aktivitas Seksual Apa Pun, Jangka Pendek atau Jangka Panjang 🎬🔞 Seks Langsung Terbuka dengan Gadis Seksi 👉",
+"💦 Hai para pria!: Aku Tersedia untuk Aktivitas Seksual Apa Pun, Jangka Pendek atau Jangka Panjang 🎬🔞 Lihat profil gadis 👉",
+"😜 Hai,: Aku Tersedia untuk Aktivitas Seksual Apa Pun, Jangka Pendek atau Jangka Panjang 🎬🔞 Seks Langsung Terbuka dengan Gadis Seksi Gadis 👉",
+"💦 Hai semuanya!: Aku punya payudara dan bokong yang bagus, kalian bisa bermain seks dengannya 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Halo teman!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Hai semuanya!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik di sini 👉",
+"💦 Hei, kamu!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"👙 Hai!: Aku punya payudara dan bokong yang bagus, kalian bisa bermain seks dengannya 🎬🔞 Jemput aku di sini 👉",
+"💦 Halo teman!: Aku punya payudara dan bokong yang bagus, kalian bisa bermain seks dengannya 🎬🔞 Hubungi saya 👉",
+"💦 Hai cowok-cowok!: Saya punya payudara dan bokong yang bagus, kalian bisa bermain seks dengan saya 🎬🔞 Hubungi saya 👉",
+"💦 Hai teman-teman!: Saya tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Ikuti saya 👉",
+"😘 Halo,: Saya punya payudara dan bokong yang bagus, kalian bisa bermain seks dengan saya 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Halo teman!: Saya tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Temukan beberapa gadis terpanas 👉",
+"😜 Hai di sana.: Saya tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Jemput saya di sini 👉",
+"😘 Halo,: Saya punya payudara dan bokong yang bagus, kalian bisa bermain seks dengan saya 🎬🔞 Nikmati bersamaku 👉",
+"🔞 Hai,: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Klik di sini untuk seks webcam langsung 👉",
+"💦 Hai, kamu!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Ayo kita nakal 👉",
+"💦 Yo!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Lihat profil gadis 👉",
+"👙 Apa kabar?: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek atau jangka panjang 🎬🔞 Nikmati bersamaku 👉",
+"💦 Halo teman!: Aku punya payudara dan bokong yang indah, kamu bisa bermain seks dengannya 🎬🔞 Mencari seks langsung malam ini 👉",
+"💦 Hai semuanya!: Aku tersedia untuk aktivitas seksual apa pun, jangka pendek Atau Jangka Panjang 🎬🔞 Seks langsung terbuka dengan gadis seksi 👉",
+"👙 Hai!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Ikuti saya 👉",
+"💦 Yo!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Ikuti saya 👉",
+"💦 Yo!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik untuk Seks Langsung Snap Dengan Saya 👉",
+"🔞 Hai,: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Klik di sini 👉",
+"💦 Hai,: Saya Punya Payudara Dan Bokong Yang Bagus Yang Bisa Kamu Mainkan Seks 🎬🔞 Temukan beberapa gadis terpanas 👉",
+"💦 Yo!: Saya Tersedia Untuk Aktivitas Seksual Apa Pun, Jangka Pendek Atau Jangka Panjang 🎬🔞 Gadis Sendirian, Seks Langsung dalam Pertunjukan Telanjang 👉",
+"🔞 Hai!: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Jemput aku di sini 👉",
+"💦 Hai,: Aku Punya Payudara dan Bokong Indah yang Bisa Kamu Ajak Berhubungan Seks 🎬🔞 Klik untuk Berhubungan Seks Langsung denganku 👉"
+],
+  
+bio: [
+"Link di bio",
+"Cek bio",
+"Info di bio",
+"Bio terbaru",
+"Lihat bio",
+"Klik bio",
+"Semua ada di bio",
+"Bio utama",
+"Update di bio",
+"Masuk lewat bio"
+],
+
+caption: [
+"Caption terbaru",
+"Baca caption",
+"Caption lengkap",
+"Lihat caption",
+"Caption menarik",
+"Caption viral",
+"Update caption",
+"Caption baru",
+"Full caption",
+"Cek caption"
+],
+  
+profile: [
+"Penasaran sama aku? Klik link ya 😉",
+"Aku lagi nunggu kamu di link 💌",
+"Mau kenal aku lebih dekat? Klik ya",
+"Ada sesuatu buat kamu di link ini 😘",
+"Jangan cuma lihat… klik linknya 💕",
+"Aku simpan rahasia di link bawah 🤫",
+"Klik link kalau kamu penasaran 😏",
+"Ada kejutan kecil buat kamu 🎁",
+"Mau lihat aku lebih dekat? Klik 🔥",
+"Aku nunggu kamu di sana 💬",
+"Jangan bikin aku nunggu, klik ya 😘",
+"Ada cerita seru di link ini 💕",
+"Klik link buat temuin aku",
+"Aku punya sesuatu spesial",
+"Penasaran? Klik aja ya 😉",
+"Aku lagi sendiri di link 💌",
+"Cuma yang berani yang klik 😏",
+"Lihat aku di link bawah 😘",
+"Kamu pasti suka yang ini 💕",
+"Aku lagi cari teman seru 💬",
+"Klik link sebelum terlambat 😉",
+"Aku punya kejutan buat kamu",
+"Yuk kenalan lebih dekat 😘",
+"Klik link kalau mau tahu 😏",
+"Jangan lewatkan ini ya 💕",
+"Aku tunggu kamu di sana",
+"Klik link dan temuin aku 💌",
+"Ada hal menarik buat kamu 😉",
+"Aku lagi bosan… temenin aku 😘",
+"Klik sekarang ya",
+"Mau tahu rahasiaku? Klik 🤫",
+"Aku lagi nunggu di link bawah 💕",
+"Cuma buat kamu yang penasaran 😉",
+"Klik link dan lihat sendiri 😏",
+"Aku punya pesan buat kamu 💌",
+"Jangan cuma diam… klik ya 😘",
+"Aku simpan sesuatu spesial",
+"Penasaran sama aku? Klik 😉",
+"Aku lagi di sana, ayo klik",
+"Klik link kalau berani 😏",
+"Aku punya cerita buat kamu 💕",
+"Jangan bikin aku sedih… klik ya 😢",
+"Klik link dan kenalan yuk 😘",
+"Aku lagi nunggu kamu 💌",
+"Ada hal seru di link",
+"Mau tahu aku lagi apa? 😉",
+"Klik link dan lihat aku",
+"Aku simpan sesuatu buat kamu 😏",
+"Jangan lewatkan kesempatan ini 💕",
+"Aku tunggu kamu di sana 😘",
+"Klik link dan temui aku 💌",
+"Aku punya kejutan kecil",
+"Penasaran? Jangan ragu klik 😉",
+"Aku lagi sendiri di sana 😘",
+"Yuk lihat apa yang ada di link 😏",
+"Aku punya hal menarik 💕",
+"Klik link dan lihat sendiri",
+"Aku lagi menunggumu",
+"Jangan sampai ketinggalan 😉",
+"Aku punya sesuatu buat kamu 😘",
+"Klik link dan lihat rahasiaku 🤫",
+"Aku lagi di sana, ayo klik 💌",
+"Mau kenal aku? Klik ya",
+"Jangan cuma lihat profilku 😉",
+"Aku punya sesuatu yang lucu 😘",
+"Klik link buat lihat aku",
+"Aku lagi bosan… temenin yuk 😏",
+"Ada hal seru buat kamu 💕",
+"Klik sekarang sebelum terlambat",
+"Aku tunggu kamu ya 😘",
+"Klik link dan temuin aku 💬",
+"Aku punya cerita seru 💕",
+"Jangan cuma scroll… klik 😉",
+"Aku lagi di sana",
+"Ada sesuatu spesial",
+"Klik link kalau penasaran 😏",
+"Aku lagi nunggu kamu 😘",
+"Yuk lihat aku di link 💌",
+"Jangan bikin aku nunggu 😉",
+"Klik sekarang ya",
+"Aku punya hal menarik buat kamu 💕",
+"Klik link dan lihat sendiri 😘",
+"Aku lagi di sana, ayo datang",
+"Penasaran sama aku? Klik 😉",
+"Aku tunggu kamu di link 😏",
+"Ada kejutan buat kamu 💌",
+"Klik link dan temuin aku",
+"Aku punya sesuatu yang seru",
+"Jangan sampai terlewat 😉",
+"Aku lagi nunggu kamu 😘",
+"Klik link dan lihat aku 💕",
+"Aku punya sesuatu spesial",
+"Mau tahu lebih banyak? 😉",
+"Aku lagi di sana",
+"Klik link kalau mau tahu 😏",
+"Jangan ragu buat klik 😘",
+"Aku tunggu kamu di link 💌",
+"Ada sesuatu buat kamu 💕",
+"Klik sekarang dan lihat 😉",
+"Aku lagi nunggu kamu di sana 😘Penasaran sama aku? Klik link ya 😉",
+"Aku lagi nunggu kamu di link 💌",
+"Mau kenal aku lebih dekat? Klik ya",
+"Ada sesuatu buat kamu di link ini 😘",
+"Jangan cuma lihat… klik linknya 💕",
+"Aku simpan rahasia di link bawah 🤫",
+"Klik link kalau kamu penasaran 😏",
+"Ada kejutan kecil buat kamu 🎁",
+"Mau lihat aku lebih dekat? Klik 🔥",
+"Aku nunggu kamu di sana 💬",
+"Jangan bikin aku nunggu, klik ya 😘",
+"Ada cerita seru di link ini 💕",
+"Klik link buat temuin aku",
+"Aku punya sesuatu spesial",
+"Penasaran? Klik aja ya 😉",
+"Aku lagi sendiri di link 💌",
+"Cuma yang berani yang klik 😏",
+"Lihat aku di link bawah 😘",
+"Kamu pasti suka yang ini 💕",
+"Aku lagi cari teman seru 💬",
+"Klik link sebelum terlambat 😉",
+"Aku punya kejutan buat kamu",
+"Yuk kenalan lebih dekat 😘",
+"Klik link kalau mau tahu 😏",
+"Jangan lewatkan ini ya 💕",
+"Aku tunggu kamu di sana",
+"Klik link dan temuin aku 💌",
+"Ada hal menarik buat kamu 😉",
+"Aku lagi bosan… temenin aku 😘",
+"Klik sekarang ya",
+"Mau tahu rahasiaku? Klik 🤫",
+"Aku lagi nunggu di link bawah 💕",
+"Cuma buat kamu yang penasaran 😉",
+"Klik link dan lihat sendiri 😏",
+"Aku punya pesan buat kamu 💌",
+"Jangan cuma diam… klik ya 😘",
+"Aku simpan sesuatu spesial",
+"Penasaran sama aku? Klik 😉",
+"Aku lagi di sana, ayo klik",
+"Klik link kalau berani 😏",
+"Aku punya cerita buat kamu 💕",
+"Jangan bikin aku sedih… klik ya 😢",
+"Klik link dan kenalan yuk 😘",
+"Aku lagi nunggu kamu 💌",
+"Ada hal seru di link",
+"Mau tahu aku lagi apa? 😉",
+"Klik link dan lihat aku",
+"Aku simpan sesuatu buat kamu 😏",
+"Jangan lewatkan kesempatan ini 💕",
+"Aku tunggu kamu di sana 😘",
+"Klik link dan temui aku 💌",
+"Aku punya kejutan kecil",
+"Penasaran? Jangan ragu klik 😉",
+"Aku lagi sendiri di sana 😘",
+"Yuk lihat apa yang ada di link 😏",
+"Aku punya hal menarik 💕",
+"Klik link dan lihat sendiri",
+"Aku lagi menunggumu",
+"Jangan sampai ketinggalan 😉",
+"Aku punya sesuatu buat kamu 😘",
+"Klik link dan lihat rahasiaku 🤫",
+"Aku lagi di sana, ayo klik 💌",
+"Mau kenal aku? Klik ya",
+"Jangan cuma lihat profilku 😉",
+"Aku punya sesuatu yang lucu 😘",
+"Klik link buat lihat aku",
+"Aku lagi bosan… temenin yuk 😏",
+"Ada hal seru buat kamu 💕",
+"Klik sekarang sebelum terlambat",
+"Aku tunggu kamu ya 😘",
+"Klik link dan temuin aku 💬",
+"Aku punya cerita seru 💕",
+"Jangan cuma scroll… klik 😉",
+"Aku lagi di sana",
+"Ada sesuatu spesial",
+"Klik link kalau penasaran 😏",
+"Aku lagi nunggu kamu 😘",
+"Yuk lihat aku di link 💌",
+"Jangan bikin aku nunggu 😉",
+"Klik sekarang ya",
+"Aku punya hal menarik buat kamu 💕",
+"Klik link dan lihat sendiri 😘",
+"Aku lagi di sana, ayo datang",
+"Penasaran sama aku? Klik 😉",
+"Aku tunggu kamu di link 😏",
+"Ada kejutan buat kamu 💌",
+"Klik link dan temuin aku",
+"Aku punya sesuatu yang seru",
+"Jangan sampai terlewat 😉",
+"Aku lagi nunggu kamu 😘",
+"Klik link dan lihat aku 💕",
+"Aku punya sesuatu spesial",
+"Mau tahu lebih banyak? 😉",
+"Aku lagi di sana",
+"Klik link kalau mau tahu 😏",
+"Jangan ragu buat klik 😘",
+"Aku tunggu kamu di link 💌",
+"Ada sesuatu buat kamu 💕",
+"Klik sekarang dan lihat 😉",
+"Aku lagi nunggu kamu di sana 😘"
+]
+};
+
+/* EMOJI LIST KAMU */
+const emojiList = [
+"👉👌💖💦🔥🔞",
+"💦💦👉👉👌🍆🍑",
+"👉👌👉👌🍆🍑💦💦💦💦",
+"👉👌💦🔥👨💦💦🔞🔞",
+"🔞🔥👄🍆🍑👉👌💦🔞",
+"🥰👉💦👌🍑🍆🔥🔞🔞",
+"🍆🍆🍑🍑💦💦🔞🔞🥰🥰🥰",
+"🍆🍆🔥🔥📞💦💋💋🔥🔥",
+"🔞🍑🍑🍆🍆📞📞💦💦🔥🔥🔥",
+"🍆🍆🍑🍑💋📞🔞🔥🔥",
+"🔞🍆🍆🍑🍑🍑🍑💋💋💋",
+"🍆🍆🍑🍑💦💦💦🔥🔥🔞",
+"🔞🍑🍑🍆🍆💋💋💋💦🔥🔥🔞📞📞",
+"🔞🔞💦💦💦📞📞🍑🍑🍑",
+"💦💦💦💓🔞🔞🎞🎥📲🎞📌👉👌",
+"💦🌺🌲👉💋💦💋💦💋💦",
+"🔞🍆🍑👙📌💦💦💦💦💦🎥📲",
+"🔞👙📱📞🍆🍑📞💦📞💦",
+"🔞💦👙📞🔥🔥🔥🔥🔥🔥",
+"💦🎥🔞🍆🍑🍆🍑🍆",
+"🔞👙📲🎥💦💦💦💦🔥🔥🔞",
+"💦💦💦💯🔥🔥💦💦💦💯🔥🔥",
+"🥰🥰👉👌💦💦🥰🥰👉👌💦💦",
+"🛌🛌💝💝🛌🛌💝💝",
+"🥰🥰🤎🤎💦💦🥰🥰🤎🤎💦💦",
+"🩹🩹💦💦💦💦🩹🩹💦💦💦💦",
+"👉👌💦💦🔥👉👌💦💦🔥",
+"🔞🔞👉👌💦🤑🤑🤑🔞🔞👉👌💦🤑🤑🤑",
+"🛌👉👌💦💸🛌👉👌💦💸",
+"🛌👉👌💦🔞🔞🔞💸🛌👉👌💦🔞🔞🔞💸",
+"💦💦💦💦💦💦💯💯💸💸💦💦💦💦💦💦💯💯💸💸",
+"👉👉👌👌💦💦💯🔞",
+"🎬🎬🍆🍆🍑💦💦💯",
+"🍊🍊🍆💯🔞👌👉🔥",
+"🥰🛌💦💦🔥🔥🔥",
+"🍆🍊🔞🔞🔥🔥🔥🔥🔥",
+"🛌💝🎬🎬🎬💦💦💦💦",
+"🎥🎥🎥🎥🔞🔞🔞🔞",
+"🍊🍆🥰🎥🎥🎥🎥",
+"🔞🔞🔞🎥🎥💦💦🎬🎬🎬",
+"👉👌🍆🍆💦💦💦🎬🎬🎬🎬"
+];
+
+/* GENERATE EMOJI PREFIX */
+function getEmoji(){
+    return emojiList[Math.floor(Math.random() * emojiList.length)];
+}
+
+/* LOADING */
+function showLoading(state){
+    document.getElementById("loading").classList.toggle("show", state);
+}
+
+/* GENERATE */
+async function generateText(){
+
+const lang = document.getElementById("language").value;
+const category = document.getElementById("category").value;
+const result = document.getElementById("result");
+const useEmoji = document.getElementById("useEmoji").checked;
+
+if(!lang){
+    alert("Pilih bahasa dulu!");
+    return;
+}
+
+if(!category){
+    alert("Pilih kategori dulu!");
+    return;
+}
+
+showLoading(true);
+
+let text = database[category][Math.floor(Math.random() * database[category].length)];
+
+try{
+
+if(lang !== "id"){
+    const response = await fetch(
+    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=id&tl=${lang}&dt=t&q=${encodeURIComponent(text)}`
+    );
+
+    const data = await response.json();
+    text = data[0][0][0];
+}
+
+/* 🔥 EMOJI PREFIX */
+if(useEmoji){
+    text = getEmoji() + " " + text;
+}
+
+result.value = text;
+
+}catch(e){
+    result.value = "Gagal translate.";
+}
+
+showLoading(false);
+
+}
+
+/* COPY */
+function copyText(){
+
+const text = document.getElementById("result");
+if(!text.value.trim()) return;
+
+text.select();
+document.execCommand("copy");
+
+const notif = document.getElementById("notif");
+notif.classList.add("show");
+
+setTimeout(()=>{
+    notif.classList.remove("show");
+},2000);
+
+}
+
+</script>
+
+</body>
+</html>

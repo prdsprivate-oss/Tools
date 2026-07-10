@@ -851,9 +851,98 @@ button:hover{
 #hapusAtas{background:linear-gradient(135deg,#ff5252,#d50000);}
 #cutAtas{background:linear-gradient(135deg,#42a5f5,#1565c0);}
 
+/* ===========================
+   USA CLOCK
+=========================== */
+
+#usaClock{
+
+    position:fixed;
+
+    top:18px;
+
+    right:20px;
+
+    z-index:99999;
+
+    padding:12px 18px;
+
+    border-radius:14px;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+    0 0 20px rgba(56,189,248,.15);
+
+    text-align:center;
+
+    min-width:145px;
+
+}
+
+.usaTitle{
+
+    font-size:12px;
+
+    color:#9ecbff;
+
+    letter-spacing:1px;
+
+    margin-bottom:4px;
+
+    font-weight:bold;
+
+}
+
+#usaTime{
+
+    font-size:24px;
+
+    color:#ffffff;
+
+    font-weight:bold;
+
+    font-family:Consolas,monospace;
+
+    text-shadow:0 0 10px rgba(255,255,255,.35);
+
+}
+.cutGroup{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:12px;
+
+}
+
+.cutGroup button{
+
+    flex:1;
+
+    margin:0;
+
+}
 </style></head>
 <body>
 <body>
+
+<div id="usaClock">
+
+    <div class="usaTitle">
+        🇺🇸 USA TIME
+    </div>
+
+    <div id="usaTime">
+        00:00:00
+    </div>
+
+</div>
 
 <div class="app">
 
@@ -949,11 +1038,21 @@ button:hover{
         </label>
 
 
-        <button id="cut">
+        <div class="cutGroup">
 
-            CUT LINK (0)
+			<button id="cut">
+				CUT LINK (0)
+			</button>
 
-        </button>
+			<button id="cut1">
+				CUT LINK 1 (0)
+			</button>
+
+			<button id="cut2">
+				CUT LINK 2 (0)
+			</button>
+
+</div>
 
     </section>
 
@@ -1050,8 +1149,20 @@ $('cutAtas').onclick=()=>{let a=db.value.split(/\n/).filter(x=>x.trim());let n=M
 updateDBCount();
 };
 function c(id){return $(id).value.split(/\n/).filter(x=>x.trim()).length}
-function upd(){$('cut').textContent='CUT LINK ('+($('r2').checked?c('l2'):c('l1'))+')'}
-function t(m){let o=$('toast');o.textContent=m;o.classList.add('show');clearTimeout(window.x);window.x=setTimeout(()=>o.classList.remove('show'),1500)}
+function upd(){
+
+    $('cut').textContent =
+    'CUT LINK ('+
+    ($('r2').checked?c('l2'):c('l1'))
+    +')';
+
+    $('cut1').textContent =
+    'CUT LINK 1 ('+c('l1')+')';
+
+    $('cut2').textContent =
+    'CUT LINK 2 ('+c('l2')+')';
+
+}function t(m){let o=$('toast');o.textContent=m;o.classList.add('show');clearTimeout(window.x);window.x=setTimeout(()=>o.classList.remove('show'),1500)}
 $('cut').onclick=async()=>{let ta=$('r2').checked?$('l2'):$('l1');let a=ta.value.split(/\n/).filter(x=>x.trim());if(!a.length){t('Link kosong');return;}let link=a.shift();ta.value=a.join('\n');localStorage.setItem(ta.id,ta.value);let out=link;if($('inc').checked&&$('status').value.trim()){out=$('status').value.trim()+' '+link;$('status').value='';localStorage.setItem('status','');}upd();
 
 // V2 additions
@@ -1076,6 +1187,22 @@ $('gas').onclick=()=>{let a=db.value.split(/\n/).filter(x=>x.trim());let n=Math.
 $('copy').onclick=async()=>{await navigator.clipboard.writeText(hasil.value);t('Berhasil dicopy');};
 $('clear').onclick=()=>{hasil.value='';localStorage.setItem('hasil','');t('Hasil dibersihkan');};
 
+$('cut1').onclick=()=>{
+
+    $('r1').checked=true;
+
+    $('cut').click();
+
+};
+
+$('cut2').onclick=()=>{
+
+    $('r2').checked=true;
+
+    $('cut').click();
+
+};
+
 upd();
 
 // V2 additions
@@ -1089,5 +1216,25 @@ db.oninput=()=>{localStorage.setItem('db',db.value);updateDBCount();};
 $('hapusAtas').onclick=()=>{let a=db.value.split(/\n/).filter(x=>x.trim());let n=Math.min(parseInt(hj.value)||1,a.length);a.splice(0,n);db.value=a.join('\n');localStorage.setItem('db',db.value);updateDBCount();t('Berhasil menghapus '+n+' data');};
 $('cutAtas').onclick=()=>{let a=db.value.split(/\n/).filter(x=>x.trim());let n=Math.min(parseInt(cj.value)||1,a.length);hasil.value=a.splice(0,n).join('\n');db.value=a.join('\n');localStorage.setItem('db',db.value);localStorage.setItem('hasil',hasil.value);updateDBCount();t('Berhasil cut '+n+' data');};
 updateDBCount();
+
+function updateUSATime(){
+
+    const now = new Date();
+
+    const jam = now.toLocaleTimeString(
+        "en-US",
+        {
+            timeZone:"America/New_York",
+            hour12:false
+        }
+    );
+
+    document.getElementById("usaTime").textContent = jam;
+
+}
+
+updateUSATime();
+
+setInterval(updateUSATime,1000);
 
 </script></body></html>

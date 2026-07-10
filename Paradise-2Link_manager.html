@@ -1,0 +1,991 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paradise Link Manager</title>
+<style>
+/*=========================================
+        PARADISE LAB PREMIUM
+              PART 2
+=========================================*/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Segoe UI",Arial,sans-serif;
+
+    background:
+    linear-gradient(rgba(4,10,22,.82),rgba(4,10,22,.88)),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2000&auto=format&fit=crop")
+    center center/cover fixed;
+
+    color:#fff;
+
+    min-height:100vh;
+
+    padding:30px;
+
+}
+
+/*=========================
+        APP
+=========================*/
+
+.app{
+
+    max-width:1100px;
+
+    margin:auto;
+
+}
+
+/*=========================
+       HEADER
+=========================*/
+
+.header{
+
+    position:relative;
+
+    text-align:center;
+
+    margin-bottom:28px;
+
+    padding-top:10px;
+
+}
+
+.badge{
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:
+    linear-gradient(135deg,#00d4ff,#006eff);
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:
+
+    0 0 18px rgba(0,212,255,.35);
+
+}
+
+.header h1{
+
+    font-size:38px;
+
+    font-weight:800;
+
+    text-shadow:
+
+    0 0 15px rgba(0,212,255,.35);
+
+}
+
+.subtitle{
+
+    margin-top:8px;
+
+    color:#a9bdd8;
+
+}
+
+/*=========================
+        GRID
+=========================*/
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+
+    margin-bottom:22px;
+
+}
+
+/*=========================
+        PANEL
+=========================*/
+
+.panel{
+
+    background:rgba(12,22,42,.74);
+
+    backdrop-filter:blur(12px);
+
+    -webkit-backdrop-filter:blur(12px);
+
+    border-radius:20px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    padding:22px;
+
+    box-shadow:
+
+    0 18px 40px rgba(0,0,0,.35);
+
+}
+
+/*=========================
+     PANEL HEADER
+=========================*/
+
+.panel-head{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:15px;
+
+}
+
+.panel-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+}
+
+.counter{
+
+    min-width:55px;
+
+    text-align:center;
+
+    padding:8px 12px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+.counter span{
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    color:#00d4ff;
+
+}
+
+/*=========================
+      TEXTAREA
+=========================*/
+
+textarea{
+
+    width:100%;
+
+    height:240px;
+
+    resize:none;
+
+    background:#081425;
+
+    color:#fff;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    outline:none;
+
+    padding:16px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    transition:.25s;
+
+}
+
+#st{
+
+    height:90px;
+
+    margin-bottom:15px;
+
+}
+
+textarea::placeholder{
+
+    color:#90a6c3;
+
+}
+
+textarea:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:
+
+    0 0 15px rgba(0,212,255,.35);
+
+}
+
+/*=========================
+      OPTION
+=========================*/
+
+.option{
+
+    margin-bottom:18px;
+
+}
+
+.option label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    cursor:pointer;
+
+    color:#d8e4f4;
+
+}
+
+.option input{
+
+    transform:scale(1.15);
+
+}
+
+/*=========================
+      BUTTON
+=========================*/
+
+.button-group{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.button-group button{
+
+    flex:1;
+
+}
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    border-radius:14px;
+
+    padding:15px;
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    transition:.25s;
+
+}
+
+#b1{
+
+    background:
+
+    linear-gradient(135deg,#00c853,#009245);
+
+}
+
+#b2{
+
+    background:
+
+    linear-gradient(135deg,#00c6ff,#0072ff);
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+    0 12px 25px rgba(0,0,0,.35);
+
+}
+
+button:active{
+
+    transform:scale(.98);
+
+}
+
+/*=========================
+      SCROLLBAR
+=========================*/
+
+textarea::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+textarea::-webkit-scrollbar-track{
+
+    background:#081425;
+
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(#00d4ff,#0072ff);
+
+}
+
+/*=========================
+      RESPONSIVE
+=========================*/
+
+@media(max-width:900px){
+
+    body{
+
+        padding:15px;
+
+    }
+
+    .row{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .badge{
+
+        position:static;
+
+        display:inline-block;
+
+        margin-bottom:18px;
+
+    }
+
+    .header{
+
+        padding-top:0;
+
+    }
+
+    .header h1{
+
+        font-size:30px;
+
+    }
+
+    .button-group{
+
+        flex-direction:column;
+
+    }
+
+}
+
+/*=========================================
+      PARADISE LAB PREMIUM
+         PART 3 - FINISHING
+=========================================*/
+
+
+/*=========================
+      FADE IN
+=========================*/
+
+.app{
+
+    animation:fadeUp .6s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/*=========================
+      BADGE GLOW
+=========================*/
+
+.badge{
+
+    animation:badgeGlow 2.5s infinite alternate;
+
+}
+
+@keyframes badgeGlow{
+
+    from{
+
+        box-shadow:
+
+        0 0 8px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        box-shadow:
+
+        0 0 18px rgba(0,212,255,.75),
+
+        0 0 35px rgba(0,212,255,.25);
+
+    }
+
+}
+
+
+/*=========================
+      TITLE GLOW
+=========================*/
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 8px rgba(0,212,255,.25);
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 22px rgba(0,212,255,.75);
+
+    }
+
+}
+
+
+/*=========================
+      PANEL EFFECT
+=========================*/
+
+.panel{
+
+    position:relative;
+
+    overflow:hidden;
+
+    transition:.25s;
+
+}
+
+.panel:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+    0 22px 50px rgba(0,0,0,.45),
+
+    0 0 20px rgba(0,212,255,.12);
+
+}
+
+
+/*=========================
+      PANEL SHINE
+=========================*/
+
+.panel::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-150%;
+
+    left:-70%;
+
+    width:60%;
+
+    height:350%;
+
+    transform:rotate(25deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+
+    );
+
+    transition:1.2s;
+
+}
+
+.panel:hover::before{
+
+    left:160%;
+
+}
+
+
+/*=========================
+      BUTTON
+=========================*/
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-70px;
+
+    width:40px;
+
+    height:100%;
+
+    transform:skewX(-25deg);
+
+    background:rgba(255,255,255,.25);
+
+    transition:.7s;
+
+}
+
+button:hover::before{
+
+    left:130%;
+
+}
+
+button:hover{
+
+    letter-spacing:.4px;
+
+}
+
+
+/*=========================
+      COUNTER
+=========================*/
+
+.counter{
+
+    transition:.25s;
+
+}
+
+.counter:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+    0 10px 22px rgba(0,212,255,.18);
+
+}
+
+
+/*=========================
+      TEXTAREA
+=========================*/
+
+textarea:hover{
+
+    border-color:#00d4ff;
+
+}
+
+textarea:focus{
+
+    transform:scale(1.005);
+
+}
+
+
+/*=========================
+      CHECKBOX
+=========================*/
+
+.option label{
+
+    transition:.25s;
+
+}
+
+.option label:hover{
+
+    color:#00d4ff;
+
+}
+
+
+/*=========================
+      SCROLLBAR
+=========================*/
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#081425;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    border-radius:30px;
+
+    background:
+
+    linear-gradient(
+
+        #00d4ff,
+
+        #0072ff
+
+    );
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+
+    linear-gradient(
+
+        #37e5ff,
+
+        #0094ff
+
+    );
+
+}
+
+
+/*=========================
+      TEXT SELECTION
+=========================*/
+
+::selection{
+
+    background:#00d4ff;
+
+    color:#081425;
+
+}
+
+
+/*=========================
+      MOBILE
+=========================*/
+
+@media(max-width:900px){
+
+    .header h1{
+
+        font-size:30px;
+
+    }
+
+}
+
+
+</style>
+</head>
+<body>
+<body>
+
+<div class="app">
+
+    <!--========================
+            HEADER
+    =========================-->
+
+    <header class="header">
+
+        <div class="badge">
+            🚀 Paradise Lab
+        </div>
+
+        <h1>LINK MANAGER</h1>
+
+        <p class="subtitle">
+
+            
+
+        </p>
+
+    </header>
+
+
+    <!--========================
+            LINK
+    =========================-->
+
+    <div class="row">
+
+        <section class="panel">
+
+            <div class="panel-head">
+
+                <div class="panel-title">
+
+                    LINK 1
+
+                </div>
+
+                <div class="counter">
+
+                    <span id="t1">0</span>
+
+                </div>
+
+            </div>
+
+            <textarea id="l1"></textarea>
+
+        </section>
+
+
+
+        <section class="panel">
+
+            <div class="panel-head">
+
+                <div class="panel-title">
+
+                    LINK 2
+
+                </div>
+
+                <div class="counter">
+
+                    <span id="t2">0</span>
+
+                </div>
+
+            </div>
+
+            <textarea id="l2"></textarea>
+
+        </section>
+
+    </div>
+
+
+    <!--========================
+            STATUS
+    =========================-->
+
+    <section class="panel">
+
+        <div class="panel-title">
+
+            STATUS
+
+        </div>
+
+        <textarea id="st"></textarea>
+
+        <div class="option">
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="cb">
+
+                Sertakan Status
+
+            </label>
+
+        </div>
+
+
+        <div class="button-group">
+
+            <button
+
+                id="b1"
+
+                onclick="cut('l1','b1')">
+
+                CUT LINK 1 (0)
+
+            </button>
+
+            <button
+
+                id="b2"
+
+                onclick="cut('l2','b2')">
+
+                CUT LINK 2 (0)
+
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+</body>
+<script>
+function upd(){['l1','l2'].forEach((id,i)=>{let n=document.getElementById(id).value.split(/\n/).filter(x=>x.trim()).length;document.getElementById('t'+(i+1)).textContent=n;});}
+['l1','l2'].forEach(id=>document.getElementById(id).addEventListener('input',upd));
+async function cut(id){
+ let ta=document.getElementById(id);
+ let arr=ta.value.split(/\n/).filter(x=>x.trim());
+ if(!arr.length){alert('Link kosong');return;}
+ let link=arr.shift(); ta.value=arr.join('\n'); upd();
+ let out=document.getElementById('cb').checked?(document.getElementById('st').value.trim()+' '+link).trim():link;
+ try{await navigator.clipboard.writeText(out);alert('Tercopy:\n'+out);}catch(e){prompt('Copy:',out);}
+}
+upd();
+
+function toast(msg){
+ let t=document.getElementById('toast');
+ t.textContent=msg;
+ t.classList.add('show');
+ clearTimeout(window.tt);
+ window.tt=setTimeout(()=>t.classList.remove('show'),2200);
+}
+const _upd=upd;
+upd=function(){
+ ['l1','l2'].forEach((id,i)=>{
+   let n=document.getElementById(id).value.split(/\n/).filter(x=>x.trim()).length;
+   document.getElementById('t'+(i+1)).textContent=n;
+   document.getElementById('b'+(i+1)).textContent='CUT LINK '+(i+1)+' ('+n+')';
+ });
+}
+cut=async function(id){
+ let ta=document.getElementById(id);
+ let arr=ta.value.split(/\n/).filter(x=>x.trim());
+ if(!arr.length){toast('Link kosong');return;}
+ let link=arr.shift(); ta.value=arr.join('\n'); upd();
+ let out=document.getElementById('cb').checked?(document.getElementById('st').value.trim()+' '+link).trim():link;
+ try{await navigator.clipboard.writeText(out);toast('✅ Berhasil dicopy');}
+ catch(e){toast('Clipboard tidak diizinkan');}
+}
+upd();
+</script>
+<div id="toast"></div>
+<style>
+#toast{position:fixed;right:20px;bottom:20px;background:#14b8a6;color:#fff;padding:12px 18px;border-radius:10px;opacity:0;transform:translateY(20px);transition:.3s;box-shadow:0 0 18px #14b8a6}
+#toast.show{opacity:1;transform:translateY(0)}
+</style>
+
+<script>
+['l1','l2','st'].forEach(id=>{
+ const e=document.getElementById(id);
+ e.value=localStorage.getItem(id)||e.value;
+ e.addEventListener('input',()=>localStorage.setItem(id,e.value));
+});
+upd();
+const oldCut=cut;
+cut=async function(id){
+ let ta=document.getElementById(id);
+ let arr=ta.value.split(/\n/).filter(x=>x.trim());
+ if(!arr.length){toast('Link kosong');return;}
+ let link=arr.shift();
+ ta.value=arr.join('\n');
+ localStorage.setItem(id,ta.value);
+ let st=document.getElementById('st');
+ let status=st.value.trim();
+ let out=document.getElementById('cb').checked && status?(status+' '+link):link;
+ if(document.getElementById('cb').checked){
+   st.value='';
+   localStorage.setItem('st','');
+ }
+ upd();
+ try{await navigator.clipboard.writeText(out);toast('✅ Berhasil dicopy');}
+ catch(e){toast('Clipboard gagal');}
+}
+</script>
+</body></html>

@@ -1,0 +1,1769 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paradise Manager V3</title>
+<style>
+/* ==========================================================
+   PARADISE LINK MANAGER
+   Paradise Lab Premium v1
+========================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Segoe UI",Arial,sans-serif;
+
+    min-height:100vh;
+
+    padding:30px;
+
+    color:#fff;
+
+    background:
+    linear-gradient(rgba(3,8,20,.78),rgba(3,8,20,.88)),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1800&auto=format&fit=crop")
+    center center/cover fixed;
+
+}
+
+/*==========================
+      CONTAINER
+===========================*/
+
+.app{
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+/*==========================
+        HEADER
+===========================*/
+
+.header{
+
+    position:relative;
+
+    margin-bottom:28px;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#00d4ff,#0078ff);
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+
+    margin-bottom:16px;
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-align:center;
+
+    text-shadow:0 0 15px rgba(0,212,255,.45);
+
+}
+
+/*==========================
+        ROW
+===========================*/
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+
+    margin-bottom:22px;
+
+}
+.row3{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+/*==========================
+        PANEL
+===========================*/
+
+.panel{
+
+    background:rgba(15,24,44,.72);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.10);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    margin-bottom:22px;
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.35),
+
+    0 0 18px rgba(0,180,255,.08);
+
+    transition:.25s;
+
+}
+
+.panel:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+    0 18px 45px rgba(0,0,0,.45),
+
+    0 0 25px rgba(0,212,255,.15);
+
+}
+
+/*==========================
+      PANEL TITLE
+===========================*/
+
+.panel-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:14px;
+
+    color:#ffffff;
+
+    letter-spacing:.5px;
+
+}
+
+/*==========================
+       TEXTAREA
+===========================*/
+
+textarea{
+
+    width:100%;
+
+    resize:none;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:14px;
+
+    background:#081425;
+
+    color:#ffffff;
+
+    padding:16px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.25s;
+
+}
+
+textarea:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:0 0 15px rgba(0,212,255,.35);
+
+}
+
+#l1,
+#l2,
+#l3{
+
+    height:250px;
+
+}
+
+#status{
+
+    height:90px;
+
+}
+
+#db{
+
+    height:230px;
+
+}
+
+#hasil{
+
+    height:150px;
+
+}
+
+/*==========================
+      INPUT NUMBER
+===========================*/
+
+input[type=number]{
+
+    width:80px;
+
+    padding:10px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:10px;
+
+    background:#081425;
+
+    color:#fff;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+/*==========================
+      LABEL
+===========================*/
+
+.option-group{
+
+    display:flex;
+
+    gap:30px;
+
+    margin-top:15px;
+
+    margin-bottom:15px;
+
+}
+
+.check{
+
+    display:block;
+
+    margin-bottom:18px;
+
+}
+
+label{
+
+    color:#fff;
+
+    font-size:14px;
+
+}
+
+input[type=radio],
+input[type=checkbox]{
+
+    margin-right:8px;
+
+}
+
+/*==========================
+        TOOLBAR
+===========================*/
+
+.toolbar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:16px;
+
+    flex-wrap:wrap;
+
+}
+
+.button-row{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:16px;
+
+}
+
+.button-row button{
+
+    flex:1;
+
+}
+
+/*==========================
+        BUTTON
+===========================*/
+
+button{
+
+    padding:13px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    color:#fff;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 22px rgba(0,114,255,.35);
+
+}
+
+button:active{
+
+    transform:scale(.98);
+
+}
+
+/* tombol khusus */
+
+#cut{
+
+    width:100%;
+
+    background:linear-gradient(135deg,#00d26a,#009245);
+
+}
+
+#gas{
+
+    background:linear-gradient(135deg,#ff9800,#ef6c00);
+
+}
+
+#copy{
+
+    background:linear-gradient(135deg,#00c853,#009624);
+
+}
+
+#clear{
+
+    background:linear-gradient(135deg,#ff5252,#d50000);
+
+}
+
+/*==========================
+        TOAST
+===========================*/
+
+#toast{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    background:rgba(10,20,40,.92);
+
+    color:#fff;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    backdrop-filter:blur(12px);
+
+    opacity:0;
+
+    transform:translateY(20px);
+
+    transition:.3s;
+
+    z-index:9999;
+
+}
+
+#toast.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+/*==========================
+      SCROLLBAR
+===========================*/
+
+textarea::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+textarea::-webkit-scrollbar-track{
+
+    background:#081425;
+
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:linear-gradient(#00d4ff,#0072ff);
+
+}
+
+/*==========================
+      MOBILE
+===========================*/
+
+@media(max-width:900px){
+
+    body{
+
+        padding:15px;
+
+    }
+
+    .row{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .toolbar{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .button-row{
+
+        flex-direction:column;
+
+    }
+
+    input[type=number]{
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================================
+   PARADISE LAB PREMIUM
+   PART 3 - FINISHING EFFECT
+========================================================== */
+
+
+/* ==========================
+      PANEL GLOW
+========================== */
+
+.panel{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.panel::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:20px;
+
+    pointer-events:none;
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        rgba(255,255,255,.08),
+
+        transparent 35%,
+
+        transparent 65%,
+
+        rgba(0,212,255,.08)
+
+    );
+
+}
+
+.panel::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60%;
+
+    left:-120%;
+
+    width:70%;
+
+    height:220%;
+
+    transform:rotate(25deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+
+    );
+
+    transition:1.2s;
+
+}
+
+.panel:hover::after{
+
+    left:170%;
+
+}
+
+
+/* ==========================
+      BUTTON PREMIUM
+========================== */
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60px;
+
+    height:100%;
+
+    transform:skewX(-25deg);
+
+    background:rgba(255,255,255,.22);
+
+    transition:.8s;
+
+}
+
+button:hover::before{
+
+    left:160%;
+
+}
+
+
+/* ==========================
+      BADGE EFFECT
+========================== */
+
+.badge{
+
+    animation:badgeGlow 2.5s ease-in-out infinite alternate;
+
+}
+
+@keyframes badgeGlow{
+
+    from{
+
+        box-shadow:
+
+        0 0 12px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        box-shadow:
+
+        0 0 24px rgba(0,212,255,.75),
+
+        0 0 45px rgba(0,212,255,.35);
+
+    }
+
+}
+
+
+/* ==========================
+      TITLE EFFECT
+========================== */
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 8px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 20px rgba(0,212,255,.9),
+
+        0 0 35px rgba(0,212,255,.35);
+
+    }
+
+}
+
+
+/* ==========================
+      TEXTAREA
+========================== */
+
+textarea{
+
+    transition:.25s;
+
+}
+
+textarea:hover{
+
+    border-color:#2ecbff;
+
+    box-shadow:
+
+    0 0 12px rgba(0,212,255,.18);
+
+}
+
+
+/* ==========================
+      INPUT NUMBER
+========================== */
+
+input[type=number]:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:
+
+    0 0 12px rgba(0,212,255,.35);
+
+}
+
+
+/* ==========================
+      SCROLLBAR
+========================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#07111f;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(
+
+        #00d4ff,
+
+        #0072ff
+
+    );
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+
+    linear-gradient(
+
+        #3be7ff,
+
+        #0094ff
+
+    );
+
+}
+
+
+/* ==========================
+      TEXT SELECTION
+========================== */
+
+::selection{
+
+    background:#00d4ff;
+
+    color:#081425;
+
+}
+
+
+/* ==========================
+      PAGE OPEN
+========================== */
+
+.app{
+
+    animation:fadeUp .6s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ==========================
+      TOAST
+========================== */
+
+#toast{
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,.45),
+
+    0 0 25px rgba(0,212,255,.15);
+
+}
+
+
+/* ==========================
+      BUTTON HOVER
+========================== */
+
+button:hover{
+
+    letter-spacing:.5px;
+
+}
+
+
+.dbTools{}
+#hapusAtas{background:linear-gradient(135deg,#ff5252,#d50000);}
+#cutAtas{background:linear-gradient(135deg,#42a5f5,#1565c0);}
+
+/* ===========================
+   USA CLOCK
+=========================== */
+
+#usaClock{
+
+    position:fixed;
+
+    top:18px;
+
+    right:20px;
+
+    z-index:99999;
+
+    padding:12px 18px;
+
+    border-radius:14px;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+    0 0 20px rgba(56,189,248,.15);
+
+    text-align:center;
+
+    min-width:145px;
+
+}
+
+.usaTitle{
+
+    font-size:12px;
+
+    color:#9ecbff;
+
+    letter-spacing:1px;
+
+    margin-bottom:4px;
+
+    font-weight:bold;
+
+}
+
+#usaTime{
+
+    font-size:24px;
+
+    color:#ffffff;
+
+    font-weight:bold;
+
+    font-family:Consolas,monospace;
+
+    text-shadow:0 0 10px rgba(255,255,255,.35);
+
+}
+.cutGroup{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:12px;
+
+}
+
+.cutGroup button{
+
+    flex:1;
+
+    margin:0;
+
+}
+
+/*==========================
+BOTTOM PANELS
+===========================*/
+
+.bottom-panels{
+
+    display:grid;
+
+    grid-template-columns:65% 50%;
+
+    gap:20px;
+
+}
+
+.bottom-panels .panel{
+
+    flex:1;
+
+    margin-bottom:0;
+
+}
+</style></head>
+<body>
+<body>
+
+<div id="usaClock">
+
+    <div class="usaTitle">
+        🇺🇸 USA TIME
+    </div>
+
+    <div id="usaTime">
+        00:00:00
+    </div>
+
+</div>
+
+<div class="app">
+
+    <div class="header">
+
+        <div class="badge">
+            🚀 Paradise Lab
+        </div>
+
+        <h1>LINK MANAGER</h1>
+
+    </div>
+
+
+    <!-- ==========================
+         LINK
+    =========================== -->
+
+    <div class="row row3">
+
+    <section class="panel">
+
+        <div class="panel-title">
+            LINK 1 (<span id="t1">0</span>)
+        </div>
+
+        <textarea id="l1"></textarea>
+
+    </section>
+
+    <section class="panel">
+
+        <div class="panel-title">
+            LINK 2 (<span id="t2">0</span>)
+        </div>
+
+        <textarea id="l2"></textarea>
+
+    </section>
+
+    <section class="panel">
+
+        <div class="panel-title">
+            LINK 3 (<span id="t3">0</span>)
+        </div>
+
+        <textarea id="l3"></textarea>
+
+    </section>
+
+</div>
+
+
+    <!-- ==========================
+         STATUS
+    =========================== -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+            STATUS
+        </div>
+
+        <textarea id="status"></textarea>
+
+        <div class="option-group">
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="src"
+                    id="r1"
+                    checked>
+
+                Link 1
+
+            </label>
+			
+            <label>
+
+                <input
+                    type="radio"
+                    name="src"
+                    id="r2">
+
+                Link 2
+
+            </label>
+
+			<label>
+
+				<input
+					type="radio"
+					name="src"
+					id="r3">
+
+				Link 3
+
+			</label>
+        </div>
+
+
+        <label class="check">
+
+            <input
+                type="checkbox"
+                id="inc">
+
+            Sertakan Status
+
+        </label>
+
+
+        <div class="cutGroup">
+
+			<button id="cut">
+				CUT LINK (0)
+			</button>
+
+			<button id="cut1">
+				CUT LINK 1 (0)
+			</button>
+
+			<button id="cut2">
+				CUT LINK 2 (0)
+			</button>
+
+			<button id="cut3">
+				CUT LINK 3 (0)
+			</button>
+
+</div>
+
+
+    </section>
+
+
+    <!-- ==========================
+         DATABASE
+    =========================== -->
+<div class="bottom-panels">
+
+    <section class="panel">
+
+        <div class="panel-title">
+DATABASE (<span id="dbCount">0</span>)
+</div>
+
+        <textarea id="db"></textarea>
+
+        <div class="toolbar">
+<input id="jumlah" type="number" value="10" min="1" max="1000">
+<button id="gas">🎲 RANDOM</button>
+<input id="hapusJumlah" type="number" value="100" min="1">
+<button id="hapusAtas">🗑 HAPUS</button>
+<input id="cutJumlah" type="number" value="500" min="1">
+<button id="cutAtas">✂ CUT</button>
+</div>
+
+    </section>
+
+
+    <!-- ==========================
+         HASIL
+    =========================== -->
+<div class="bottom-panels">
+
+    <section class="panel">
+
+        <div class="panel-title">
+
+            HASIL RANDOM
+
+        </div>
+
+        <textarea id="hasil"></textarea>
+
+        <div class="button-row">
+
+            <button id="copy">
+
+                COPY
+
+            </button>
+
+            <button id="clear">
+
+                CLEAR HASIL
+
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+/*==========================================
+ PARADISE MANAGER V3
+ PART 1 - CORE
+==========================================*/
+
+const $ = id => document.getElementById(id);
+
+const APP = {
+
+    links: ['l1','l2','l3'],
+
+    save(id){
+        const el=$(id);
+        if(el) localStorage.setItem(id,el.value);
+    },
+
+    load(id){
+        const el=$(id);
+        if(el) el.value=localStorage.getItem(id)||'';
+    },
+
+    count(id){
+        const el=$(id);
+        if(!el) return 0;
+
+        return el.value
+            .split(/\n/)
+            .filter(v=>v.trim())
+            .length;
+    }
+
+};
+/*==========================================
+ TOAST
+==========================================*/
+
+function toast(text){
+
+    const t=$('toast');
+
+    if(!t) return;
+
+    t.textContent=text;
+
+    t.classList.add('show');
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer=setTimeout(()=>{
+
+        t.classList.remove('show');
+
+    },1500);
+
+}
+/*==========================================
+ STORAGE
+==========================================*/
+
+APP.links.forEach(id=>{
+
+    APP.load(id);
+
+    const el=$(id);
+
+    if(!el) return;
+
+    el.addEventListener('input',()=>{
+
+        APP.save(id);
+
+        refreshUI();
+
+    });
+
+});
+
+APP.load('status');
+
+if($('status')){
+
+    $('status').addEventListener('input',()=>{
+
+        APP.save('status');
+
+    });
+
+}
+
+/*==========================================
+ COUNTER
+==========================================*/
+
+function updateCounter(){
+
+    $('t1').textContent=APP.count('l1');
+
+    $('t2').textContent=APP.count('l2');
+
+    $('t3').textContent=APP.count('l3');
+
+}
+/*==========================================
+ ACTIVE LINK
+==========================================*/
+
+function activeTextarea(){
+
+    if($('r3').checked) return $('l3');
+
+    if($('r2').checked) return $('l2');
+
+    return $('l1');
+
+}
+/*==========================================
+ BUTTON COUNTER
+==========================================*/
+
+function updateButtons(){
+
+    const total=APP.count(activeTextarea().id);
+
+    $('cut').textContent=
+        'CUT LINK ('+total+')';
+
+    $('cut1').textContent=
+        'CUT LINK 1 ('+APP.count('l1')+')';
+
+    $('cut2').textContent=
+        'CUT LINK 2 ('+APP.count('l2')+')';
+
+    $('cut3').textContent=
+        'CUT LINK 3 ('+APP.count('l3')+')';
+
+}
+/*==========================================
+ REFRESH UI
+==========================================*/
+
+function refreshUI(){
+
+    updateCounter();
+
+    updateButtons();
+
+}
+/*==========================================
+ RADIO
+==========================================*/
+
+['r1','r2','r3'].forEach(id=>{
+
+    const radio=$(id);
+
+    if(!radio) return;
+
+    radio.addEventListener(
+
+        'change',
+
+        ()=>{
+
+            localStorage.setItem(
+
+                'src',
+
+                id
+
+            );
+
+            refreshUI();
+
+        }
+
+    );
+
+});
+/*==========================================
+ LOAD RADIO
+==========================================*/
+
+const lastRadio=
+
+localStorage.getItem('src');
+
+if($(lastRadio)){
+
+    $(lastRadio).checked=true;
+
+}else{
+
+    $('r1').checked=true;
+
+}
+refreshUI();
+
+/*==========================================
+ CUT ENGINE
+==========================================*/
+
+function cutFrom(textarea){
+
+    let arr=textarea.value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    if(!arr.length){
+
+        toast('Link kosong');
+
+        return;
+
+    }
+
+    let link=arr.shift();
+
+    textarea.value=arr.join('\n');
+
+    APP.save(textarea.id);
+
+    let hasil=link;
+
+    if($('inc').checked && $('status').value.trim()){
+
+        hasil=
+            $('status').value.trim()
+            +' '+
+            link;
+
+        $('status').value='';
+
+        APP.save('status');
+
+    }
+
+    navigator.clipboard
+    .writeText(hasil)
+    .then(()=>{
+
+        toast('Berhasil dicopy');
+
+        refreshUI();
+
+    })
+    .catch(()=>{
+
+        toast('Gagal copy');
+
+    });
+
+}
+
+/*==========================================
+ CUT BUTTONS
+==========================================*/
+
+$('cut').onclick=()=>{
+
+    cutFrom(
+
+        activeTextarea()
+
+    );
+
+};
+
+$('cut1').onclick=()=>{
+
+    cutFrom(
+
+        $('l1')
+
+    );
+
+};
+
+$('cut2').onclick=()=>{
+
+    cutFrom(
+
+        $('l2')
+
+    );
+
+};
+
+$('cut3').onclick=()=>{
+
+    cutFrom(
+
+        $('l3')
+
+    );
+
+};
+
+/*==========================================
+ DATABASE
+==========================================*/
+
+function updateDBCount(){
+
+    $('dbCount').textContent=
+        APP.count('db');
+
+}
+
+APP.load('db');
+
+$('db').addEventListener(
+
+    'input',
+
+    ()=>{
+
+        APP.save('db');
+
+        updateDBCount();
+
+    }
+
+);
+
+/*==========================================
+ SETTINGS
+==========================================*/
+
+[
+'hasil',
+'jumlah',
+'hapusJumlah',
+'cutJumlah'
+
+].forEach(id=>{
+
+    APP.load(id);
+
+    const el=$(id);
+
+    if(!el) return;
+
+    el.addEventListener(
+
+        'input',
+
+        ()=>{
+
+            APP.save(id);
+
+        }
+
+    );
+
+});
+/*==========================================
+ COPY & CLEAR
+==========================================*/
+
+$('copy').onclick=()=>{
+
+    navigator.clipboard.writeText(
+
+        $('hasil').value
+
+    ).then(()=>{
+
+        toast('Berhasil dicopy');
+
+    });
+
+};
+
+$('clear').onclick=()=>{
+
+    $('hasil').value='';
+
+    APP.save('hasil');
+
+    toast('Hasil dibersihkan');
+
+};
+updateDBCount();
+
+/*==========================================
+ RANDOM
+==========================================*/
+
+$('gas').onclick=()=>{
+
+    let arr=$('db').value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    if(!arr.length){
+
+        toast('Database kosong');
+
+        return;
+
+    }
+
+    let total=parseInt($('jumlah').value)||1;
+
+    if(total>arr.length) total=arr.length;
+
+    arr.sort(()=>Math.random()-0.5);
+
+    $('hasil').value=
+        arr.slice(0,total).join('\n');
+
+    APP.save('hasil');
+
+    toast('Random selesai');
+
+};
+
+/*==========================================
+ HAPUS ATAS
+==========================================*/
+
+$('hapusAtas').onclick=()=>{
+
+    let arr=$('db').value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    let total=parseInt($('hapusJumlah').value)||1;
+
+    arr.splice(0,total);
+
+    $('db').value=arr.join('\n');
+
+    APP.save('db');
+
+    updateDBCount();
+
+    toast('Data dihapus');
+
+};
+
+/*==========================================
+ CUT ATAS
+==========================================*/
+
+$('cutAtas').onclick=()=>{
+
+    let arr=$('db').value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    let total=parseInt($('cutJumlah').value)||1;
+
+    let hasil=arr.splice(0,total);
+
+    $('hasil').value=hasil.join('\n');
+
+    $('db').value=arr.join('\n');
+
+    APP.save('hasil');
+
+    APP.save('db');
+
+    updateDBCount();
+
+    navigator.clipboard.writeText(
+
+        $('hasil').value
+
+    ).then(()=>{
+
+        toast('Cut selesai');
+
+    });
+
+};
+
+/*==========================================
+ USA CLOCK
+==========================================*/
+
+function updateUSClock(){
+
+    const el=$('usaClock');
+
+    if(!el) return;
+
+    const now=new Date();
+
+    el.textContent=now.toLocaleString(
+        'en-US',
+        {
+            timeZone:'America/New_York',
+            weekday:'short',
+            year:'numeric',
+            month:'short',
+            day:'2-digit',
+            hour:'2-digit',
+            minute:'2-digit',
+            second:'2-digit',
+            hour12:false
+        }
+    );
+
+}
+
+updateUSClock();
+
+setInterval(updateUSClock,1000);
+
+/*==========================================
+ ENTER NUMBER ONLY
+==========================================*/
+
+[
+'jumlah',
+'hapusJumlah',
+'cutJumlah'
+
+].forEach(id=>{
+
+    const el=$(id);
+
+    if(!el) return;
+
+    el.addEventListener('input',()=>{
+
+        el.value=el.value.replace(/\D/g,'');
+
+    });
+
+});
+
+/*==========================================
+ AUTO FOCUS
+==========================================*/
+
+window.onload=()=>{
+
+    if($('l1'))
+
+        $('l1').focus();
+
+};
+
+/*==========================================
+ SHORTCUT
+==========================================*/
+
+document.addEventListener(
+
+'keydown',
+
+e=>{
+
+    if(e.ctrlKey && e.key==='1'){
+
+        $('cut1').click();
+
+    }
+
+    if(e.ctrlKey && e.key==='2'){
+
+        $('cut2').click();
+
+    }
+
+    if(e.ctrlKey && e.key==='3'){
+
+        $('cut3').click();
+
+    }
+
+    if(e.ctrlKey && e.key==='r'){
+
+        e.preventDefault();
+
+        $('gas').click();
+
+    }
+
+});
+
+/*==========================================
+ STARTUP
+==========================================*/
+
+refreshUI();
+
+updateDBCount();
+
+toast('Paradise Manager V3 Ready');
+
+</script>
+</body>
+</html>

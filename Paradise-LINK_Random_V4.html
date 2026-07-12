@@ -641,32 +641,96 @@ button:hover::before{
 
 .badge{
 
-    animation:badgeGlow 1.5s ease-in-out infinite alternate;
+    position:relative;
+
+    overflow:hidden;
+
+    animation:badgeGlow 3.5s ease-in-out infinite;
 
 }
 
 @keyframes badgeGlow{
 
-    from{
+    0%,100%{
 
         box-shadow:
-
-        0 0 12px rgba(0,212,255,.35);
+        0 0 10px rgba(0,212,255,.25);
 
     }
 
-    to{
+    50%{
 
         box-shadow:
-
-        0 0 24px rgba(0,212,255,.75),
-
-        0 0 45px rgba(0,212,255,.35);
+        0 0 18px rgba(0,212,255,.55),
+        0 0 30px rgba(0,212,255,.18);
 
     }
 
 }
 
+.badge::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70%;
+
+    left:-120%;
+
+    width:45%;
+
+    height:250%;
+
+    transform:rotate(25deg);
+
+    background:linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+    animation:badgeShine 6s linear infinite;
+
+}
+
+@keyframes badgeShine{
+
+    0%{
+
+        left:-120%;
+
+    }
+
+    20%{
+
+        left:150%;
+
+    }
+
+    100%{
+
+        left:150%;
+
+    }
+
+}
+
+.badge{
+
+    transition:.25s;
+
+}
+
+.badge:hover{
+
+    transform:translateY(-2px) scale(1.03);
+
+}
 
 /* ==========================
       TITLE EFFECT

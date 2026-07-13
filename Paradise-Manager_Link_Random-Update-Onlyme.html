@@ -969,6 +969,19 @@ button:hover{
 
 }
 
+#usaDate{
+
+    font-size:13px;
+
+    color:#b7d7ff;
+
+    margin-bottom:6px;
+
+    letter-spacing:.5px;
+
+}
+
+
 #usaTime{
 
     font-size:24px;
@@ -1092,15 +1105,18 @@ STATUS DATABASE
 <div id="usaClock">
 
     <div class="usaTitle">
-        🇺🇸 USA TIME
+        NEW YORK
+    </div>
+
+    <div id="usaDate">
+        Mon, Jul 13, 2026
     </div>
 
     <div id="usaTime">
-        00:00:00
+        02:15:48
     </div>
 
 </div>
-
 <div class="app">
 
     <div class="header">
@@ -1880,22 +1896,29 @@ function updateUSClock(){
 
     if(!el) return;
 
-    const now=new Date();
+	const now = new Date();
 
-    el.textContent=now.toLocaleString(
-        'en-US',
-        {
-            timeZone:'America/New_York',
-            weekday:'short',
-            year:'numeric',
-            month:'short',
-            day:'2-digit',
-            hour:'2-digit',
-            minute:'2-digit',
-            second:'2-digit',
-            hour12:false
-        }
-    );
+	$("usaDate").textContent = now.toLocaleDateString(
+		"en-US",
+		{
+			timeZone:"America/New_York",
+			weekday:"short",
+			year:"numeric",
+			month:"short",
+			day:"2-digit"
+		}
+	);
+
+	$("usaTime").textContent = now.toLocaleTimeString(
+		"en-US",
+		{
+			timeZone:"America/New_York",
+			hour:"2-digit",
+			minute:"2-digit",
+			second:"2-digit",
+			hour12:false
+		}
+	);
 
 }
 

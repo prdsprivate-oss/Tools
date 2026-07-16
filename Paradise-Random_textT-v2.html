@@ -6,6 +6,7 @@
 
 <title>Paradise Translate Generator</title>
 <link rel="icon" type="image/png" href="favicon.png">
+
 <style>
 /*=========================================
         PARADISE LAB PREMIUM
@@ -772,6 +773,212 @@ textarea:focus{
 
 }
 
+/*==========================
+BADGE SHINE EFFECT
+==========================*/
+.badge{
+
+    display:inline-block;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#00d4ff,#0078ff);
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+
+    margin-bottom:16px;
+
+}
+
+
+
+.badge::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70%;
+
+    left:-120%;
+
+    width:60%;
+
+    height:240%;
+
+    transform:rotate(25deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+    animation:badgeShine 5s linear infinite;
+
+}
+
+@keyframes badgeShine{
+
+    0%{
+
+        left:-120%;
+
+    }
+
+    100%{
+
+        left:180%;
+
+    }
+
+}
+
+.badge{
+
+    position:relative;
+
+    overflow:hidden;
+
+    animation:badgeGlow 3.5s ease-in-out infinite;
+
+}
+
+@keyframes badgeGlow{
+
+    0%,100%{
+
+        box-shadow:
+        0 0 10px rgba(0,212,255,.25);
+
+    }
+
+    50%{
+
+        box-shadow:
+        0 0 18px rgba(0,212,255,.55),
+        0 0 30px rgba(0,212,255,.18);
+
+    }
+
+}
+
+.badge::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70%;
+
+    left:-120%;
+
+    width:45%;
+
+    height:250%;
+
+    transform:rotate(25deg);
+
+    background:linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+    animation:badgeShine 6s linear infinite;
+
+}
+
+@keyframes badgeShine{
+
+    0%{
+
+        left:-120%;
+
+    }
+
+    20%{
+
+        left:150%;
+
+    }
+
+    100%{
+
+        left:150%;
+
+    }
+
+}
+
+/* ==========================
+      TITLE EFFECT
+========================== */
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 8px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 20px rgba(0,212,255,.9),
+
+        0 0 35px rgba(0,212,255,.35);
+
+    }
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-align:center;
+
+    text-shadow:0 0 15px rgba(0,212,255,.45);
+
+
+
 </style>
 </head>
 
@@ -785,15 +992,14 @@ textarea:focus{
 <div class="container">
 
     <!-- HEADER -->
-    <div class="header">
 
         <div class="badge">
             🚀 Paradise Lab
         </div>
+		
+    <div class="header">
 
-        <div class="title">
-            RANDOM TEXT
-        </div>
+        <h1>RANDOM TEXT</h1>        
 
         <div class="subtitle">
         </div>

@@ -5,177 +5,458 @@
 <title>Username To Link</title>
 
 <style>
-/* ===========================
-   PARADISE LAB UI
-=========================== */
+/* =========================================
+   PARADISE LAB — FUTURistic Premium UI
+   Apple × Tesla × Discord × PlayStation × SpaceX
+   ========================================= */
+
+:root{
+  --bg:#08111f;
+  --bg2:#0d1728;
+  --bg3:#111c30;
+  --cyan:#00c8ff;
+  --blue:#1da1ff;
+  --white:#ffffff;
+
+  --glass:rgba(255,255,255,.08);
+  --glass2:rgba(255,255,255,.04);
+  --line:rgba(255,255,255,.12);
+
+  --shadow:0 20px 60px rgba(0,0,0,.55);
+  --glow:0 0 30px rgba(0,200,255,.28);
+}
+
+*{box-sizing:border-box}
+
+html,body{height:100%}
 
 body{
-    margin:0;
-    padding:30px;
-    font-family:Inter,Arial,sans-serif;
-    background:
-    linear-gradient(rgba(5,10,25,.75),rgba(5,10,25,.85)),
-    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop")
-    center/cover fixed;
+  margin:0;
+  padding:32px;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  color:var(--white);
+  overflow-x:hidden;
+
+  background:
+    radial-gradient(circle at 20% 15%, rgba(29,161,255,.20), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(0,200,255,.16), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(29,161,255,.14), transparent 35%),
+    linear-gradient(180deg,var(--bg),var(--bg2) 55%,var(--bg3));
+
+  background-attachment:fixed;
 }
 
-/* APP */
+/* Tiny stars */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.75;
+  background:
+    radial-gradient(circle,#fff 1px,transparent 1.5px) 8% 12%/140px 140px,
+    radial-gradient(circle,#fff 1px,transparent 1.5px) 72% 24%/180px 180px,
+    radial-gradient(circle,#fff 1px,transparent 1.5px) 35% 72%/160px 160px,
+    radial-gradient(circle,#fff 1px,transparent 1.5px) 90% 82%/200px 200px;
+}
+
+/* Blue energy particles */
+body::after{
+  content:'';
+  position:fixed;
+  inset:-20%;
+  pointer-events:none;
+  opacity:.35;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(0,200,255,.35) 0 2px, transparent 3px),
+    radial-gradient(circle at 65% 55%, rgba(29,161,255,.35) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 28%, rgba(0,200,255,.28) 0 1.5px, transparent 2.5px);
+  animation:float 18s linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(0)}
+  to{transform:translateY(-40px)}
+}
 
 #utlApp{
-
-    max-width:760px;
-
-    margin:auto;
-
-    color:#fff;
+  max-width:860px;
+  margin:auto;
 }
 
-/* CONTAINER */
-
 #utlApp .container{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05)),
+    var(--glass);
+
+  border:1px solid var(--line);
+  border-radius:28px;
+
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(255,255,255,.03),
+    var(--glow);
+
+  animation:fadeUp .45s ease;
+}
+
+/* Holographic top reflection */
+#utlApp .container::before{
+  content:'';
+  position:absolute;
+  inset:0 0 auto 0;
+  height:120px;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.14),
+    rgba(255,255,255,.04),
+    transparent
+  );
+  pointer-events:none;
+}
+
+#utlApp .lab-tag{
+  position:absolute;
+  top:16px;
+  left:16px;
+
+  padding:8px 16px;
+  border-radius:999px;
+
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+
+  color:#001827;
+  background:linear-gradient(135deg,#7fe8ff,#00c8ff 55%,#1da1ff);
+
+  box-shadow:
+    0 0 16px rgba(0,200,255,.75),
+    0 0 36px rgba(0,200,255,.35);
+}
+
+#utlApp .box{
+  padding:30px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+#utlApp .box:last-child{border-bottom:none}
+
+#utlApp h3{
+  margin:0 0 18px;
+  text-align:center;
+  font-size:24px;
+  font-weight:750;
+  letter-spacing:.3px;
+
+  color:#fff;
+  text-shadow:0 0 18px rgba(0,200,255,.28);
+}
+
+#utlApp textarea{
+  width:100%;
+  min-height:220px;
+  resize:vertical;
+
+  padding:18px;
+
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
+    var(--glass2);
+
+  color:#fff;
+  font-size:15px;
+  line-height:1.5;
+
+  outline:none;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 -1px 0 rgba(0,0,0,.25);
+
+  transition:.25s ease;
+}
+
+#utlApp textarea::placeholder{
+  color:rgba(255,255,255,.58);
+}
+
+#utlApp textarea:focus{
+  border-color:rgba(0,200,255,.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 0 3px rgba(0,200,255,.14),
+    0 0 26px rgba(0,200,255,.22);
+}
+
+#utlApp .center{text-align:center}
+
+#utlApp button{
+  position:relative;
+  overflow:hidden;
+
+  margin:6px;
+  padding:13px 22px;
+
+  border:none;
+  border-radius:16px;
+
+  cursor:pointer;
+
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.3px;
+  color:#fff;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02)),
+    linear-gradient(135deg,#0f2740,#102c4b);
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.12);
+
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+
+  border:1px solid rgba(255,255,255,.10);
+}
+
+#utlApp button::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, transparent, rgba(255,255,255,.22), transparent);
+  transform:translateX(-120%);
+  transition:.6s;
+}
+
+#utlApp button:hover::before{
+  transform:translateX(120%);
+}
+
+#utlApp button:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.45),
+    0 0 26px rgba(0,200,255,.22);
+}
+
+#utlApp button:active{
+  transform:translateY(0) scale(.98);
+}
+
+#utlApp button:last-child{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)),
+    linear-gradient(135deg,#00c8ff,#1da1ff);
+  color:#031321;
+}
+
+/* Premium toast */
+.toast{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+
+  min-width:260px;
+  max-width:360px;
+
+  padding:16px 20px;
+
+  border-radius:18px;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+    rgba(8,17,31,.92);
+
+  border:1px solid rgba(0,200,255,.30);
+
+  backdrop-filter:blur(18px);
+
+  color:#fff;
+  font-weight:650;
+
+  box-shadow:
+    0 16px 40px rgba(0,0,0,.45),
+    0 0 24px rgba(0,200,255,.20);
+
+  transform:translateX(120%);
+  opacity:0;
+  transition:.35s ease;
+
+  z-index:9999;
+}
+
+.toast.show{
+  transform:translateX(0);
+  opacity:1;
+}
+
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(18px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+@media (max-width:640px){
+  body{padding:16px}
+
+  #utlApp .box{padding:22px}
+
+  #utlApp h3{font-size:21px}
+
+  #utlApp button{
+    width:100%;
+    margin:6px 0;
+  }
+
+  .toast{
+    left:16px;
+    right:16px;
+    bottom:16px;
+    max-width:none;
+    min-width:0;
+  }
+}
+
+/*==================================================
+  HEADER
+==================================================*/
+
+.header{
+
+    position:relative;
+
+    margin-bottom:28px;
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-align:center;
+
+    text-shadow:0 0 15px rgba(0,212,255,.45);
+
+}
+
+
+/*==================================================
+  PARADISE BADGE
+==================================================*/
+
+.badge{
+
+    display:inline-block;
 
     position:relative;
 
     overflow:hidden;
 
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    border-radius:24px;
-
-    box-shadow:
-    0 20px 50px rgba(0,0,0,.45),
-    0 0 40px rgba(0,255,255,.08);
-
-    animation:fadeUp .5s ease;
-}
-
-/* PARADISE LAB */
-
-#utlApp .lab-tag{
-
-    position:absolute;
-
-    top:15px;
-    left:15px;
-
-    padding:6px 14px;
+    padding:8px 18px;
 
     border-radius:50px;
 
-    background:linear-gradient(135deg,#00e5ff,#0091ff);
+    background:linear-gradient(135deg,#00d4ff,#0078ff);
 
-    color:#fff;
-
-    font-size:11px;
+    font-size:12px;
 
     font-weight:bold;
 
     letter-spacing:1px;
 
-    text-transform:uppercase;
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+
+    margin-bottom:16px;
+
+}
+
+}
+
+.badge:hover{
+
+    transform:translateY(-2px);
 
     box-shadow:
-    0 0 8px #00e5ff,
-    0 0 18px rgba(0,229,255,.7);
 
-    animation:glow 2s infinite alternate;
+    inset 0 1px rgba(255,255,255,.25),
+
+    0 0 35px rgba(0,200,255,.45);
+
 }
 
-/* BOX */
+.header h1{
 
-#utlApp .box{
-
-    padding:28px;
-
-    border-bottom:1px solid rgba(255,255,255,.12);
-}
-
-#utlApp .box:last-child{
-
-    border-bottom:none;
-}
-
-/* TITLE */
-
-#utlApp h3{
-
-    margin:0 0 18px;
-
-    text-align:center;
-
-    font-size:24px;
-
-    font-weight:700;
+    margin:0;
 
     color:#fff;
+
+    font-size:42px;
+
+    font-weight:800;
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
 
     text-shadow:
-    0 0 12px rgba(0,229,255,.6);
+
+    0 0 20px rgba(0,200,255,.45);
+
 }
 
-/* TEXTAREA */
+.subtitle{
 
-#utlApp textarea{
+    margin-top:12px;
 
-    width:100%;
-
-    box-sizing:border-box;
-
-    resize:vertical;
-
-    min-height:220px;
-
-    padding:16px;
-
-    border-radius:14px;
-
-    border:1px solid rgba(255,255,255,.15);
-
-    outline:none;
-
-    background:rgba(255,255,255,.08);
-
-    color:#fff;
+    color:#9fcfff;
 
     font-size:15px;
 
-    transition:.25s;
+    letter-spacing:2px;
+
+    opacity:.8;
+
 }
 
-#utlApp textarea::placeholder{
+.button-group{
 
-    color:#d0d0d0;
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+
+    padding:35px;
+
 }
 
-#utlApp textarea:focus{
+.btn{
 
-    border-color:#00e5ff;
+    position:relative;
 
-    box-shadow:
-    0 0 15px rgba(0,229,255,.45);
-}
+    overflow:hidden;
 
-/* BUTTON */
-
-#utlApp .center{
-
-    text-align:center;
-}
-
-#utlApp button{
-
-    margin:6px;
-
-    padding:12px 22px;
+    height:60px;
 
     border:none;
 
-    border-radius:12px;
+    border-radius:18px;
 
     cursor:pointer;
 
@@ -183,86 +464,315 @@ body{
 
     font-size:15px;
 
-    font-weight:bold;
+    font-weight:700;
 
-    background:linear-gradient(135deg,#00c6ff,#0072ff);
+    letter-spacing:1px;
 
-    transition:.25s;
-}
+    background:
 
-#utlApp button:hover{
+    linear-gradient(
 
-    transform:translateY(-2px);
+    180deg,
+
+    #1da1ff,
+
+    #008fe8);
 
     box-shadow:
-    0 8px 22px rgba(0,114,255,.45);
+
+    inset 0 1px rgba(255,255,255,.25),
+
+    0 10px 30px rgba(0,120,255,.18);
+
+    transition:.35s;
+
 }
 
-#utlApp button:active{
+.btn:hover{
 
-    transform:scale(.97);
+    transform:
+
+    translateY(-4px);
+
+    box-shadow:
+
+    0 0 30px rgba(0,200,255,.40),
+
+    0 18px 40px rgba(0,0,0,.35);
+
 }
 
-/* ANIMATION */
+.btn:active{
 
-@keyframes glow{
+    transform:scale(.98);
+
+}
+
+.btn::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-130%;
+
+    width:70%;
+
+    height:100%;
+
+    background:
+
+    linear-gradient(
+
+    90deg,
+
+    transparent,
+
+    rgba(255,255,255,.35),
+
+    transparent);
+
+    transform:skewX(-25deg);
+
+    transition:.8s;
+
+}
+
+.btn:hover::before{
+
+    left:140%;
+
+}
+
+.facebook{
+
+    background:
+
+    linear-gradient(135deg,#1da1ff,#0088ff);
+
+}
+
+.instagram{
+
+    background:
+
+    linear-gradient(135deg,#23b5ff,#00c8ff);
+
+}
+
+.threads{
+
+    background:
+
+    linear-gradient(135deg,#177fff,#009dff);
+
+}
+
+.copy{
+
+    background:
+
+    linear-gradient(135deg,#00bfff,#0090ff);
+
+}
+
+/*==========================
+BADGE SHINE EFFECT
+==========================*/
+.badge{
+
+    display:inline-block;
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#00d4ff,#0078ff);
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+
+    margin-bottom:16px;
+
+}
+
+
+
+.badge::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70%;
+
+    left:-120%;
+
+    width:60%;
+
+    height:240%;
+
+    transform:rotate(25deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+    animation:badgeShine 5s linear infinite;
+
+}
+
+@keyframes badgeShine{
+
+    0%{
+
+        left:-120%;
+
+    }
+
+    100%{
+
+        left:180%;
+
+    }
+
+}
+
+.badge{
+
+    position:relative;
+
+    overflow:hidden;
+
+    animation:badgeGlow 3.5s ease-in-out infinite;
+
+}
+
+@keyframes badgeGlow{
+
+    0%,100%{
+
+        box-shadow:
+        0 0 10px rgba(0,212,255,.25);
+
+    }
+
+    50%{
+
+        box-shadow:
+        0 0 18px rgba(0,212,255,.55),
+        0 0 30px rgba(0,212,255,.18);
+
+    }
+
+}
+
+.badge::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70%;
+
+    left:-120%;
+
+    width:45%;
+
+    height:250%;
+
+    transform:rotate(25deg);
+
+    background:linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+    animation:badgeShine 6s linear infinite;
+
+}
+
+@keyframes badgeShine{
+
+    0%{
+
+        left:-120%;
+
+    }
+
+    20%{
+
+        left:150%;
+
+    }
+
+    100%{
+
+        left:150%;
+
+    }
+
+}
+
+/* ==========================
+      TITLE EFFECT
+========================== */
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
 
     from{
 
-        box-shadow:
-        0 0 6px #00e5ff,
-        0 0 12px #00e5ff;
+        text-shadow:
+
+        0 0 8px rgba(0,212,255,.35);
+
     }
 
     to{
 
-        box-shadow:
-        0 0 14px #00e5ff,
-        0 0 28px #00e5ff,
-        0 0 40px #00e5ff;
+        text-shadow:
+
+        0 0 20px rgba(0,212,255,.9),
+
+        0 0 35px rgba(0,212,255,.35);
+
     }
+
 }
 
-@keyframes fadeUp{
 
-    from{
 
-        opacity:0;
-        transform:translateY(20px);
-    }
 
-    to{
-
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-/* MOBILE */
-
-@media(max-width:600px){
-
-    body{
-
-        padding:15px;
-    }
-
-    #utlApp .box{
-
-        padding:20px;
-    }
-
-    #utlApp h3{
-
-        font-size:20px;
-    }
-
-    #utlApp button{
-
-        width:100%;
-        margin:6px 0;
-    }
-}
 </style>
 
 </head>
@@ -270,10 +780,21 @@ body{
 
 <div id="utlApp">
 
+   
+<div class="header">
+
+    <div class="badge">
+        🚀 Paradise Lab
+    </div>
+	
+	
+    <h1>CONVERT USERNAME LINK</h1>
+
+	  </p>
+	
 <div class="container">
-   
-<div class="lab-tag">Paradise Lab</div>
-   
+
+
 <div class="box">
 
 <h3>USERNAME</h3>
@@ -282,15 +803,23 @@ body{
 
 </div>
 
-<div class="box center">
+<div class="button-group">
 
-<button onclick="buat('facebook')">FACEBOOK</button>
+<button class="btn facebook" onclick="buat('facebook')">
+FACEBOOK
+</button>
 
-<button onclick="buat('instagram')">INSTAGRAM</button>
+<button class="btn instagram" onclick="buat('instagram')">
+INSTAGRAM
+</button>
 
-<button onclick="buat('threads')">THREADS</button>
+<button class="btn threads" onclick="buat('threads')">
+THREADS
+</button>
 
-<button onclick="copyHasil()">COPY LINK</button>
+<button class="btn copy" onclick="copyHasil()">
+COPY LINK
+</button>
 
 </div>
 
@@ -304,8 +833,9 @@ body{
 
 </div>
 
-<script>
+<div id="toast" class="toast"></div>
 
+<script>
 function ambilUsername(){
 
     return document.getElementById("usernames").value
@@ -318,6 +848,14 @@ function ambilUsername(){
 function buat(platform){
 
     let data=ambilUsername();
+	
+	if(data.length==0){
+
+		toast("⚠️ Masukkan username terlebih dahulu");
+
+		return;
+
+	}
 
     let hasil=[];
 
@@ -335,16 +873,44 @@ function buat(platform){
     });
 
     document.getElementById("hasil").value=hasil.join("\n");
-
+	
+	toast("✅ "+hasil.length+" Link "+platform.toUpperCase()+" berhasil dibuat");
+	
 }
 
 function copyHasil(){
 
     let hasil=document.getElementById("hasil");
 
-    if(hasil.value=="") return;
+    if(hasil.value==""){
+
+        toast("⚠️ Tidak ada link untuk dicopy");
+
+        return;
+
+    }
 
     navigator.clipboard.writeText(hasil.value);
+
+    toast("📋 Link berhasil dicopy");
+
+}
+
+function toast(text){
+
+    const t=document.getElementById("toast");
+
+    t.innerHTML=text;
+
+    t.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer=setTimeout(()=>{
+
+        t.classList.remove("show");
+
+    },2500);
 
 }
 

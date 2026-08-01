@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070A12">
+<title>Paradise Link — Username Converter</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#05070d;
+  --surface:#0b0f19;
+  --surface-2:#101725;
+  --surface-3:#151d2e;
+  --text:#f7f9ff;
+  --muted:#8d99ad;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.16);
+  --accent:#7c5cff;
+  --accent-2:#2bd9fe;
+  --success:#42e8a5;
+  --danger:#ff6b87;
+  --shadow:0 32px 100px rgba(0,0,0,.55);
+  --radius-xl:30px;
+  --radius-lg:22px;
+  --radius-md:16px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  margin:0;
+  padding:24px;
+  overflow-x:hidden;
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(124,92,255,.19),transparent 31%),
+    radial-gradient(circle at 86% 8%,rgba(43,217,254,.13),transparent 27%),
+    radial-gradient(circle at 50% 100%,rgba(124,92,255,.10),transparent 35%),
+    var(--bg);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  opacity:.32;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,black,transparent 88%);
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:420px;
+  height:420px;
+  right:-150px;
+  bottom:-170px;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:50%;
+  background:rgba(124,92,255,.16);
+  filter:blur(90px);
+  animation:ambient 9s ease-in-out infinite alternate;
+}
+
+button,textarea{font:inherit}
+button{border:0}
+
+.app-shell{
+  width:min(1180px,100%);
+  margin:0 auto;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:54px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.brand-mark{
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.03));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 12px 28px rgba(0,0,0,.28);
+}
+
+.brand-mark::before{
+  content:"";
+  width:19px;
+  height:19px;
+  border-radius:7px 7px 7px 3px;
+  background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  box-shadow:0 0 24px rgba(124,92,255,.55);
+  transform:rotate(-12deg);
+}
+
+.brand-copy strong{
+  display:block;
+  font-size:14px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.brand-copy span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.07em;
+}
+
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:9px 13px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  color:#c6cfdd;
+  font-size:12px;
+  font-weight:650;
+  backdrop-filter:blur(12px);
+}
+
+.status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--success);
+  box-shadow:0 0 12px rgba(66,232,165,.8);
+}
+
+.hero{
+  max-width:790px;
+  margin:0 auto 36px;
+  text-align:center;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:18px;
+  padding:8px 12px;
+  border:1px solid rgba(124,92,255,.28);
+  border-radius:999px;
+  background:rgba(124,92,255,.08);
+  color:#c8bcff;
+  font-size:11px;
+  font-weight:750;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.eyebrow svg{width:14px;height:14px}
+
+h1{
+  margin:0;
+  font-size:clamp(42px,7vw,78px);
+  line-height:.98;
+  letter-spacing:-.055em;
+  font-weight:790;
+}
+
+.gradient-text{
+  display:block;
+  color:transparent;
+  background:linear-gradient(110deg,#fff 7%,#b9c9ff 40%,#8ae9ff 70%,#bcaeff 96%);
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+
+.hero p{
+  max-width:620px;
+  margin:22px auto 0;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.75;
+}
+
+.workspace{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-xl);
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.13);
+  backdrop-filter:blur(24px) saturate(130%);
+}
+
+.workspace::before{
+  content:"";
+  position:absolute;
+  inset:0 18% auto;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(138,233,255,.9),transparent);
+  box-shadow:0 0 24px rgba(43,217,254,.55);
+}
+
+.workspace-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:22px 24px;
+  border-bottom:1px solid var(--line);
+  background:rgba(0,0,0,.11);
+}
+
+.workspace-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  font-weight:720;
+  letter-spacing:.03em;
+}
+
+.workspace-title svg{width:18px;height:18px;color:#a896ff}
+
+.meta-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.secure-badge{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 9px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+}
+
+.secure-badge svg{width:12px;height:12px;color:var(--success)}
+
+.panels{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--line);
+}
+
+.panel{
+  min-width:0;
+  padding:26px;
+  background:rgba(7,10,18,.80);
+}
+
+.panel-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.label-wrap label{
+  display:block;
+  font-size:13px;
+  font-weight:720;
+}
+
+.label-wrap span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.counter{
+  flex:none;
+  min-width:65px;
+  padding:7px 9px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(255,255,255,.035);
+  color:#c3ccdb;
+  font-size:11px;
+  font-variant-numeric:tabular-nums;
+  text-align:center;
+}
+
+.textarea-wrap{position:relative}
+
+textarea{
+  display:block;
+  width:100%;
+  min-height:280px;
+  resize:vertical;
+  padding:17px 18px;
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  outline:none;
+  color:#eef3ff;
+  background:rgba(255,255,255,.035);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),inset 0 10px 35px rgba(0,0,0,.12);
+  font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  font-size:13px;
+  line-height:1.75;
+  transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+
+textarea::placeholder{color:#687388}
+textarea:hover{border-color:rgba(255,255,255,.14)}
+textarea:focus{
+  border-color:rgba(124,92,255,.72);
+  background:rgba(124,92,255,.045);
+  box-shadow:0 0 0 4px rgba(124,92,255,.11),inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+#hasil{color:#bdefff}
+
+.mini-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:13px;
+}
+
+.text-button{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 0;
+  cursor:pointer;
+  color:var(--muted);
+  background:none;
+  font-size:11px;
+  font-weight:650;
+  transition:color .2s ease;
+}
+.text-button:hover{color:#fff}
+.text-button svg{width:13px;height:13px}
+
+.hint{
+  color:#667186;
+  font-size:10px;
+  text-align:right;
+}
+
+.action-zone{
+  padding:22px 24px 24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(0,0,0,.16));
+}
+
+.action-label{
+  margin:0 0 13px 2px;
+  color:#a4aec0;
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.button-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.action-btn{
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:54px;
+  padding:12px 15px;
+  overflow:hidden;
+  cursor:pointer;
+  border:1px solid var(--line);
+  border-radius:14px;
+  color:#e9eef9;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 10px 22px rgba(0,0,0,.18);
+  font-size:12px;
+  font-weight:710;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+
+.action-btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:0;
+  background:radial-gradient(circle at 50% 120%,var(--btn-glow,rgba(124,92,255,.45)),transparent 58%);
+  transition:opacity .2s ease;
+}
+
+.action-btn::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-90%;
+  width:55%;
+  height:100%;
+  z-index:-1;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);
+  transform:skewX(-22deg);
+  transition:left .55s ease;
+}
+
+.action-btn:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 16px 34px rgba(0,0,0,.32);
+}
+.action-btn:hover::before{opacity:1}
+.action-btn:hover::after{left:135%}
+.action-btn:active{transform:translateY(-1px) scale(.985)}
+.action-btn svg{width:17px;height:17px;flex:0 0 17px}
+
+.facebook{--btn-glow:rgba(24,119,242,.7)}
+.instagram{--btn-glow:rgba(225,48,108,.65)}
+.threads{--btn-glow:rgba(255,255,255,.34)}
+.copy{
+  border-color:rgba(124,92,255,.38);
+  color:#fff;
+  background:linear-gradient(135deg,rgba(124,92,255,.94),rgba(91,79,225,.90));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 12px 28px rgba(83,63,207,.28);
+}
+.copy:hover{border-color:rgba(180,164,255,.72)}
+
+.footer-note{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  margin-top:19px;
+  color:#626d81;
+  font-size:10px;
+  text-align:center;
+}
+.footer-note svg{width:12px;height:12px}
+
+.toast{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  width:min(390px,calc(100vw - 32px));
+  padding:15px 17px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:15px;
+  color:#eef3ff;
+  background:rgba(12,17,28,.9);
+  box-shadow:0 24px 60px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+  transform:translateY(24px) scale(.97);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+}
+.toast.show{transform:translateY(0) scale(1);opacity:1}
+.toast-icon{
+  display:grid;
+  place-items:center;
+  width:29px;
+  height:29px;
+  flex:0 0 29px;
+  border-radius:9px;
+  background:rgba(66,232,165,.12);
+  color:var(--success);
+}
+.toast.warning .toast-icon{background:rgba(255,107,135,.12);color:var(--danger)}
+.toast-copy strong{display:block;font-size:12px}
+.toast-copy span{display:block;margin-top:3px;color:var(--muted);font-size:10px}
+
+@keyframes ambient{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(-90px,-45px,0) scale(1.16)}
+}
+
+@media (max-width:850px){
+  .topbar{margin-bottom:40px}
+  .panels{grid-template-columns:1fr}
+  .button-grid{grid-template-columns:repeat(2,1fr)}
+  textarea{min-height:220px}
+}
+
+@media (max-width:560px){
+  body{padding:15px}
+  .topbar{margin-bottom:36px}
+  .brand-copy span{display:none}
+  .status-pill{padding:9px 10px;font-size:0}
+  .status-pill .status-dot{margin:0}
+  .hero{margin-bottom:28px}
+  .hero p{font-size:13px}
+  .workspace{border-radius:22px}
+  .workspace-head{padding:18px}
+  .meta-row>span{display:none}
+  .panel{padding:19px}
+  .panel-header{align-items:center}
+  textarea{min-height:210px;font-size:12px}
+  .action-zone{padding:18px}
+  .button-grid{grid-template-columns:1fr}
+  .action-btn{min-height:50px}
+  .hint{display:none}
+  .toast{right:16px;bottom:16px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main class="app-shell" id="utlApp">
+  <nav class="topbar" aria-label="Navigasi aplikasi">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-copy">
+        <strong>Paradise Lab</strong>
+        <span>Digital utility collection</span>
+      </div>
+    </div>
+
+    <div class="status-pill" title="Pemrosesan dilakukan di perangkat Anda">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>Private &amp; Local</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.64 5.64l2.83 2.83M15.53 15.53l2.83 2.83M18.36 5.64l-2.83 2.83M8.47 15.53l-2.83 2.83"/>
+      </svg>
+      Smart profile utility
+    </div>
+    <h1><span class="gradient-text">Username to Link.</span>Instan &amp; presisi.</h1>
+    <p>Ubah daftar username menjadi tautan profil siap pakai dalam sekali klik. Cepat, bersih, dan seluruh proses berlangsung langsung di browser Anda.</p>
+  </header>
+
+  <section class="workspace" aria-label="Konverter username ke tautan">
+    <div class="workspace-head">
+      <div class="workspace-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M8 12h8M12 8v8"/><rect x="3" y="3" width="18" height="18" rx="5"/>
+        </svg>
+        Link Generator
+      </div>
+      <div class="meta-row">
+        <span>Browser processing</span>
+        <div class="secure-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="10" rx="3"/>
+          </svg>
+          Aman
+        </div>
+      </div>
+    </div>
+
+    <div class="panels">
+      <section class="panel">
+        <div class="panel-header">
+          <div class="label-wrap">
+            <label for="usernames">Username</label>
+            <span>Satu username per baris</span>
+          </div>
+          <div class="counter"><span id="inputCount">0</span> akun</div>
+        </div>
+
+        <div class="textarea-wrap">
+          <textarea id="usernames" spellcheck="false" autocomplete="off" placeholder="contoh_username&#10;@paradise.lab&#10;https://instagram.com/creator"></textarea>
+        </div>
+
+        <div class="mini-actions">
+          <button class="text-button" type="button" onclick="isiContoh()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Isi contoh
+          </button>
+          <button class="text-button" type="button" onclick="bersihkanSemua()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13"/>
+            </svg>
+            Bersihkan
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div class="label-wrap">
+            <label for="hasil">Hasil link</label>
+            <span>Siap disalin dan dibagikan</span>
+          </div>
+          <div class="counter"><span id="outputCount">0</span> link</div>
+        </div>
+
+        <div class="textarea-wrap">
+          <textarea id="hasil" readonly spellcheck="false" placeholder="Tautan yang dibuat akan muncul di sini..."></textarea>
+        </div>
+
+        <div class="mini-actions">
+          <div class="text-button" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 12a8 8 0 0 1 14.9-4M20 12a8 8 0 0 1-14.9 4"/><path d="M18 3v5h-5M6 21v-5h5"/>
+            </svg>
+            Format otomatis
+          </div>
+          <span class="hint">Ctrl/⌘ + Enter untuk mengulang</span>
+        </div>
+      </section>
+    </div>
+
+    <div class="action-zone">
+      <p class="action-label">Pilih platform tujuan</p>
+      <div class="button-grid">
+        <button class="action-btn facebook" type="button" onclick="buat('facebook')">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M13.8 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V5a21 21 0 0 0-2.4-.1c-2.4 0-4.1 1.5-4.1 4.1v2H8v3h2.5v8h3.3Z"/>
+          </svg>
+          Facebook
+        </button>
+
+        <button class="action-btn instagram" type="button" onclick="buat('instagram')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="6"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.7" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          Instagram
+        </button>
+
+        <button class="action-btn threads" type="button" onclick="buat('threads')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M16.8 10.1c-.4-3-2.3-4.9-5-4.9-3.4 0-5.7 2.6-5.7 6.7 0 4.4 2.3 7 6 7 3 0 5.1-1.7 5.1-4.2 0-2.2-1.8-3.7-4.4-3.7-2 0-3.5.9-3.5 2.4 0 1.3 1.2 2.2 2.8 2.2 2.8 0 4.8-1.8 4.8-4.7 0-1.2-.3-2.5-.9-3.5"/>
+          </svg>
+          Threads
+        </button>
+
+        <button class="action-btn copy" type="button" onclick="copyHasil()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="8" y="8" width="11" height="11" rx="3"/><path d="M16 8V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h2"/>
+          </svg>
+          Salin Link
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+    </svg>
+    Data tidak dikirim atau disimpan ke server mana pun.
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite">
+  <div class="toast-icon" id="toastIcon" aria-hidden="true">✓</div>
+  <div class="toast-copy">
+    <strong id="toastTitle">Berhasil</strong>
+    <span id="toastMessage">Proses selesai.</span>
+  </div>
+</div>
+
+<script>
+const platformBase = {
+  facebook: "https://www.facebook.com/",
+  instagram: "https://www.instagram.com/",
+  threads: "https://www.threads.com/@"
+};
+
+let platformTerakhir = "instagram";
+let toastTimer;
+
+const usernamesEl = document.getElementById("usernames");
+const hasilEl = document.getElementById("hasil");
+const inputCountEl = document.getElementById("inputCount");
+const outputCountEl = document.getElementById("outputCount");
+
+function normalisasiUsername(value){
+  let user = value.trim();
+  if(!user) return "";
+
+  user = user.replace(/^https?:\/\/(www\.)?/i, "");
+  user = user.replace(/^(facebook\.com|instagram\.com|threads\.net|threads\.com)\//i, "");
+  user = user.split(/[?#]/)[0];
+  user = user.replace(/^@+/, "");
+  user = user.replace(/\/$/, "");
+
+  return user.trim();
+}
+
+function ambilUsername(){
+  const unik = new Set();
+
+  usernamesEl.value
+    .split(/\r?\n/)
+    .map(normalisasiUsername)
+    .filter(Boolean)
+    .forEach(user => unik.add(user));
+
+  return [...unik];
+}
+
+function hitungBaris(value){
+  return value.split(/\r?\n/).map(item => item.trim()).filter(Boolean).length;
+}
+
+function perbaruiCounter(){
+  inputCountEl.textContent = hitungBaris(usernamesEl.value);
+  outputCountEl.textContent = hitungBaris(hasilEl.value);
+}
+
+function buat(platform){
+  const data = ambilUsername();
+
+  if(data.length === 0){
+    tampilkanToast("Username belum tersedia", "Masukkan minimal satu username terlebih dahulu.", true);
+    usernamesEl.focus();
+    return;
+  }
+
+  platformTerakhir = platform;
+  const hasil = data.map(user => platformBase[platform] + user);
+  hasilEl.value = hasil.join("\n");
+  perbaruiCounter();
+
+  const namaPlatform = platform.charAt(0).toUpperCase() + platform.slice(1);
+  tampilkanToast("Link berhasil dibuat", `${hasil.length} tautan ${namaPlatform} siap digunakan.`);
+}
+
+async function copyHasil(){
+  const text = hasilEl.value.trim();
+
+  if(!text){
+    tampilkanToast("Belum ada link", "Buat tautan terlebih dahulu sebelum menyalin.", true);
+    return;
+  }
+
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(error){
+    hasilEl.select();
+    document.execCommand("copy");
+    window.getSelection()?.removeAllRanges();
+  }
+
+  tampilkanToast("Tersalin ke clipboard", `${hitungBaris(text)} tautan berhasil disalin.`);
+}
+
+function isiContoh(){
+  usernamesEl.value = "paradise.lab\ncreator_indonesia\ndigitalstudio";
+  perbaruiCounter();
+  usernamesEl.focus();
+  tampilkanToast("Contoh dimasukkan", "Pilih platform untuk membuat tautan.");
+}
+
+function bersihkanSemua(){
+  usernamesEl.value = "";
+  hasilEl.value = "";
+  perbaruiCounter();
+  usernamesEl.focus();
+  tampilkanToast("Area dibersihkan", "Semua username dan hasil telah dihapus.");
+}
+
+function tampilkanToast(title, message, warning = false){
+  const toast = document.getElementById("toast");
+  document.getElementById("toastTitle").textContent = title;
+  document.getElementById("toastMessage").textContent = message;
+  document.getElementById("toastIcon").textContent = warning ? "!" : "✓";
+
+  toast.classList.toggle("warning", warning);
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+}
+
+usernamesEl.addEventListener("input", perbaruiCounter);
+
+document.addEventListener("keydown", event => {
+  if((event.ctrlKey || event.metaKey) && event.key === "Enter"){
+    event.preventDefault();
+    buat(platformTerakhir);
+  }
+});
+
+perbaruiCounter();
+</script>
+</body>
+</html>

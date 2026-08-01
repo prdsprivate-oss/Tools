@@ -1,0 +1,1081 @@
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+body{
+
+    background:
+    radial-gradient(circle at top,#12365c,#08111f 65%);
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    color:#fff;
+
+    min-height:100vh;
+
+}
+
+#app{
+
+    width:1400px;
+
+    margin:25px auto;
+
+}
+
+#header{
+
+    background:rgba(17,28,48,.88);
+
+    border:1px solid rgba(0,200,255,.25);
+
+    border-radius:18px;
+
+    padding:18px 25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    backdrop-filter:blur(14px);
+
+    box-shadow:
+        0 0 35px rgba(0,200,255,.15);
+
+}
+
+#logo{
+
+    color:#00c8ff;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+}
+
+#title{
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    color:#fff;
+
+    letter-spacing:2px;
+
+}
+
+/* ===========================
+   DASHBOARD
+=========================== */
+
+#dashboard{
+
+    margin-top:20px;
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:18px;
+
+}
+
+.card{
+
+    background:rgba(17,28,48,.88);
+
+    border:1px solid rgba(0,200,255,.20);
+
+    border-radius:18px;
+
+    padding:22px;
+
+    text-align:center;
+
+    backdrop-filter:blur(12px);
+
+    transition:.25s;
+
+    box-shadow:
+        0 0 18px rgba(0,200,255,.08);
+
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#00c8ff;
+
+    box-shadow:
+        0 0 28px rgba(0,200,255,.25);
+
+}
+
+.label{
+
+    color:#8fcfff;
+
+    font-size:14px;
+
+    letter-spacing:1px;
+
+    margin-bottom:10px;
+
+}
+
+.value{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    color:#00c8ff;
+
+    text-shadow:
+        0 0 12px rgba(0,200,255,.40);
+
+}
+
+/* ===========================
+   SEARCH PANEL
+=========================== */
+
+#searchPanel{
+
+    margin-top:20px;
+
+}
+
+#searchBox{
+
+    width:100%;
+
+    height:55px;
+
+    background:rgba(17,28,48,.88);
+
+    border:1px solid rgba(0,200,255,.20);
+
+    border-radius:16px;
+
+    padding:0 20px;
+
+    color:#fff;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.25s;
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 0 15px rgba(0,200,255,.08);
+
+}
+
+#searchBox::placeholder{
+
+    color:#7fa4c5;
+
+}
+
+#searchBox:focus{
+
+    border-color:#00c8ff;
+
+    box-shadow:
+        0 0 25px rgba(0,200,255,.25);
+
+}
+
+/* ===========================
+   ACTION PANEL
+=========================== */
+
+#actionPanel{
+
+    margin-top:20px;
+
+    display:grid;
+
+    grid-template-columns:repeat(6,1fr);
+
+    gap:18px;
+
+}
+
+.actionCard{
+
+    background:rgba(17,28,48,.88);
+
+    border:1px solid rgba(0,200,255,.18);
+
+    border-radius:18px;
+
+    padding:20px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 0 15px rgba(0,200,255,.08);
+
+}
+
+.actionCard:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#00c8ff;
+
+    box-shadow:
+        0 0 30px rgba(0,200,255,.25);
+
+}
+
+.actionIcon{
+
+    font-size:34px;
+
+    margin-bottom:10px;
+
+}
+
+.actionText{
+
+    color:#fff;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+    letter-spacing:1px;
+
+}
+
+/* ===========================
+   CONTENT
+=========================== */
+
+#content{
+
+    display:flex;
+
+    gap:20px;
+
+    margin-top:20px;
+
+}
+
+/* ===========================
+   LEFT PANEL
+=========================== */
+
+#leftPanel{
+
+    width:430px;
+
+}
+
+#licenseList{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+/* ===========================
+   LICENSE CARD
+=========================== */
+
+.licenseCard{
+
+    background:rgba(17,28,48,.88);
+
+    border:2px solid rgba(255,255,255,.08);
+
+    border-radius:18px;
+
+    padding:18px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    backdrop-filter:blur(12px);
+
+    overflow:hidden;
+
+}
+
+/* ===========================
+   STATUS CARD
+=========================== */
+
+.cardReady{
+
+    border-color:#21d07a;
+
+    box-shadow:
+        0 0 18px rgba(33,208,122,.18);
+
+}
+
+.cardReady:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 35px rgba(33,208,122,.35);
+
+}
+
+.cardActive{
+
+    border-color:#00c8ff;
+
+    box-shadow:
+        0 0 18px rgba(0,200,255,.18);
+
+}
+
+.cardActive:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 35px rgba(0,200,255,.35);
+
+}
+
+.cardBlock{
+
+    border-color:#ff4b5f;
+
+    box-shadow:
+        0 0 18px rgba(255,75,95,.18);
+
+}
+
+.cardBlock:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 35px rgba(255,75,95,.35);
+
+}
+
+.licenseCard:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#00c8ff;
+
+    box-shadow:
+        0 0 22px rgba(0,200,255,.22);
+
+}
+
+.licenseKey{
+
+    color:#00c8ff;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    margin-bottom:12px;
+
+    word-break:break-all;
+
+}
+
+.licenseStatus{
+
+    display:inline-block;
+
+    padding:5px 12px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    margin-bottom:12px;
+
+}
+
+/* READY */
+
+.ready{
+
+    background:#16482d;
+
+    color:#6cff99;
+
+}
+
+/* ACTIVE */
+
+.active{
+
+    background:#113b67;
+
+    color:#63c6ff;
+
+}
+
+/* BLOCK */
+
+.block{
+
+    background:#5b1b22;
+
+    color:#ff6b7c;
+
+}
+
+.licenseOwner{
+
+    color:#ddd;
+
+    margin-bottom:8px;
+
+}
+
+.licenseDevice{
+
+    color:#8faecf;
+
+    font-size:13px;
+
+}
+
+/* ===========================
+   RIGHT PANEL
+=========================== */
+
+#rightPanel{
+
+    flex:1;
+
+    background:rgba(17,28,48,.88);
+
+    border:1px solid rgba(0,200,255,.18);
+
+    border-radius:18px;
+
+    padding:25px;
+
+    backdrop-filter:blur(12px);
+
+}
+
+#detailTitle{
+
+    font-size:24px;
+
+    color:#00c8ff;
+
+    font-weight:bold;
+
+    margin-bottom:25px;
+
+    letter-spacing:1px;
+
+}
+
+/* ===========================
+   DETAIL
+=========================== */
+
+.detailRow{
+
+    margin-bottom:18px;
+
+    padding-bottom:15px;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.detailRow span{
+
+    display:block;
+
+    color:#82bde7;
+
+    font-size:12px;
+
+    margin-bottom:8px;
+
+    letter-spacing:1px;
+
+}
+
+.detailRow div{
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    word-break:break-all;
+
+}
+
+/* ===========================
+   PROFILE CARD
+=========================== */
+
+#profileCard{
+
+    background:linear-gradient(
+        135deg,
+        rgba(0,200,255,.18),
+        rgba(17,28,48,.95)
+    );
+
+    border:1px solid rgba(0,200,255,.28);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+        0 0 25px rgba(0,200,255,.15);
+
+}
+
+#profileStatus{
+
+    display:inline-block;
+
+    padding:6px 14px;
+
+    border-radius:40px;
+
+    background:#16482d;
+
+    color:#79ffad;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-bottom:18px;
+
+}
+
+#profileLicense{
+
+    color:#00c8ff;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    margin-bottom:14px;
+
+    word-break:break-all;
+
+}
+
+#profileOwner{
+
+    color:#ffffff;
+
+    margin-bottom:10px;
+
+}
+
+#profileDevice{
+
+    color:#9bb9d6;
+
+    font-size:14px;
+
+}
+
+/* ===========================
+   GENERATE POPUP
+=========================== */
+
+#generateOverlay{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(0,0,0,.65);
+
+    z-index:999999;
+
+}
+
+#generateBox{
+
+    width:520px;
+
+    background:#101a2b;
+
+    border:1px solid rgba(0,200,255,.25);
+
+    border-radius:22px;
+
+    padding:28px;
+
+    box-shadow:
+        0 0 40px rgba(0,200,255,.18);
+
+}
+
+#generateTitle{
+
+    color:#00c8ff;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    margin-bottom:25px;
+
+}
+
+.generateItem{
+
+    margin-bottom:18px;
+
+}
+
+.generateItem label{
+
+    display:block;
+
+    color:#8fcfff;
+
+    margin-bottom:8px;
+
+    font-size:13px;
+
+}
+
+.generateItem input{
+
+    width:100%;
+
+    height:48px;
+
+    background:#08111f;
+
+    border:1px solid rgba(0,200,255,.18);
+
+    border-radius:12px;
+
+    padding:0 15px;
+
+    color:#fff;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+.generateItem input:focus{
+
+    border-color:#00c8ff;
+
+}
+
+#generateButtons{
+
+    margin-top:25px;
+
+    display:flex;
+
+    gap:15px;
+
+}
+
+#generateButtons button{
+
+    flex:1;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+}
+
+#generateCancel{
+
+    background:#333;
+
+    color:#fff;
+
+}
+
+#generateOk{
+
+    background:#00c8ff;
+
+    color:#08111f;
+
+}
+
+.selectedCard{
+
+    border:2px solid #00c8ff !important;
+
+    box-shadow:
+        0 0 35px rgba(0,200,255,.45);
+
+    transform:translateY(-3px);
+
+}
+
+/*==========================
+PARADISE TOAST
+==========================*/
+
+#toastContainer{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    z-index:99999999;
+
+}
+
+.toast{
+
+    min-width:320px;
+
+    background:rgba(17,28,48,.96);
+
+    border:1px solid rgba(0,200,255,.25);
+
+    border-left:5px solid #00c8ff;
+
+    border-radius:16px;
+
+    padding:16px 18px;
+
+    color:#fff;
+
+    backdrop-filter:blur(14px);
+
+    box-shadow:
+        0 0 25px rgba(0,200,255,.18);
+
+    animation:toastIn .28s ease;
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+.toast.success{
+
+    border-left-color:#2ecc71;
+
+}
+
+.toast.error{
+
+    border-left-color:#ff4b5f;
+
+}
+
+.toast.warning{
+
+    border-left-color:#ffc107;
+
+}
+
+.toast.info{
+
+    border-left-color:#00c8ff;
+
+}
+
+.toastTitle{
+
+    font-weight:bold;
+
+    margin-bottom:5px;
+
+}
+
+.toastBar{
+
+    position:absolute;
+
+    left:0;
+
+    bottom:0;
+
+    height:3px;
+
+    width:100%;
+
+    background:#00c8ff;
+
+    animation:toastBar 3s linear forwards;
+
+}
+
+@keyframes toastIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(60px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+@keyframes toastOut{
+
+    to{
+
+        opacity:0;
+
+        transform:translateX(60px);
+
+    }
+
+}
+
+@keyframes toastBar{
+
+    from{
+
+        width:100%;
+
+    }
+
+    to{
+
+        width:0%;
+
+    }
+
+}
+
+/*==========================
+PARADISE CONFIRM
+==========================*/
+.hidden{
+    display:none !important;
+}
+
+#confirmOverlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:999999999;
+
+}
+
+#confirmBox{
+
+    width:430px;
+
+    background:#101a2b;
+
+    border:1px solid rgba(0,200,255,.25);
+
+    border-radius:22px;
+
+    padding:28px;
+
+    text-align:center;
+
+    box-shadow:
+        0 0 40px rgba(0,200,255,.18);
+
+}
+
+#confirmIcon{
+
+    font-size:55px;
+
+    margin-bottom:15px;
+
+}
+
+#confirmTitle{
+
+    color:#00c8ff;
+
+    font-size:25px;
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+
+}
+
+#confirmMessage{
+
+    color:#ddd;
+
+    line-height:26px;
+
+    margin-bottom:30px;
+
+    white-space:pre-line;
+
+}
+
+#confirmButtons{
+
+    display:flex;
+
+    gap:15px;
+
+}
+
+#confirmButtons button{
+
+    flex:1;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+}
+
+#confirmCancel{
+
+    background:#30384d;
+
+    color:#fff;
+
+}
+
+#confirmOk{
+
+    background:#00c8ff;
+
+    color:#08111f;
+
+}
+
+
+/* Responsive fixes for Chrome extension popup / smaller screens */
+#app {
+    width: min(1400px, calc(100vw - 30px));
+}
+
+.actionCard.busy {
+    opacity: .55;
+    pointer-events: none;
+}
+
+.emptyState {
+    padding: 28px 18px;
+    text-align: center;
+    color: #8faecf;
+    background: rgba(17,28,48,.65);
+    border: 1px dashed rgba(0,200,255,.20);
+    border-radius: 18px;
+}
+
+@media (max-width: 900px) {
+    #dashboard { grid-template-columns: repeat(2, 1fr); }
+    #actionPanel { grid-template-columns: repeat(3, 1fr); }
+    #content { flex-direction: column; }
+    #leftPanel { width: 100%; }
+}
+
+@media (max-width: 520px) {
+    #app { width: calc(100vw - 16px); margin: 8px auto; }
+    #header { align-items: flex-start; gap: 8px; flex-direction: column; }
+    #dashboard { gap: 8px; }
+    #actionPanel { gap: 8px; grid-template-columns: repeat(2, 1fr); }
+    .actionCard { padding: 12px; }
+    #generateBox, #confirmBox { width: calc(100vw - 24px); }
+    .toast { min-width: 0; width: calc(100vw - 32px); }
+    #toastContainer { right: 16px; bottom: 16px; }
+}

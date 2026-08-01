@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradise License Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div id="logo">🚀 Paradise Lab</div>
+    <div id="title">LICENSE ADMIN</div>
+  </div>
+
+  <div id="dashboard">
+    <div class="card"><div class="label">TOTAL</div><div id="totalLicense" class="value">0</div></div>
+    <div class="card"><div class="label">READY</div><div id="readyLicense" class="value">0</div></div>
+    <div class="card"><div class="label">ACTIVE</div><div id="activeLicense" class="value">0</div></div>
+    <div class="card"><div class="label">BLOCK</div><div id="blockLicense" class="value">0</div></div>
+  </div>
+
+  <div id="searchPanel">
+    <input id="searchBox" type="text" placeholder="🔍 Search License, Owner, Device...">
+  </div>
+
+  <div id="actionPanel">
+    <div class="actionCard" id="btnGenerate"><div class="actionIcon">➕</div><div class="actionText">GENERATE</div></div>
+    <div class="actionCard" id="btnReset"><div class="actionIcon">♻</div><div class="actionText">RESET</div></div>
+    <div class="actionCard" id="btnBlock"><div class="actionIcon">🚫</div><div class="actionText">BLOCK</div></div>
+    <div class="actionCard" id="btnUnblock"><div class="actionIcon">🔓</div><div class="actionText">UNBLOCK</div></div>
+    <div class="actionCard" id="btnDelete"><div class="actionIcon">🗑</div><div class="actionText">DELETE</div></div>
+    <div class="actionCard" id="btnExport" title="Klik kanan untuk import JSON"><div class="actionIcon">📤</div><div class="actionText">EXPORT</div></div>
+  </div>
+
+  <div id="content">
+    <div id="leftPanel"><div id="licenseList"></div></div>
+    <div id="rightPanel">
+      <div id="profileCard">
+        <div id="profileStatus">🟢 READY</div>
+        <div id="profileLicense">PLP-XXXX-XXXX-XXXX</div>
+        <div id="profileOwner">👤 Paradise</div>
+        <div id="profileDevice">💻 -</div>
+      </div>
+      <div id="detailTitle">LICENSE DETAIL</div>
+      <div id="detailContent">
+        <div class="detailRow"><span>LICENSE</span><div id="detailLicense">-</div></div>
+        <div class="detailRow"><span>STATUS</span><div id="detailStatus">-</div></div>
+        <div class="detailRow"><span>OWNER</span><div id="detailOwner">-</div></div>
+        <div class="detailRow"><span>DEVICE</span><div id="detailDevice">-</div></div>
+        <div class="detailRow"><span>CREATED</span><div id="detailCreated">-</div></div>
+        <div class="detailRow"><span>ACTIVATED</span><div id="detailActivated">-</div></div>
+        <div class="detailRow"><span>LAST LOGIN</span><div id="detailLastLogin">-</div></div>
+        <div class="detailRow"><span>EXPIRED</span><div id="detailExpired">-</div></div>
+        <div class="detailRow"><span>VERSION</span><div id="detailVersion">-</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="generateOverlay">
+  <div id="generateBox">
+    <div id="generateTitle">➕ GENERATE LICENSE</div>
+    <div class="generateItem"><label>PREFIX</label><input id="genPrefix" type="text" value="PLP"></div>
+    <div class="generateItem"><label>JUMLAH</label><input id="genTotal" type="number" min="1" max="500" value="100"></div>
+    <div class="generateItem"><label>OWNER</label><input id="genOwner" type="text" value="Paradise"></div>
+    <div class="generateItem"><label>VERSION</label><input id="genVersion" type="text" value="1"></div>
+    <div id="generateButtons">
+      <button id="generateCancel" type="button">❌ BATAL</button>
+      <button id="generateOk" type="button">🚀 GENERATE</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<div id="confirmOverlay" class="hidden">
+  <div id="confirmBox">
+    <div id="confirmIcon">⚠</div>
+    <div id="confirmTitle">KONFIRMASI</div>
+    <div id="confirmMessage">Apakah Anda yakin?</div>
+    <div id="confirmButtons">
+      <button id="confirmCancel" type="button">BATAL</button>
+      <button id="confirmOk" type="button">YA</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,2786 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paradise Manager Auto Update Only</title>
+<style>
+/* ==========================================================
+   PARADISE LINK MANAGER
+   Paradise Lab Premium v1
+========================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Segoe UI",Arial,sans-serif;
+
+    min-height:100vh;
+
+    padding:30px;
+
+    color:#fff;
+
+    background:
+    linear-gradient(rgba(3,8,20,.78),rgba(3,8,20,.88)),
+    url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1800&auto=format&fit=crop")
+    center center/cover fixed;
+
+}
+
+/*==========================
+      CONTAINER
+===========================*/
+
+.app{
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+/*==========================
+        HEADER
+===========================*/
+
+.header{
+
+    position:relative;
+
+    margin-bottom:28px;
+
+}
+
+.badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#00d4ff,#0078ff);
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    box-shadow:0 0 18px rgba(0,212,255,.45);
+
+    margin-bottom:16px;
+
+}
+
+.header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-align:center;
+
+    text-shadow:0 0 15px rgba(0,212,255,.45);
+
+}
+
+/*==========================
+        ROW
+===========================*/
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+
+    margin-bottom:22px;
+
+}
+.row3{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+/*==========================
+        PANEL
+===========================*/
+
+.panel{
+
+    background:rgba(15,24,44,.72);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.10);
+
+    border-radius:20px;
+
+    padding:22px;
+
+    margin-bottom:22px;
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.35),
+
+    0 0 18px rgba(0,180,255,.08);
+
+    transition:.25s;
+
+}
+
+.panel:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+    0 18px 45px rgba(0,0,0,.45),
+
+    0 0 25px rgba(0,212,255,.15);
+
+}
+
+/*==========================
+      PANEL TITLE
+===========================*/
+
+.panel-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:14px;
+
+    color:#ffffff;
+
+    letter-spacing:.5px;
+
+}
+
+/*==========================
+       TEXTAREA
+===========================*/
+
+textarea{
+
+    width:100%;
+
+    resize:none;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:14px;
+
+    background:#081425;
+
+    color:#ffffff;
+
+    padding:16px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.25s;
+
+}
+
+textarea:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:0 0 15px rgba(0,212,255,.35);
+
+}
+
+#l1,
+#l2,
+#l3{
+
+    height:250px;
+
+}
+
+#status{
+
+    height:90px;
+
+}
+
+#db{
+
+    height:230px;
+
+}
+
+#hasil{
+
+    height:150px;
+
+}
+
+/*==========================
+      INPUT NUMBER
+===========================*/
+
+input[type=number]{
+
+    width:80px;
+
+    padding:10px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:10px;
+
+    background:#081425;
+
+    color:#fff;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+/*==========================
+      LABEL
+===========================*/
+
+.option-group{
+
+    display:flex;
+
+    gap:30px;
+
+    margin-top:15px;
+
+    margin-bottom:15px;
+
+}
+
+.check{
+
+    display:block;
+
+    margin-bottom:18px;
+
+}
+
+label{
+
+    color:#fff;
+
+    font-size:14px;
+
+}
+
+input[type=radio],
+input[type=checkbox]{
+
+    margin-right:8px;
+
+}
+
+/*==========================
+        TOOLBAR
+===========================*/
+
+.toolbar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:16px;
+
+    flex-wrap:wrap;
+
+}
+
+.button-row{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:16px;
+
+}
+
+.button-row button{
+
+    flex:1;
+
+}
+
+/*==========================
+        BUTTON
+===========================*/
+
+button{
+
+    padding:13px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    color:#fff;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 22px rgba(0,114,255,.35);
+
+}
+
+button:active{
+
+    transform:scale(.98);
+
+}
+
+/* tombol khusus */
+
+#cut{
+
+    width:100%;
+
+    background:linear-gradient(135deg,#00d26a,#009245);
+
+}
+
+#gas{
+
+    background:linear-gradient(135deg,#ff9800,#ef6c00);
+
+}
+
+#copy{
+
+    background:linear-gradient(135deg,#00c853,#009624);
+
+}
+
+#clear{
+
+    background:linear-gradient(135deg,#ff5252,#d50000);
+
+}
+
+/*==========================
+        TOAST
+===========================*/
+
+#toast{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    background:rgba(10,20,40,.92);
+
+    color:#fff;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    backdrop-filter:blur(12px);
+
+    opacity:0;
+
+    transform:translateY(20px);
+
+    transition:.3s;
+
+    z-index:9999;
+
+}
+
+#toast.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+/*==========================
+      SCROLLBAR
+===========================*/
+
+textarea::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+textarea::-webkit-scrollbar-track{
+
+    background:#081425;
+
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:linear-gradient(#00d4ff,#0072ff);
+
+}
+
+/*==========================
+      MOBILE
+===========================*/
+
+@media(max-width:900px){
+
+    body{
+
+        padding:15px;
+
+    }
+
+    .row{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .toolbar{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .button-row{
+
+        flex-direction:column;
+
+    }
+
+    input[type=number]{
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================================
+   PARADISE LAB PREMIUM
+   PART 3 - FINISHING EFFECT
+========================================================== */
+
+
+/* =======================================================
+   PANEL GLASS SHINE EFFECT (OFF)
+   Aktifkan lagi jika ingin efek sapuan cahaya.
+======================================================= */
+
+/*
+.panel{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.panel::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:20px;
+
+    pointer-events:none;
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        rgba(255,255,255,.08),
+
+        transparent 35%,
+
+        transparent 65%,
+
+        rgba(0,212,255,.08)
+
+    );
+
+}
+
+.panel::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60%;
+
+    left:-120%;
+
+    width:70%;
+
+    height:220%;
+
+    transform:rotate(25deg);
+
+    background:
+
+    linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+
+    );
+
+    transition:1.2s;
+
+}
+
+.panel:hover::after{
+
+    left:170%;
+
+}
+*/
+
+/* ==========================
+      BUTTON PREMIUM
+========================== */
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60px;
+
+    height:100%;
+
+    transform:skewX(-25deg);
+
+    background:rgba(255,255,255,.22);
+
+    transition:.8s;
+
+}
+
+button:hover::before{
+
+    left:160%;
+
+}
+
+
+/* ==========================
+      BADGE EFFECT
+========================== */
+
+.badge{
+
+    position:relative;
+
+    overflow:hidden;
+
+    animation:badgeGlow 3.5s ease-in-out infinite;
+
+}
+
+@keyframes badgeGlow{
+
+    0%,100%{
+
+        box-shadow:
+        0 0 10px rgba(0,212,255,.25);
+
+    }
+
+    50%{
+
+        box-shadow:
+        0 0 18px rgba(0,212,255,.55),
+        0 0 30px rgba(0,212,255,.18);
+
+    }
+
+}
+
+.badge::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70%;
+
+    left:-120%;
+
+    width:45%;
+
+    height:250%;
+
+    transform:rotate(25deg);
+
+    background:linear-gradient(
+
+        transparent,
+
+        rgba(255,255,255,.45),
+
+        transparent
+
+    );
+
+    animation:badgeShine 6s linear infinite;
+
+}
+
+@keyframes badgeShine{
+
+    0%{
+
+        left:-120%;
+
+    }
+
+    20%{
+
+        left:150%;
+
+    }
+
+    100%{
+
+        left:150%;
+
+    }
+
+}
+
+.badge{
+
+    transition:.25s;
+
+}
+
+.badge:hover{
+
+    transform:translateY(-2px) scale(1.03);
+
+}
+
+/* ==========================
+      TITLE EFFECT
+========================== */
+
+.header h1{
+
+    animation:titleGlow 3s ease-in-out infinite alternate;
+
+}
+
+@keyframes titleGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 8px rgba(0,212,255,.35);
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 20px rgba(0,212,255,.9),
+
+        0 0 35px rgba(0,212,255,.35);
+
+    }
+
+}
+
+
+/* ==========================
+      TEXTAREA
+========================== */
+
+textarea{
+
+    transition:.25s;
+
+}
+
+textarea:hover{
+
+    border-color:#2ecbff;
+
+    box-shadow:
+
+    0 0 12px rgba(0,212,255,.18);
+
+}
+
+
+/* ==========================
+      INPUT NUMBER
+========================== */
+
+input[type=number]:focus{
+
+    border-color:#00d4ff;
+
+    box-shadow:
+
+    0 0 12px rgba(0,212,255,.35);
+
+}
+
+
+/* ==========================
+      SCROLLBAR
+========================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#07111f;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(
+
+        #00d4ff,
+
+        #0072ff
+
+    );
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+
+    linear-gradient(
+
+        #3be7ff,
+
+        #0094ff
+
+    );
+
+}
+
+
+/* ==========================
+      TEXT SELECTION
+========================== */
+
+::selection{
+
+    background:#00d4ff;
+
+    color:#081425;
+
+}
+
+
+/* ==========================
+      PAGE OPEN
+========================== */
+
+.app{
+
+    animation:fadeUp .6s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ==========================
+      TOAST
+========================== */
+
+#toast{
+
+    box-shadow:
+
+    0 15px 35px rgba(0,0,0,.45),
+
+    0 0 25px rgba(0,212,255,.15);
+
+}
+
+
+/* ==========================
+      BUTTON HOVER
+========================== */
+
+button:hover{
+
+    letter-spacing:.5px;
+
+}
+
+
+.dbTools{}
+#hapusAtas{background:linear-gradient(135deg,#ff5252,#d50000);}
+#cutAtas{background:linear-gradient(135deg,#42a5f5,#1565c0);}
+
+/* ===========================
+   USA CLOCK
+=========================== */
+
+#usaClock{
+
+    position:fixed;
+
+    top:18px;
+
+    right:20px;
+
+    z-index:99999;
+
+    padding:12px 18px;
+
+    border-radius:14px;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+    0 0 20px rgba(56,189,248,.15);
+
+    text-align:center;
+
+    min-width:145px;
+
+}
+
+.usaTitle{
+
+    font-size:12px;
+
+    color:#9ecbff;
+
+    letter-spacing:1px;
+
+    margin-bottom:4px;
+
+    font-weight:bold;
+
+}
+
+#usaDate{
+
+    font-size:13px;
+
+    color:#b7d7ff;
+
+    margin-bottom:6px;
+
+    letter-spacing:.5px;
+
+}
+
+
+#usaTime{
+
+    font-size:24px;
+
+    color:#ffffff;
+
+    font-weight:bold;
+
+    font-family:Consolas,monospace;
+
+    text-shadow:0 0 10px rgba(255,255,255,.35);
+
+}
+.cutGroup{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:12px;
+
+}
+
+.cutGroup button{
+
+    flex:1;
+
+    margin:0;
+
+}
+
+/*==========================
+BOTTOM PANELS
+===========================*/
+
+.bottom-panels{
+
+    display:grid;
+
+    grid-template-columns:70% 40%;
+
+    gap:20px;
+
+}
+
+.bottom-panels .panel{
+
+    flex:1;
+
+    margin-bottom:0;
+
+}
+
+/*==========================*
+STATUS DATABASE
+*===========================*/
+
+#statusDB{
+
+    min-height:170px;
+
+    resize:vertical;
+
+}
+
+#clearStatusDB{
+
+    width:42px;
+
+    font-size:18px;
+
+    padding:8px 0;
+
+}
+.status-option-bar{
+
+    display:flex;
+
+    align-items:center;
+
+    margin:6px 0 4px;
+
+}
+
+.status-tools{
+
+    margin-left:auto;
+
+    display:flex;
+
+    gap:8px;
+
+    transform:translateY(-3px);
+
+}
+
+.status-tools button{
+
+    padding:6px 12px;
+
+    font-size:12px;
+
+    border-radius:8px;
+
+}
+.status-tools button:hover{
+
+    transform:translateY(-1px);
+
+}
+
+
+.status-db-panel{
+    margin-top:150px;
+}
+
+
+
+/* ==========================================================
+   PARADISE LAB THEME POPUP — 20 THEMES
+   Tambahan visual mandiri. Script utama aplikasi tidak diubah.
+========================================================== */
+
+.theme-launcher{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    user-select:none;
+    outline:none;
+}
+
+.theme-launcher:focus-visible{
+    box-shadow:
+    0 0 0 3px rgba(255,255,255,.25),
+    0 0 22px rgba(0,212,255,.65);
+}
+
+.theme-launcher .theme-chevron{
+    font-size:11px;
+    opacity:.8;
+    transition:transform .25s ease;
+}
+
+.theme-launcher[aria-expanded="true"] .theme-chevron{
+    transform:rotate(180deg);
+}
+
+.theme-popup{
+    position:fixed;
+    inset:0;
+    z-index:1000000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(0,0,0,.66);
+    backdrop-filter:blur(9px);
+    -webkit-backdrop-filter:blur(9px);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .22s ease,visibility .22s ease;
+}
+
+.theme-popup.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.theme-popup-card{
+    width:min(920px,96vw);
+    max-height:min(760px,88vh);
+    overflow:auto;
+    padding:22px;
+    border-radius:22px;
+    color:var(--theme-text,#fff);
+    background:var(--theme-panel,rgba(10,18,34,.96));
+    border:1px solid var(--theme-border,rgba(255,255,255,.16));
+    box-shadow:
+    0 30px 90px rgba(0,0,0,.55),
+    0 0 32px var(--theme-glow,rgba(0,212,255,.18));
+    transform:translateY(18px) scale(.97);
+    transition:transform .25s ease;
+}
+
+.theme-popup.show .theme-popup-card{
+    transform:translateY(0) scale(1);
+}
+
+.theme-popup-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.theme-popup-title{
+    min-width:0;
+    flex:1;
+}
+
+.theme-popup-title h2{
+    margin:0 0 4px;
+    font-size:22px;
+    letter-spacing:.4px;
+}
+
+.theme-popup-title p{
+    margin:0;
+    color:var(--theme-muted,#9ecbff);
+    font-size:13px;
+}
+
+.theme-close{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    padding:0;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    color:var(--theme-text,#fff);
+    background:var(--theme-input,rgba(255,255,255,.08));
+    border:1px solid var(--theme-border,rgba(255,255,255,.14));
+    font-size:21px;
+    line-height:1;
+}
+
+.theme-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+}
+
+.theme-option{
+    position:relative;
+    min-height:96px;
+    padding:13px;
+    border-radius:16px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    overflow:hidden;
+    text-align:left;
+    color:#fff;
+    background:
+    radial-gradient(circle at 85% 15%,rgba(255,255,255,.28),transparent 28%),
+    linear-gradient(135deg,var(--preview-a),var(--preview-b));
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 8px 20px rgba(0,0,0,.22);
+    transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+
+.theme-option:hover{
+    transform:translateY(-3px);
+    box-shadow:0 13px 28px rgba(0,0,0,.32);
+    border-color:rgba(255,255,255,.55);
+}
+
+.theme-option::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 35%,transparent 70%,rgba(255,255,255,.08));
+    pointer-events:none;
+}
+
+.theme-option .theme-icon{
+    position:relative;
+    z-index:1;
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    font-size:22px;
+    background:rgba(0,0,0,.22);
+    border:1px solid rgba(255,255,255,.2);
+    backdrop-filter:blur(7px);
+}
+
+.theme-option .theme-name{
+    position:relative;
+    z-index:1;
+    font-size:13px;
+    font-weight:800;
+    line-height:1.25;
+    text-shadow:0 2px 8px rgba(0,0,0,.38);
+}
+
+.theme-option .theme-check{
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:2;
+    width:23px;
+    height:23px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:#fff;
+    color:#07111f;
+    font-size:13px;
+    font-weight:900;
+    opacity:0;
+    transform:scale(.6);
+    transition:.2s ease;
+}
+
+.theme-option.active{
+    border-color:#fff;
+    box-shadow:
+    0 0 0 2px rgba(255,255,255,.34),
+    0 14px 30px rgba(0,0,0,.35);
+}
+
+.theme-option.active .theme-check{
+    opacity:1;
+    transform:scale(1);
+}
+
+body.theme-popup-open{
+    overflow:hidden;
+}
+
+/* Variabel untuk 19 tema tambahan. Tema "Bawaan" tidak memberi
+   atribut data-theme sehingga tampilan asli tetap utuh. */
+
+body[data-theme="bright-blue"]{
+    --theme-bg1:#eaf5ff;--theme-bg2:#fbfdff;--theme-panel:rgba(255,255,255,.94);
+    --theme-input:#ffffff;--theme-text:#10243f;--theme-muted:#52749d;
+    --theme-border:rgba(35,132,255,.58);--theme-accent:#1681ff;--theme-accent2:#55b7ff;
+    --theme-glow:rgba(35,132,255,.24);--theme-button-text:#fff;
+}
+body[data-theme="black-gold"]{
+    --theme-bg1:#030303;--theme-bg2:#171106;--theme-panel:rgba(13,12,9,.9);
+    --theme-input:#090806;--theme-text:#fff7d6;--theme-muted:#d3b864;
+    --theme-border:rgba(255,199,55,.58);--theme-accent:#ffd24a;--theme-accent2:#a96800;
+    --theme-glow:rgba(255,196,44,.28);--theme-button-text:#171006;
+}
+body[data-theme="midnight"]{
+    --theme-bg1:#020617;--theme-bg2:#0b1738;--theme-panel:rgba(8,17,39,.86);
+    --theme-input:#030b20;--theme-text:#eaf2ff;--theme-muted:#90a9d6;
+    --theme-border:rgba(74,120,255,.44);--theme-accent:#3f6cff;--theme-accent2:#112b78;
+    --theme-glow:rgba(63,108,255,.25);--theme-button-text:#fff;
+}
+body[data-theme="neon-purple"]{
+    --theme-bg1:#08020f;--theme-bg2:#210730;--theme-panel:rgba(23,7,34,.86);
+    --theme-input:#12031c;--theme-text:#f9edff;--theme-muted:#d4a4ed;
+    --theme-border:rgba(210,72,255,.55);--theme-accent:#d84cff;--theme-accent2:#6b16a9;
+    --theme-glow:rgba(216,76,255,.3);--theme-button-text:#fff;
+}
+body[data-theme="matrix"]{
+    --theme-bg1:#010603;--theme-bg2:#071b0d;--theme-panel:rgba(4,20,10,.88);
+    --theme-input:#020d06;--theme-text:#d9ffe6;--theme-muted:#78d99a;
+    --theme-border:rgba(40,255,112,.5);--theme-accent:#31ff78;--theme-accent2:#08752e;
+    --theme-glow:rgba(49,255,120,.25);--theme-button-text:#021007;
+}
+body[data-theme="ocean"]{
+    --theme-bg1:#01131b;--theme-bg2:#063c50;--theme-panel:rgba(4,34,46,.85);
+    --theme-input:#021c27;--theme-text:#e4fbff;--theme-muted:#83d6e7;
+    --theme-border:rgba(37,211,238,.48);--theme-accent:#22d3ee;--theme-accent2:#087f9d;
+    --theme-glow:rgba(34,211,238,.25);--theme-button-text:#02202a;
+}
+body[data-theme="crimson"]{
+    --theme-bg1:#0b0205;--theme-bg2:#330713;--theme-panel:rgba(36,6,15,.87);
+    --theme-input:#190208;--theme-text:#fff0f3;--theme-muted:#efa0b2;
+    --theme-border:rgba(255,62,104,.5);--theme-accent:#ff416c;--theme-accent2:#8c092a;
+    --theme-glow:rgba(255,65,108,.27);--theme-button-text:#fff;
+}
+body[data-theme="sakura"]{
+    --theme-bg1:#fff0f5;--theme-bg2:#fffafd;--theme-panel:rgba(255,255,255,.9);
+    --theme-input:#fff8fb;--theme-text:#54243b;--theme-muted:#a96382;
+    --theme-border:rgba(239,91,154,.48);--theme-accent:#f062a6;--theme-accent2:#c53279;
+    --theme-glow:rgba(240,98,166,.22);--theme-button-text:#fff;
+}
+body[data-theme="ice"]{
+    --theme-bg1:#e8faff;--theme-bg2:#f7fdff;--theme-panel:rgba(246,253,255,.91);
+    --theme-input:#ffffff;--theme-text:#143445;--theme-muted:#5b869b;
+    --theme-border:rgba(64,198,235,.52);--theme-accent:#55d9f7;--theme-accent2:#198db3;
+    --theme-glow:rgba(85,217,247,.24);--theme-button-text:#073040;
+}
+body[data-theme="forest"]{
+    --theme-bg1:#06110a;--theme-bg2:#15351e;--theme-panel:rgba(12,35,19,.86);
+    --theme-input:#071b0e;--theme-text:#edf9ef;--theme-muted:#9bc9a4;
+    --theme-border:rgba(91,190,108,.45);--theme-accent:#5ebe72;--theme-accent2:#1d6230;
+    --theme-glow:rgba(94,190,114,.24);--theme-button-text:#fff;
+}
+body[data-theme="sunset"]{
+    --theme-bg1:#190721;--theme-bg2:#5b1b17;--theme-panel:rgba(42,13,37,.84);
+    --theme-input:#23091d;--theme-text:#fff2e8;--theme-muted:#eab29c;
+    --theme-border:rgba(255,133,70,.5);--theme-accent:#ff8a3d;--theme-accent2:#b0295e;
+    --theme-glow:rgba(255,111,60,.28);--theme-button-text:#fff;
+}
+body[data-theme="cyber"]{
+    --theme-bg1:#070800;--theme-bg2:#202000;--theme-panel:rgba(24,25,2,.88);
+    --theme-input:#101100;--theme-text:#ffffdd;--theme-muted:#d7d66a;
+    --theme-border:rgba(242,255,0,.5);--theme-accent:#efff00;--theme-accent2:#7d8500;
+    --theme-glow:rgba(239,255,0,.25);--theme-button-text:#121300;
+}
+body[data-theme="cyan-glass"]{
+    --theme-bg1:#021217;--theme-bg2:#07353b;--theme-panel:rgba(7,40,46,.67);
+    --theme-input:rgba(2,26,31,.78);--theme-text:#ebffff;--theme-muted:#93dfe3;
+    --theme-border:rgba(87,239,244,.44);--theme-accent:#55f0f4;--theme-accent2:#0c8991;
+    --theme-glow:rgba(85,240,244,.28);--theme-button-text:#03282b;
+}
+body[data-theme="copper"]{
+    --theme-bg1:#130905;--theme-bg2:#3a1d0e;--theme-panel:rgba(47,24,13,.86);
+    --theme-input:#231006;--theme-text:#fff2e7;--theme-muted:#d6a27c;
+    --theme-border:rgba(218,132,74,.5);--theme-accent:#d98950;--theme-accent2:#7b3416;
+    --theme-glow:rgba(217,137,80,.26);--theme-button-text:#fff;
+}
+body[data-theme="mono"]{
+    --theme-bg1:#eceff3;--theme-bg2:#ffffff;--theme-panel:rgba(255,255,255,.94);
+    --theme-input:#f7f8fa;--theme-text:#17191d;--theme-muted:#666c75;
+    --theme-border:rgba(39,44,52,.36);--theme-accent:#343a44;--theme-accent2:#0d0f12;
+    --theme-glow:rgba(30,34,40,.16);--theme-button-text:#fff;
+}
+body[data-theme="galaxy"]{
+    --theme-bg1:#06031a;--theme-bg2:#241057;--theme-panel:rgba(20,10,54,.84);
+    --theme-input:#0e062c;--theme-text:#f4efff;--theme-muted:#bea9ef;
+    --theme-border:rgba(140,98,255,.5);--theme-accent:#8f63ff;--theme-accent2:#d33ca8;
+    --theme-glow:rgba(143,99,255,.3);--theme-button-text:#fff;
+}
+body[data-theme="candy"]{
+    --theme-bg1:#fff0fa;--theme-bg2:#eef9ff;--theme-panel:rgba(255,255,255,.9);
+    --theme-input:#fffaff;--theme-text:#43254d;--theme-muted:#966d9f;
+    --theme-border:rgba(108,183,255,.48);--theme-accent:#ff72bb;--theme-accent2:#6dbaff;
+    --theme-glow:rgba(255,114,187,.21);--theme-button-text:#fff;
+}
+body[data-theme="desert"]{
+    --theme-bg1:#f6e4c4;--theme-bg2:#fff8e9;--theme-panel:rgba(255,250,237,.9);
+    --theme-input:#fffdf7;--theme-text:#4a2e19;--theme-muted:#8f6b4b;
+    --theme-border:rgba(185,119,48,.48);--theme-accent:#c78137;--theme-accent2:#7c451a;
+    --theme-glow:rgba(199,129,55,.2);--theme-button-text:#fff;
+}
+body[data-theme="emerald-gold"]{
+    --theme-bg1:#02100a;--theme-bg2:#15351f;--theme-panel:rgba(7,31,19,.88);
+    --theme-input:#041b10;--theme-text:#f4ffe9;--theme-muted:#c4d596;
+    --theme-border:rgba(226,197,80,.5);--theme-accent:#dfc34f;--theme-accent2:#18764d;
+    --theme-glow:rgba(223,195,79,.25);--theme-button-text:#10200d;
+}
+
+body[data-theme]{
+    color:var(--theme-text);
+    background:
+    radial-gradient(circle at 16% 2%,var(--theme-glow),transparent 34%),
+    radial-gradient(circle at 88% 12%,var(--theme-glow),transparent 30%),
+    linear-gradient(135deg,var(--theme-bg1),var(--theme-bg2));
+    background-attachment:fixed;
+}
+
+body[data-theme] .panel,
+body[data-theme] #usaClock,
+body[data-theme] #toast{
+    color:var(--theme-text);
+    background:var(--theme-panel);
+    border-color:var(--theme-border);
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.28),
+    0 0 22px var(--theme-glow);
+}
+
+body[data-theme] .panel:hover{
+    box-shadow:
+    0 18px 45px rgba(0,0,0,.34),
+    0 0 30px var(--theme-glow);
+}
+
+body[data-theme] textarea,
+body[data-theme] input[type=number]{
+    color:var(--theme-text);
+    background:var(--theme-input);
+    border-color:var(--theme-border);
+}
+
+body[data-theme] textarea:focus,
+body[data-theme] input[type=number]:focus,
+body[data-theme] textarea:hover{
+    border-color:var(--theme-accent);
+    box-shadow:0 0 15px var(--theme-glow);
+}
+
+body[data-theme] .panel-title,
+body[data-theme] label,
+body[data-theme] .header h1,
+body[data-theme] #usaTime{
+    color:var(--theme-text);
+}
+
+body[data-theme] .usaTitle,
+body[data-theme] #usaDate{
+    color:var(--theme-muted);
+}
+
+body[data-theme] .badge,
+body[data-theme] button:not(.theme-option):not(.theme-close){
+    color:var(--theme-button-text);
+    background:linear-gradient(135deg,var(--theme-accent),var(--theme-accent2));
+}
+
+body[data-theme] .badge{
+    box-shadow:0 0 22px var(--theme-glow);
+}
+
+body[data-theme] .header h1{
+    text-shadow:
+    0 0 12px var(--theme-glow),
+    0 0 28px var(--theme-glow);
+}
+
+body[data-theme] ::selection{
+    color:var(--theme-button-text);
+    background:var(--theme-accent);
+}
+
+body[data-theme] ::-webkit-scrollbar-track{
+    background:var(--theme-bg1);
+}
+
+body[data-theme] ::-webkit-scrollbar-thumb{
+    background:linear-gradient(var(--theme-accent),var(--theme-accent2));
+}
+
+@media(max-width:760px){
+    .theme-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .theme-popup{padding:12px;}
+    .theme-popup-card{padding:16px;max-height:92vh;}
+}
+
+@media(max-width:420px){
+    .theme-grid{grid-template-columns:1fr;}
+}
+
+</style></head>
+<body>
+<body>
+
+<div id="usaClock">
+
+    <div class="usaTitle">
+        NEW YORK
+    </div>
+
+    <div id="usaDate">
+        Mon, Jul 13, 2026
+    </div>
+
+    <div id="usaTime">
+        02:15:48
+    </div>
+
+</div>
+<div class="app">
+
+    <div class="header">
+
+        <div class="badge theme-launcher"
+             id="themeLauncher"
+             role="button"
+             tabindex="0"
+             aria-haspopup="dialog"
+             aria-controls="themePopup"
+             aria-expanded="false"
+             title="Buka pilihan tema">
+            <span aria-hidden="true">🚀</span>
+            <span>Paradise Lab</span>
+            <span class="theme-chevron" aria-hidden="true">▼</span>
+        </div>
+
+        <h1>LINK MANAGER</h1>
+
+    </div>
+
+
+
+
+    <!-- ==========================
+         THEME POPUP — 20 PILIHAN
+    =========================== -->
+    <div class="theme-popup" id="themePopup" role="dialog" aria-modal="true" aria-labelledby="themePopupTitle" aria-hidden="true">
+        <div class="theme-popup-card">
+            <div class="theme-popup-head">
+                <div class="theme-popup-title">
+                    <h2 id="themePopupTitle">Pilih Tema Paradise Lab</h2>
+                    <p>Klik salah satu tema. Pilihan akan tersimpan otomatis.</p>
+                </div>
+                <button type="button" class="theme-close" id="themeClose" aria-label="Tutup pilihan tema">×</button>
+            </div>
+            <div class="theme-grid">
+            <button type="button" class="theme-option" data-theme-choice="default" data-theme-icon="🚀" data-theme-label="Tema Bawaan" aria-pressed="false" style="--preview-a:#00d4ff;--preview-b:#0078ff;">
+                <span class="theme-icon" aria-hidden="true">🚀</span>
+                <span class="theme-name">Tema Bawaan</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="bright-blue" data-theme-icon="☀️" data-theme-label="Cerah Biru" aria-pressed="false" style="--preview-a:#f8fdff;--preview-b:#2384ff;">
+                <span class="theme-icon" aria-hidden="true">☀️</span>
+                <span class="theme-name">Cerah Biru</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="black-gold" data-theme-icon="🔥" data-theme-label="Hitam Emas" aria-pressed="false" style="--preview-a:#050505;--preview-b:#d99f16;">
+                <span class="theme-icon" aria-hidden="true">🔥</span>
+                <span class="theme-name">Hitam Emas</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="midnight" data-theme-icon="🌙" data-theme-label="Midnight" aria-pressed="false" style="--preview-a:#020617;--preview-b:#244baf;">
+                <span class="theme-icon" aria-hidden="true">🌙</span>
+                <span class="theme-name">Midnight</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="neon-purple" data-theme-icon="💜" data-theme-label="Neon Purple" aria-pressed="false" style="--preview-a:#09010f;--preview-b:#c43cff;">
+                <span class="theme-icon" aria-hidden="true">💜</span>
+                <span class="theme-name">Neon Purple</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="matrix" data-theme-icon="💚" data-theme-label="Matrix Green" aria-pressed="false" style="--preview-a:#010503;--preview-b:#20d963;">
+                <span class="theme-icon" aria-hidden="true">💚</span>
+                <span class="theme-name">Matrix Green</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="ocean" data-theme-icon="🌊" data-theme-label="Ocean Blue" aria-pressed="false" style="--preview-a:#01141d;--preview-b:#0b91ad;">
+                <span class="theme-icon" aria-hidden="true">🌊</span>
+                <span class="theme-name">Ocean Blue</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="crimson" data-theme-icon="🌹" data-theme-label="Crimson Red" aria-pressed="false" style="--preview-a:#0b0205;--preview-b:#c61543;">
+                <span class="theme-icon" aria-hidden="true">🌹</span>
+                <span class="theme-name">Crimson Red</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="sakura" data-theme-icon="🌸" data-theme-label="Sakura" aria-pressed="false" style="--preview-a:#fff1f6;--preview-b:#e05292;">
+                <span class="theme-icon" aria-hidden="true">🌸</span>
+                <span class="theme-name">Sakura</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="ice" data-theme-icon="🧊" data-theme-label="Ice Crystal" aria-pressed="false" style="--preview-a:#e9fbff;--preview-b:#46bddc;">
+                <span class="theme-icon" aria-hidden="true">🧊</span>
+                <span class="theme-name">Ice Crystal</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="forest" data-theme-icon="🌲" data-theme-label="Deep Forest" aria-pressed="false" style="--preview-a:#06110a;--preview-b:#367b46;">
+                <span class="theme-icon" aria-hidden="true">🌲</span>
+                <span class="theme-name">Deep Forest</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="sunset" data-theme-icon="🌅" data-theme-label="Sunset Glow" aria-pressed="false" style="--preview-a:#210927;--preview-b:#d95c35;">
+                <span class="theme-icon" aria-hidden="true">🌅</span>
+                <span class="theme-name">Sunset Glow</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="cyber" data-theme-icon="⚡" data-theme-label="Cyber Yellow" aria-pressed="false" style="--preview-a:#080900;--preview-b:#d9e500;">
+                <span class="theme-icon" aria-hidden="true">⚡</span>
+                <span class="theme-name">Cyber Yellow</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="cyan-glass" data-theme-icon="🩵" data-theme-label="Cyan Glass" aria-pressed="false" style="--preview-a:#021216;--preview-b:#16b6bf;">
+                <span class="theme-icon" aria-hidden="true">🩵</span>
+                <span class="theme-name">Cyan Glass</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="copper" data-theme-icon="🧡" data-theme-label="Copper" aria-pressed="false" style="--preview-a:#140905;--preview-b:#a95428;">
+                <span class="theme-icon" aria-hidden="true">🧡</span>
+                <span class="theme-name">Copper</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="mono" data-theme-icon="🤍" data-theme-label="Monochrome" aria-pressed="false" style="--preview-a:#f5f6f8;--preview-b:#25282e;">
+                <span class="theme-icon" aria-hidden="true">🤍</span>
+                <span class="theme-name">Monochrome</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="galaxy" data-theme-icon="🌌" data-theme-label="Galaxy" aria-pressed="false" style="--preview-a:#07031c;--preview-b:#813ed9;">
+                <span class="theme-icon" aria-hidden="true">🌌</span>
+                <span class="theme-name">Galaxy</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="candy" data-theme-icon="🍬" data-theme-label="Candy" aria-pressed="false" style="--preview-a:#fff0fa;--preview-b:#68b8ff;">
+                <span class="theme-icon" aria-hidden="true">🍬</span>
+                <span class="theme-name">Candy</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="desert" data-theme-icon="🏜️" data-theme-label="Desert Sand" aria-pressed="false" style="--preview-a:#f3dfbd;--preview-b:#a96d30;">
+                <span class="theme-icon" aria-hidden="true">🏜️</span>
+                <span class="theme-name">Desert Sand</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" class="theme-option" data-theme-choice="emerald-gold" data-theme-icon="🐉" data-theme-label="Emerald Gold" aria-pressed="false" style="--preview-a:#02110a;--preview-b:#ba9c35;">
+                <span class="theme-icon" aria-hidden="true">🐉</span>
+                <span class="theme-name">Emerald Gold</span>
+                <span class="theme-check" aria-hidden="true">✓</span>
+            </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================
+         LINK
+    =========================== -->
+
+    <div class="row row3">
+
+    <section class="panel">
+
+        <div class="panel-title">
+            LINK 1 (<span id="t1">0</span>)
+        </div>
+
+        <textarea id="l1"></textarea>
+
+    </section>
+
+    <section class="panel">
+
+        <div class="panel-title">
+            LINK 2 (<span id="t2">0</span>)
+        </div>
+
+        <textarea id="l2"></textarea>
+
+    </section>
+
+    <section class="panel">
+
+        <div class="panel-title">
+            LINK 3 (<span id="t3">0</span>)
+        </div>
+
+        <textarea id="l3"></textarea>
+
+    </section>
+
+</div>
+
+
+    <!-- ==========================
+         STATUS
+    =========================== -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+            STATUS
+        </div>
+
+        <textarea id="status"></textarea>
+
+        <div class="option-group">
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="src"
+                    id="r1"
+                    checked>
+
+                Link 1
+
+            </label>
+			
+            <label>
+
+                <input
+                    type="radio"
+                    name="src"
+                    id="r2">
+
+                Link 2
+
+            </label>
+
+			<label>
+
+				<input
+					type="radio"
+					name="src"
+					id="r3">
+
+				Link 3
+
+			</label>
+        </div>
+
+
+        <div class="status-option-bar">
+
+			<label class="check">
+
+				<input
+					type="checkbox"
+					id="inc">
+
+				Sertakan Status
+
+			</label>
+
+			<div class="status-tools">
+
+				<button id="genStatus">
+
+					🎲 Generate
+
+				</button>
+
+				<button id="copyStatus">
+
+					📋 Copy
+
+				</button>
+
+			</div>
+
+		</div>
+
+
+        <div class="cutGroup">
+
+			<button id="cut">
+				CUT LINK (0)
+			</button>
+
+			<button id="cut1">
+				CUT LINK 1 (0)
+			</button>
+
+			<button id="cut2">
+				CUT LINK 2 (0)
+			</button>
+
+			<button id="cut3">
+				CUT LINK 3 (0)
+			</button>
+
+</div>
+
+
+    </section>
+
+
+    <!-- ==========================
+         DATABASE
+    =========================== -->
+<div class="bottom-panels">
+
+    <section class="panel">
+
+        <div class="panel-title">
+DATABASE (<span id="dbCount">0</span>)
+</div>
+
+        <textarea id="db"></textarea>
+
+        <div class="toolbar">
+<input id="jumlah" type="number" value="10" min="1" max="1000">
+<button id="gas">🎲 RANDOM</button>
+<input id="hapusJumlah" type="number" value="100" min="1">
+<button id="hapusAtas">🗑 HAPUS</button>
+<input id="cutJumlah" type="number" value="500" min="1">
+<button id="cutAtas">✂ CUT</button>
+</div>
+
+    </section>
+
+
+    <!-- ==========================
+         HASIL
+    =========================== -->
+<div class="bottom-panels">
+
+    <section class="panel">
+
+        <div class="panel-title">
+
+            HASIL RANDOM
+
+        </div>
+
+        <textarea id="hasil"></textarea>
+
+        <div class="button-row">
+
+            <button id="copy">
+
+                COPY
+
+            </button>
+
+		
+		
+            <button id="clear">
+
+                CLEAR
+
+            </button>
+
+        </div>
+
+    </section>
+</div>
+
+<!-- ==========================
+     STATUS DATABASE
+=========================== -->
+
+<section class="panel status-db-panel">
+
+    <div class="panel-title">
+
+        STATUS DATABASE (<span id="statusCount">0</span>)
+
+    </div>
+
+    <textarea id="statusDB"></textarea>
+
+    <div class="button-row">
+
+        <button id="clearStatusDB">
+
+            ✖ CLEAR STATUS
+
+        </button>
+
+    </div>
+
+</section>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/*==========================================
+ PARADISE MANAGER V3
+ PART 1 - CORE
+==========================================*/
+
+const $ = id => document.getElementById(id);
+
+const APP = {
+
+    links: ['l1','l2','l3'],
+
+    save(id){
+        const el=$(id);
+        if(el) localStorage.setItem(id,el.value);
+    },
+
+    load(id){
+        const el=$(id);
+        if(el) el.value=localStorage.getItem(id)||'';
+    },
+
+    count(id){
+        const el=$(id);
+        if(!el) return 0;
+
+        return el.value
+            .split(/\n/)
+            .filter(v=>v.trim())
+            .length;
+    }
+
+};
+/*==========================================
+ TOAST
+==========================================*/
+
+function toast(text){
+
+    const t=$('toast');
+
+    if(!t) return;
+
+    t.textContent=text;
+
+    t.classList.add('show');
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer=setTimeout(()=>{
+
+        t.classList.remove('show');
+
+    },1500);
+
+}
+/*==========================================
+ STORAGE
+==========================================*/
+
+APP.links.forEach(id=>{
+
+    APP.load(id);
+
+    const el=$(id);
+
+    if(!el) return;
+
+    el.addEventListener('input',()=>{
+
+        APP.save(id);
+
+        refreshUI();
+
+    });
+
+});
+
+APP.load('status');
+
+if($('status')){
+
+    $('status').addEventListener('input',()=>{
+
+        APP.save('status');
+
+    });
+
+}
+
+/*==========================================
+ COUNTER
+==========================================*/
+
+function updateCounter(){
+
+    $('t1').textContent=APP.count('l1');
+
+    $('t2').textContent=APP.count('l2');
+
+    $('t3').textContent=APP.count('l3');
+
+}
+/*==========================================
+ ACTIVE LINK
+==========================================*/
+
+function activeTextarea(){
+
+    if($('r3').checked) return $('l3');
+
+    if($('r2').checked) return $('l2');
+
+    return $('l1');
+
+}
+/*==========================================
+ BUTTON COUNTER
+==========================================*/
+
+function updateButtons(){
+
+    const total=APP.count(activeTextarea().id);
+
+    $('cut').textContent=
+        'CUT LINK ('+total+')';
+
+    $('cut1').textContent=
+        'CUT LINK 1 ('+APP.count('l1')+')';
+
+    $('cut2').textContent=
+        'CUT LINK 2 ('+APP.count('l2')+')';
+
+    $('cut3').textContent=
+        'CUT LINK 3 ('+APP.count('l3')+')';
+
+}
+/*==========================================
+ REFRESH UI
+==========================================*/
+
+function refreshUI(){
+
+    updateCounter();
+
+    updateButtons();
+
+}
+/*==========================================
+ RADIO
+==========================================*/
+
+['r1','r2','r3'].forEach(id=>{
+
+    const radio=$(id);
+
+    if(!radio) return;
+
+    radio.addEventListener(
+
+        'change',
+
+        ()=>{
+
+            localStorage.setItem(
+
+                'src',
+
+                id
+
+            );
+
+            refreshUI();
+
+        }
+
+    );
+
+});
+/*==========================================
+ LOAD RADIO
+==========================================*/
+
+const lastRadio=
+
+localStorage.getItem('src');
+
+if($(lastRadio)){
+
+    $(lastRadio).checked=true;
+
+}else{
+
+    $('r1').checked=true;
+
+}
+refreshUI();
+
+/*==========================================
+ CUT ENGINE
+==========================================*/
+
+function cutFrom(textarea){
+
+    let arr=textarea.value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    if(!arr.length){
+
+        toast('Link kosong');
+
+        return;
+
+    }
+
+    let link=arr.shift();
+
+    textarea.value=arr.join('\n');
+
+    APP.save(textarea.id);
+
+	let hasil=link;
+
+	if($('inc').checked){
+
+		if(!$('status').value.trim()){
+
+			generateStatus();
+
+		}
+
+		if($('status').value.trim()){
+
+			hasil=
+				$('status').value.trim()
+				+' ➢ '+
+				link;
+
+			$('status').value='';
+
+			APP.save('status');
+
+		}
+
+	}
+	
+    navigator.clipboard
+    .writeText(hasil)
+    .then(()=>{
+
+        toast('Berhasil dicopy');
+
+        refreshUI();
+
+    })
+    .catch(()=>{
+
+        toast('Gagal copy');
+
+    });
+
+}
+
+/*==========================================
+ CUT BUTTONS
+==========================================*/
+
+$('cut').onclick=()=>{
+
+    cutFrom(
+
+        activeTextarea()
+
+    );
+
+};
+
+$('cut1').onclick=()=>{
+
+    cutFrom(
+
+        $('l1')
+
+    );
+
+};
+
+$('cut2').onclick=()=>{
+
+    cutFrom(
+
+        $('l2')
+
+    );
+
+};
+
+$('cut3').onclick=()=>{
+
+    cutFrom(
+
+        $('l3')
+
+    );
+
+};
+
+/*==========================================
+ DATABASE
+==========================================*/
+
+function updateDBCount(){
+
+    $('dbCount').textContent=
+        APP.count('db');
+
+}
+
+APP.load('db');
+
+$('db').addEventListener(
+
+    'input',
+
+    ()=>{
+
+        APP.save('db');
+
+        updateDBCount();
+
+    }
+
+);
+
+/*==========================================
+ SETTINGS
+==========================================*/
+
+[
+'hasil',
+'jumlah',
+'hapusJumlah',
+'cutJumlah'
+
+].forEach(id=>{
+
+    APP.load(id);
+
+    const el=$(id);
+
+    if(!el) return;
+
+    el.addEventListener(
+
+        'input',
+
+        ()=>{
+
+            APP.save(id);
+
+        }
+
+    );
+
+});
+/*==========================================
+ COPY & CLEAR
+==========================================*/
+
+$('copy').onclick=()=>{
+
+    navigator.clipboard.writeText(
+
+        $('hasil').value
+
+    ).then(()=>{
+
+        toast('Berhasil dicopy');
+
+    });
+
+};
+
+/*==========================================*
+COPY STATUS
+*==========================================*/
+
+$('copyStatus').onclick=()=>{
+
+    const text=$('status').value.trim();
+
+    if(!text){
+
+        toast('Status kosong');
+
+        return;
+
+    }
+
+    navigator.clipboard
+
+    .writeText(text)
+
+    .then(()=>{
+
+        toast('Status berhasil dicopy');
+
+    })
+
+    .catch(()=>{
+
+        toast('Gagal copy');
+
+    });
+
+};
+
+$('clear').onclick=()=>{
+
+    $('hasil').value='';
+
+    APP.save('hasil');
+
+    toast('Hasil dibersihkan');
+
+};
+updateDBCount();
+
+/*==========================================
+ RANDOM
+==========================================*/
+
+$('gas').onclick=()=>{
+
+    let arr=$('db').value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    if(!arr.length){
+
+        toast('Database kosong');
+
+        return;
+
+    }
+
+    let total=parseInt($('jumlah').value)||1;
+
+    if(total>arr.length) total=arr.length;
+
+    arr.sort(()=>Math.random()-0.5);
+
+    $('hasil').value=
+        arr.slice(0,total).join('\n');
+
+    APP.save('hasil');
+
+    toast('Random selesai');
+
+};
+
+/*==========================================
+ HAPUS ATAS
+==========================================*/
+
+$('hapusAtas').onclick=()=>{
+
+    let arr=$('db').value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    let total=parseInt($('hapusJumlah').value)||1;
+
+    arr.splice(0,total);
+
+    $('db').value=arr.join('\n');
+
+    APP.save('db');
+
+    updateDBCount();
+
+    toast('Data dihapus');
+
+};
+
+/*==========================================
+ CUT ATAS
+==========================================*/
+
+$('cutAtas').onclick=()=>{
+
+    let arr=$('db').value
+        .split(/\n/)
+        .filter(v=>v.trim());
+
+    let total=parseInt($('cutJumlah').value)||1;
+
+    let hasil=arr.splice(0,total);
+
+    $('hasil').value=hasil.join('\n');
+
+    $('db').value=arr.join('\n');
+
+    APP.save('hasil');
+
+    APP.save('db');
+
+    updateDBCount();
+
+    navigator.clipboard.writeText(
+
+        $('hasil').value
+
+    ).then(()=>{
+
+        toast('Cut selesai');
+
+    });
+
+};
+
+/*==========================================
+ USA CLOCK
+==========================================*/
+
+function updateUSClock(){
+
+    const el=$('usaClock');
+
+    if(!el) return;
+
+	const now = new Date();
+
+	$("usaDate").textContent = now.toLocaleDateString(
+		"en-US",
+		{
+			timeZone:"America/New_York",
+			weekday:"short",
+			year:"numeric",
+			month:"short",
+			day:"2-digit"
+		}
+	);
+
+	$("usaTime").textContent = now.toLocaleTimeString(
+		"en-US",
+		{
+			timeZone:"America/New_York",
+			hour:"2-digit",
+			minute:"2-digit",
+			second:"2-digit",
+			hour12:false
+		}
+	);
+
+}
+
+updateUSClock();
+
+setInterval(updateUSClock,1000);
+
+/*==========================================
+ ENTER NUMBER ONLY
+==========================================*/
+
+[
+'jumlah',
+'hapusJumlah',
+'cutJumlah'
+
+].forEach(id=>{
+
+    const el=$(id);
+
+    if(!el) return;
+
+    el.addEventListener('input',()=>{
+
+        el.value=el.value.replace(/\D/g,'');
+
+    });
+
+});
+
+/*==========================================
+ AUTO FOCUS
+==========================================*/
+
+window.onload=()=>{
+
+    if($('l1'))
+
+        $('l1').focus();
+
+};
+
+/*==========================================
+ SHORTCUT
+==========================================*/
+
+document.addEventListener(
+
+'keydown',
+
+e=>{
+
+    if(e.ctrlKey && e.key==='1'){
+
+        $('cut1').click();
+
+    }
+
+    if(e.ctrlKey && e.key==='2'){
+
+        $('cut2').click();
+
+    }
+
+    if(e.ctrlKey && e.key==='3'){
+
+        $('cut3').click();
+
+    }
+
+    if(e.ctrlKey && e.key==='r'){
+
+        e.preventDefault();
+
+        $('gas').click();
+
+    }
+
+});
+
+/*==========================================
+ STARTUP
+==========================================*/
+
+refreshUI();
+
+updateDBCount();
+
+/*==========================================*
+STATUS DATABASE
+*==========================================*/
+
+APP.load('statusDB');
+
+if($('statusDB')){
+
+    $('statusDB').addEventListener(
+
+        'input',
+
+        ()=>{
+
+            APP.save('statusDB');
+
+			statusPool=[];
+			
+            updateStatusCount();
+
+        }
+
+    );
+
+}
+
+function updateStatusCount(){
+
+    const total=
+
+    $('statusDB').value
+
+    .split(/\n-\n|\r\n-\r\n|\n-\r|\r-\n/)
+
+    .filter(v=>v.trim())
+
+    .length;
+
+    $('statusCount').textContent=total;
+
+}
+
+updateStatusCount();
+
+/*==========================================*
+STATUS GENERATE
+*==========================================*/
+
+let statusPool=[];
+
+function buildStatusPool(){
+
+    statusPool=$('statusDB').value
+
+    .split(/\n-\n|\r\n-\r\n|\n-\r|\r-\n/)
+
+    .map(v=>v.trim())
+
+    .filter(v=>v);
+
+    // acak urutan sekali saja
+    statusPool.sort(()=>Math.random()-0.5);
+
+}
+function generateStatus(){
+
+    // Kalau pool habis, isi ulang
+    if(statusPool.length===0){
+
+        buildStatusPool();
+
+    }
+
+    // Kalau database memang kosong
+    if(statusPool.length===0){
+
+        toast('Status Database kosong');
+
+        return false;
+
+    }
+
+    // Ambil satu status secara acak
+    const index=Math.floor(
+
+        Math.random()*statusPool.length
+
+    );
+
+    const status=statusPool.splice(index,1)[0];
+
+    $('status').value=status;
+
+    APP.save('status');
+
+    // Kalau status terakhir baru saja dipakai,
+    // siapkan pool baru untuk generate berikutnya
+    if(statusPool.length===0){
+
+        buildStatusPool();
+
+    }
+
+    return true;
+
+}
+$('genStatus').onclick=()=>{
+
+    generateStatus();
+
+};
+
+
+$('clearStatusDB').onclick=()=>{
+
+    $('statusDB').value='';
+
+    APP.save('statusDB');
+
+	statusPool=[];
+
+    updateStatusCount();
+
+    toast('Status Database dikosongkan');
+
+};
+
+
+toast('Paradise Manager Auto Update Ready');
+
+</script>
+
+
+<script>
+/* ==========================================================
+   THEME CONTROLLER — tambahan mandiri
+   Tidak mengubah fungsi, event, atau script utama aplikasi.
+========================================================== */
+(function(){
+    const STORAGE_KEY='paradiseLabTheme20';
+    const validThemes=new Set([
+        'default','bright-blue','black-gold','midnight','neon-purple',
+        'matrix','ocean','crimson','sakura','ice','forest','sunset',
+        'cyber','cyan-glass','copper','mono','galaxy','candy','desert',
+        'emerald-gold'
+    ]);
+
+    const launcher=document.getElementById('themeLauncher');
+    const popup=document.getElementById('themePopup');
+    const closeButton=document.getElementById('themeClose');
+    const options=Array.from(document.querySelectorAll('[data-theme-choice]'));
+
+    if(!launcher || !popup || !closeButton || !options.length) return;
+
+    function setPopup(open){
+        popup.classList.toggle('show',open);
+        popup.setAttribute('aria-hidden',String(!open));
+        launcher.setAttribute('aria-expanded',String(open));
+        document.body.classList.toggle('theme-popup-open',open);
+
+        if(open){
+            window.setTimeout(()=>{
+                const active=popup.querySelector('.theme-option.active') || options[0];
+                active.focus();
+            },60);
+        }else{
+            launcher.focus();
+        }
+    }
+
+    function applyTheme(theme,save){
+        if(!validThemes.has(theme)) theme='default';
+
+        if(theme==='default'){
+            document.body.removeAttribute('data-theme');
+        }else{
+            document.body.setAttribute('data-theme',theme);
+        }
+
+        options.forEach(option=>{
+            const active=option.dataset.themeChoice===theme;
+            option.classList.toggle('active',active);
+            option.setAttribute('aria-pressed',String(active));
+        });
+
+        const selected=options.find(option=>option.dataset.themeChoice===theme);
+        if(selected){
+            launcher.title='Tema aktif: '+selected.dataset.themeLabel+' — klik untuk mengganti';
+        }
+
+        if(save){
+            localStorage.setItem(STORAGE_KEY,theme);
+        }
+    }
+
+    launcher.addEventListener('click',()=>setPopup(true));
+    launcher.addEventListener('keydown',event=>{
+        if(event.key==='Enter' || event.key===' '){
+            event.preventDefault();
+            setPopup(true);
+        }
+    });
+
+    closeButton.addEventListener('click',()=>setPopup(false));
+
+    popup.addEventListener('click',event=>{
+        if(event.target===popup) setPopup(false);
+    });
+
+    options.forEach(option=>{
+        option.addEventListener('click',()=>{
+            applyTheme(option.dataset.themeChoice,true);
+            window.setTimeout(()=>setPopup(false),120);
+        });
+    });
+
+    document.addEventListener('keydown',event=>{
+        if(event.key==='Escape' && popup.classList.contains('show')){
+            setPopup(false);
+        }
+    });
+
+    applyTheme(localStorage.getItem(STORAGE_KEY) || 'default',false);
+})();
+</script>
+
+</body>
+</html>

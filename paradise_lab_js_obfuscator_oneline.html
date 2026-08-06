@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Paradise Lab — JavaScript Obfuscator</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    :root {
+      --bg: #08111f;
+      --panel: #0d1728;
+      --card: #111c30;
+      --primary: #00c8ff;
+      --accent: #1da1ff;
+      --text: #ffffff;
+      --muted: #8fa8c5;
+      --success: #35e6a2;
+      --warning: #ffd166;
+      --danger: #ff6b8a;
+      --border: rgba(120, 196, 255, .16);
+      --shadow: 0 18px 55px rgba(0, 0, 0, .34);
+      --glow: 0 0 28px rgba(0, 200, 255, .22);
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(29, 161, 255, .15), transparent 25%),
+        radial-gradient(circle at 88% 14%, rgba(0, 200, 255, .11), transparent 27%),
+        radial-gradient(circle at 50% 105%, rgba(29, 161, 255, .14), transparent 32%),
+        linear-gradient(145deg, #06101d 0%, var(--bg) 48%, #091527 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .28;
+      background-image:
+        linear-gradient(rgba(0, 200, 255, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 200, 255, .025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+    }
+
+    button, textarea, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1540px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 44px;
+    }
+
+    .glass {
+      background: linear-gradient(145deg, rgba(17, 28, 48, .86), rgba(13, 23, 40, .76));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.035);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      margin-bottom: 18px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      right: -95px;
+      top: -180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 200, 255, .25), transparent 65%);
+      filter: blur(6px);
+    }
+
+    .brand-wrap { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .brand-mark {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: linear-gradient(145deg, rgba(0,200,255,.26), rgba(29,161,255,.08));
+      border: 1px solid rgba(0,200,255,.34);
+      box-shadow: var(--glow), inset 0 1px 8px rgba(255,255,255,.11);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float { 50% { transform: translateY(-4px); } }
+    @keyframes pulseGlow { 50% { box-shadow: 0 0 36px rgba(0,200,255,.42); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-10px) scale(.97); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { to { opacity: 0; transform: translateY(-8px) scale(.98); } }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--primary);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.6rem); letter-spacing: -.045em; }
+    .subtitle { margin: 7px 0 0; color: var(--muted); }
+
+    .offline-badge {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #c9f8ff;
+      background: rgba(0, 200, 255, .085);
+      border: 1px solid rgba(0, 200, 255, .2);
+      padding: 10px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: .88rem;
+      font-weight: 700;
+    }
+    .offline-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 14px var(--success);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .editor-card {
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      min-width: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .editor-card.dragover {
+      border-color: rgba(0,200,255,.7);
+      box-shadow: var(--shadow), 0 0 0 3px rgba(0,200,255,.12), var(--glow);
+    }
+
+    .card-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .card-heading h2 { margin: 0; font-size: 1.02rem; }
+    .counter { color: var(--muted); font-size: .76rem; white-space: nowrap; }
+
+    textarea {
+      width: 100%;
+      min-height: 420px;
+      resize: vertical;
+      border: 1px solid rgba(120,196,255,.14);
+      border-radius: var(--radius-lg);
+      outline: none;
+      color: #dff8ff;
+      caret-color: var(--primary);
+      background:
+        linear-gradient(rgba(5, 13, 25, .89), rgba(7, 16, 30, .92)),
+        repeating-linear-gradient(0deg, transparent, transparent 25px, rgba(0,200,255,.022) 26px);
+      padding: 18px;
+      font: 13.5px/1.62 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      tab-size: 2;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    textarea:focus { border-color: rgba(0,200,255,.48); box-shadow: 0 0 0 4px rgba(0,200,255,.075); }
+    textarea::placeholder { color: #58708c; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      border: 1px solid rgba(120,196,255,.16);
+      color: #eafaff;
+      background: rgba(255,255,255,.035);
+      border-radius: 12px;
+      min-height: 40px;
+      padding: 9px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 750;
+      font-size: .86rem;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); border-color: rgba(0,200,255,.45); background: rgba(0,200,255,.085); }
+    .btn:active:not(:disabled) { transform: translateY(0); }
+    .btn:disabled { cursor: not-allowed; opacity: .45; }
+    .btn.primary { background: linear-gradient(135deg, rgba(0,200,255,.28), rgba(29,161,255,.22)); border-color: rgba(0,200,255,.42); box-shadow: 0 0 24px rgba(0,200,255,.12); }
+    .btn.danger { color: #ffc4d1; }
+
+    .drop-hint {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: .78rem;
+      margin: 11px 2px 0;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, .7fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .options-panel, .action-panel {
+      border-radius: var(--radius-xl);
+      padding: 22px;
+    }
+    .section-title { margin: 0 0 6px; font-size: 1.08rem; }
+    .section-copy { margin: 0 0 18px; color: var(--muted); font-size: .86rem; line-height: 1.55; }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .switch-card {
+      min-height: 50px;
+      border: 1px solid rgba(120,196,255,.11);
+      border-radius: 14px;
+      background: rgba(255,255,255,.022);
+      padding: 11px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+      user-select: none;
+    }
+    .switch-card:hover { transform: translateY(-1px); border-color: rgba(0,200,255,.3); background: rgba(0,200,255,.045); }
+    .switch-card input { position: absolute; opacity: 0; pointer-events: none; }
+    .switch-ui {
+      width: 38px;
+      height: 22px;
+      border-radius: 999px;
+      background: #1e2b40;
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 2px;
+      flex: 0 0 auto;
+      transition: .22s ease;
+    }
+    .switch-ui::after {
+      content: "";
+      display: block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #7790ad;
+      transition: .22s ease;
+    }
+    .switch-card input:checked + .switch-ui { background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: 0 0 16px rgba(0,200,255,.24); }
+    .switch-card input:checked + .switch-ui::after { transform: translateX(16px); background: white; }
+    .switch-label { min-width: 0; font-size: .79rem; font-weight: 700; line-height: 1.22; }
+    .experimental { color: var(--warning); font-size: .66rem; display: block; margin-top: 2px; }
+
+    .preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .preset-btn {
+      border: 1px solid rgba(120,196,255,.13);
+      background: rgba(255,255,255,.025);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 7px 11px;
+      cursor: pointer;
+      font-size: .72rem;
+      font-weight: 800;
+    }
+    .preset-btn:hover { color: white; border-color: rgba(0,200,255,.38); }
+
+    .action-panel { display: flex; flex-direction: column; }
+    .obfuscate-btn {
+      min-height: 64px;
+      width: 100%;
+      border: 1px solid rgba(0,200,255,.65);
+      border-radius: 18px;
+      color: white;
+      cursor: pointer;
+      background: linear-gradient(135deg, #006f9d 0%, #00aee8 45%, #1d8dff 100%);
+      box-shadow: 0 16px 34px rgba(0, 151, 220, .2), 0 0 28px rgba(0,200,255,.16), inset 0 1px 0 rgba(255,255,255,.24);
+      font-size: .98rem;
+      font-weight: 900;
+      letter-spacing: .09em;
+      transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+      animation: pulseGlow 3.5s ease-in-out infinite;
+    }
+    .obfuscate-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.07); }
+    .obfuscate-btn:disabled { cursor: wait; opacity: .72; animation: none; }
+
+    .progress-wrap { margin-top: 18px; }
+    .progress-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .78rem; margin-bottom: 8px; }
+    .progress-track { height: 10px; overflow: hidden; border-radius: 999px; background: #08101d; border: 1px solid rgba(120,196,255,.11); }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--accent)); box-shadow: 0 0 18px rgba(0,200,255,.5); transition: width .28s ease; }
+
+    .status-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .82rem;
+      min-height: 24px;
+    }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 12px var(--success); }
+    .status-dot.loading { border: 2px solid rgba(255,255,255,.2); border-top-color: var(--primary); width: 16px; height: 16px; background: transparent; animation: spin .7s linear infinite; box-shadow: none; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .stat {
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(120,196,255,.11);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .stat-label { color: var(--muted); font-size: .68rem; margin-bottom: 5px; }
+    .stat-value { font-weight: 900; font-size: .91rem; word-break: break-word; }
+
+    .security-note {
+      margin-top: auto;
+      padding-top: 16px;
+      color: #7890aa;
+      font-size: .7rem;
+      line-height: 1.5;
+    }
+
+    .toast-stack {
+      position: fixed;
+      z-index: 50;
+      top: 20px;
+      right: 20px;
+      width: min(360px, calc(100vw - 28px));
+      display: grid;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      padding: 13px 14px;
+      border-radius: 15px;
+      background: rgba(9, 19, 34, .94);
+      border: 1px solid rgba(120,196,255,.17);
+      box-shadow: 0 18px 44px rgba(0,0,0,.35);
+      backdrop-filter: blur(16px);
+      animation: toastIn .25s ease both;
+    }
+    .toast.out { animation: toastOut .2s ease both; }
+    .toast-icon { flex: 0 0 auto; }
+    .toast-title { font-size: .82rem; font-weight: 900; }
+    .toast-message { margin-top: 2px; color: var(--muted); font-size: .74rem; line-height: 1.35; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1120px) {
+      .control-grid { grid-template-columns: 1fr; }
+      .options-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    }
+    @media (max-width: 850px) {
+      .workspace { grid-template-columns: 1fr; }
+      textarea { min-height: 330px; }
+      .options-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .hero { align-items: flex-start; }
+    }
+    @media (max-width: 560px) {
+      .app-shell { width: min(100% - 16px, 1540px); padding-top: 8px; }
+      .hero, .editor-card, .options-panel, .action-panel { border-radius: 20px; }
+      .hero { padding: 20px; flex-direction: column; }
+      .brand-mark { width: 50px; height: 50px; border-radius: 15px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .toolbar .btn { flex: 1 1 120px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      textarea { min-height: 290px; padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero glass">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">🚀</div>
+        <div>
+          <p class="eyebrow">Paradise Lab</p>
+          <h1>JavaScript Obfuscator</h1>
+          <p class="subtitle">Offline JavaScript Protection Tool</p>
+        </div>
+      </div>
+      <div class="offline-badge">100% Offline • Single File</div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <article class="editor-card glass" id="inputCard">
+          <div class="card-heading">
+            <h2>Input JavaScript / HTML</h2>
+            <span class="counter" id="inputCounter">0 chars • 0 lines</span>
+          </div>
+          <textarea id="inputCode" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="// Paste JavaScript atau HTML di sini\n// Untuk HTML, hanya isi tag <script> yang akan diobfuscate.\nfunction hello(name) {\n  console.log('Hello ' + name);\n}"></textarea>
+          <div class="toolbar">
+            <button class="btn primary" id="importBtn" type="button">📂 Import JS / HTML</button>
+            <button class="btn" id="pasteBtn" type="button">📋 Paste</button>
+            <button class="btn danger" id="clearInputBtn" type="button">✕ Clear</button>
+          </div>
+          <div class="drop-hint">⬇️ Drop file <strong>.js, .mjs, .cjs, .html</strong> di panel ini atau di halaman</div>
+          <input id="fileInput" type="file" accept=".js,.mjs,.cjs,.html,.htm,application/javascript,text/javascript,text/html" class="hidden" />
+        </article>
+
+        <article class="editor-card glass">
+          <div class="card-heading">
+            <h2>Output JavaScript / HTML</h2>
+            <span class="counter" id="outputCounter">0 chars • 0 lines</span>
+          </div>
+          <textarea id="outputCode" spellcheck="false" readonly placeholder="Hasil obfuscation akan muncul di sini..."></textarea>
+          <div class="toolbar">
+            <button class="btn primary" id="copyBtn" type="button" disabled>📋 Copy</button>
+            <button class="btn" id="downloadBtn" type="button" disabled>⬇️ Download</button>
+            <button class="btn danger" id="clearOutputBtn" type="button">✕ Clear</button>
+          </div>
+          <div class="drop-hint">🔒 Processing berlangsung lokal di browser. Kode tidak dikirim ke mana pun.</div>
+        </article>
+      </section>
+
+      <section class="control-grid">
+        <article class="options-panel glass">
+          <h2 class="section-title">Protection Options</h2>
+          <p class="section-copy">Pilih lapisan proteksi. Mode agresif dapat mengubah perilaku script yang sangat bergantung pada nama global, reflection, atau source inspection.</p>
+          <div class="preset-row">
+            <button class="preset-btn" data-preset="safe" type="button">Safe</button>
+            <button class="preset-btn" data-preset="balanced" type="button">Balanced</button>
+            <button class="preset-btn" data-preset="maximum" type="button">Maximum</button>
+            <button class="preset-btn" data-preset="none" type="button">Reset</button>
+          </div>
+          <div class="options-grid" id="optionsGrid"></div>
+        </article>
+
+        <aside class="action-panel glass">
+          <button class="obfuscate-btn" id="obfuscateBtn" type="button">⚡ OBFUSCATE</button>
+
+          <div class="progress-wrap">
+            <div class="progress-meta"><span>Processing</span><span id="progressText">0%</span></div>
+            <div class="progress-track" aria-label="Obfuscation progress"><div class="progress-bar" id="progressBar"></div></div>
+          </div>
+
+          <div class="status-box">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Ready</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat"><div class="stat-label">Original Size</div><div class="stat-value" id="statOriginal">0 B</div></div>
+            <div class="stat"><div class="stat-label">Output Size</div><div class="stat-value" id="statOutput">0 B</div></div>
+            <div class="stat"><div class="stat-label">Compression</div><div class="stat-value" id="statCompression">0%</div></div>
+            <div class="stat"><div class="stat-label">Protection Score</div><div class="stat-value" id="statScore">0 / 100</div></div>
+            <div class="stat"><div class="stat-label">Execution Time</div><div class="stat-value" id="statTime">0 ms</div></div>
+            <div class="stat"><div class="stat-label">Lines</div><div class="stat-value" id="statLines">0 → 0</div></div>
+            <div class="stat"><div class="stat-label">Characters</div><div class="stat-value" id="statChars">0 → 0</div></div>
+            <div class="stat"><div class="stat-label">Renamed IDs</div><div class="stat-value" id="statRenamed">0</div></div>
+          </div>
+
+          <p class="security-note">Engine ini memakai tokenizer internal tanpa library eksternal. Transformasi berisiko tinggi diterapkan secara konservatif agar kompatibilitas lebih baik, tetapi tetap lakukan pengujian pada hasil sebelum produksi.</p>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    'use strict';
+
+    class Utils {
+      static sleep(ms = 0) { return new Promise(resolve => setTimeout(resolve, ms)); }
+      static yieldToUI() { return new Promise(resolve => setTimeout(resolve, 0)); }
+      static randomHex(length = 4) {
+        const bytes = new Uint8Array(Math.ceil(length / 2));
+        if (globalThis.crypto?.getRandomValues) crypto.getRandomValues(bytes);
+        else for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+        return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('').slice(0, length);
+      }
+      static randomIdentifier(prefix = '_0x') { return `${prefix}${this.randomHex(6)}`; }
+      static shuffle(array) {
+        const out = [...array];
+        for (let i = out.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [out[i], out[j]] = [out[j], out[i]];
+        }
+        return out;
+      }
+      static byteSize(text) { return new Blob([text]).size; }
+      static formatBytes(bytes) {
+        if (!bytes) return '0 B';
+        const units = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+        return `${(bytes / Math.pow(1024, i)).toFixed(i ? 2 : 0)} ${units[i]}`;
+      }
+      static lineCount(text) { return text ? text.split(/\r?\n/).length : 0; }
+      static clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+      static escapeRegExp(text) { return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+    }
+
+    class Toast {
+      static show(title, message = '', type = 'info', duration = 2600) {
+        const icons = { success: '✅', error: '⛔', info: '✨', warning: '⚠️' };
+        const stack = document.getElementById('toastStack');
+        const node = document.createElement('div');
+        node.className = 'toast';
+        node.innerHTML = `<div class="toast-icon">${icons[type] || icons.info}</div><div><div class="toast-title"></div><div class="toast-message"></div></div>`;
+        node.querySelector('.toast-title').textContent = title;
+        node.querySelector('.toast-message').textContent = message;
+        stack.appendChild(node);
+        setTimeout(() => {
+          node.classList.add('out');
+          setTimeout(() => node.remove(), 230);
+        }, duration);
+      }
+    }
+
+    class Settings {
+      static definitions = [
+        ['renameVariables', 'Rename Variables', true],
+        ['encodeStrings', 'Encode Strings', true],
+        ['stringArray', 'String Array', true],
+        ['unicodeEscape', 'Unicode Escape', false],
+        ['hexEscape', 'Hexadecimal Escape', true],
+        ['controlFlow', 'Control Flow Flattening', false, 'conservative'],
+        ['deadCode', 'Dead Code Injection', true],
+        ['selfDefending', 'Self Defending', true],
+        ['antiBeautify', 'Anti Beautify', true],
+        ['disableConsole', 'Disable Console', false],
+        ['minify', 'Minify', true],
+        ['compact', 'Compact JS Output', true],
+        ['oneLineOutput', 'One Line JS / HTML', true, 'new'],
+        ['randomPrefix', 'Random Identifier Prefix', true],
+        ['shuffleStringArray', 'Shuffle String Array', true],
+        ['splitStrings', 'Split Strings', true],
+        ['numbersToExpressions', 'Numbers To Expressions', true],
+        ['removeComments', 'Remove Comments', true],
+        ['removeWhitespace', 'Remove Whitespace', true],
+        ['renameFunctions', 'Rename Functions', true],
+        ['renameClasses', 'Rename Classes', true],
+        ['renameProperties', 'Rename Object Properties', false, 'experimental']
+      ];
+
+      static presets = {
+        safe: ['encodeStrings', 'unicodeEscape', 'hexEscape', 'minify', 'compact', 'oneLineOutput', 'removeComments', 'removeWhitespace'],
+        balanced: ['renameVariables', 'renameFunctions', 'renameClasses', 'encodeStrings', 'stringArray', 'hexEscape', 'deadCode', 'selfDefending', 'antiBeautify', 'minify', 'compact', 'oneLineOutput', 'randomPrefix', 'shuffleStringArray', 'splitStrings', 'numbersToExpressions', 'removeComments', 'removeWhitespace'],
+        maximum: Settings.definitions.map(([key]) => key).filter(key => key !== 'renameProperties'),
+        none: []
+      };
+
+      static render(container) {
+        container.innerHTML = this.definitions.map(([key, label, checked, badge]) => `
+          <label class="switch-card">
+            <input type="checkbox" data-option="${key}" ${checked ? 'checked' : ''} />
+            <span class="switch-ui"></span>
+            <span class="switch-label">${label}${badge ? `<span class="experimental">${badge}</span>` : ''}</span>
+          </label>
+        `).join('');
+      }
+
+      static read() {
+        return Object.fromEntries([...document.querySelectorAll('[data-option]')].map(input => [input.dataset.option, input.checked]));
+      }
+
+      static applyPreset(name) {
+        const active = new Set(this.presets[name] || []);
+        document.querySelectorAll('[data-option]').forEach(input => { input.checked = active.has(input.dataset.option); });
+      }
+    }
+
+    class FileManager {
+      static MAX_BYTES = 5 * 1024 * 1024;
+
+      static async loadFile(file) {
+        if (!file) throw new Error('File tidak ditemukan.');
+        if (!/\.(?:js|mjs|cjs|html?|xhtml)$/i.test(file.name)) throw new Error('Gunakan file JavaScript (.js/.mjs/.cjs) atau HTML (.html/.htm).');
+        if (file.size > this.MAX_BYTES) throw new Error('Ukuran file melebihi batas rekomendasi 5 MB.');
+        return file.text();
+      }
+    }
+
+    class Downloader {
+      static save(text, filename = 'output.js') {
+        if (!text) throw new Error('Belum ada output untuk diunduh.');
+        const mime = /\.html?$/i.test(filename) ? 'text/html;charset=utf-8' : 'application/javascript;charset=utf-8';
+        const blob = new Blob([text], { type: mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+    }
+
+    class ClipboardManager {
+      static async copy(text) {
+        if (!text) throw new Error('Belum ada output untuk disalin.');
+        if (navigator.clipboard?.writeText && window.isSecureContext) return navigator.clipboard.writeText(text);
+        const area = document.createElement('textarea');
+        area.value = text;
+        area.style.position = 'fixed';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        const ok = document.execCommand('copy');
+        area.remove();
+        if (!ok) throw new Error('Browser menolak akses clipboard.');
+      }
+
+      static async read() {
+        if (!navigator.clipboard?.readText) throw new Error('Clipboard API tidak tersedia. Gunakan Ctrl+V pada textarea.');
+        return navigator.clipboard.readText();
+      }
+    }
+
+    class Statistics {
+      static calculate(input, output, elapsed, score, renamed = 0) {
+        const inputBytes = Utils.byteSize(input);
+        const outputBytes = Utils.byteSize(output);
+        const compression = inputBytes ? ((inputBytes - outputBytes) / inputBytes) * 100 : 0;
+        return {
+          inputBytes,
+          outputBytes,
+          compression,
+          score,
+          elapsed,
+          inputLines: Utils.lineCount(input),
+          outputLines: Utils.lineCount(output),
+          inputChars: input.length,
+          outputChars: output.length,
+          renamed
+        };
+      }
+    }
+
+    class Tokenizer {
+      constructor(code) {
+        this.code = code;
+        this.length = code.length;
+        this.index = 0;
+        this.tokens = [];
+      }
+
+      peek(offset = 0) { return this.code[this.index + offset] || ''; }
+      add(type, value) { this.tokens.push({ type, value }); }
+      isIdStart(ch) { return /[A-Za-z_$]/.test(ch); }
+      isIdPart(ch) { return /[A-Za-z0-9_$]/.test(ch); }
+
+      async tokenize(onProgress = () => {}) {
+        let lastYield = 0;
+        while (this.index < this.length) {
+          const ch = this.peek();
+          const next = this.peek(1);
+
+          if (/\s/.test(ch)) this.readWhitespace();
+          else if (ch === '/' && next === '/') this.readLineComment();
+          else if (ch === '/' && next === '*') this.readBlockComment();
+          else if (ch === '/' && this.canStartRegex()) this.readRegex();
+          else if (ch === '"' || ch === "'") this.readString(ch);
+          else if (ch === '`') this.readTemplate();
+          else if (this.isIdStart(ch)) this.readIdentifier();
+          else if (/\d/.test(ch) || (ch === '.' && /\d/.test(next))) this.readNumber();
+          else this.readOperatorOrPunctuator();
+
+          if (this.index - lastYield > 70000) {
+            lastYield = this.index;
+            onProgress(this.length ? this.index / this.length : 1);
+            await Utils.yieldToUI();
+          }
+        }
+        onProgress(1);
+        return this.tokens;
+      }
+
+      readWhitespace() {
+        const start = this.index;
+        while (/\s/.test(this.peek())) this.index++;
+        this.add('ws', this.code.slice(start, this.index));
+      }
+      readLineComment() {
+        const start = this.index;
+        this.index += 2;
+        while (this.index < this.length && this.peek() !== '\n') this.index++;
+        this.add('comment', this.code.slice(start, this.index));
+      }
+      readBlockComment() {
+        const start = this.index;
+        this.index += 2;
+        while (this.index < this.length && !(this.peek() === '*' && this.peek(1) === '/')) this.index++;
+        this.index = Math.min(this.length, this.index + 2);
+        this.add('comment', this.code.slice(start, this.index));
+      }
+      canStartRegex() {
+        let previous = null;
+        for (let i = this.tokens.length - 1; i >= 0; i--) {
+          if (!['ws', 'comment'].includes(this.tokens[i].type)) { previous = this.tokens[i]; break; }
+        }
+        if (!previous) return true;
+        if (previous.type === 'keyword') return new Set(['return','throw','case','delete','void','typeof','new','in','of','yield','await','else','do']).has(previous.value);
+        if (previous.type === 'op') return !['++','--'].includes(previous.value);
+        return ['(', '[', '{', ',', ';', ':', '?'].includes(previous.value);
+      }
+      readRegex() {
+        const start = this.index++;
+        let escaped = false;
+        let inClass = false;
+        while (this.index < this.length) {
+          const ch = this.peek();
+          this.index++;
+          if (escaped) { escaped = false; continue; }
+          if (ch === '\\') { escaped = true; continue; }
+          if (ch === '[') { inClass = true; continue; }
+          if (ch === ']' && inClass) { inClass = false; continue; }
+          if (ch === '/' && !inClass) break;
+          if (ch === '\n' || ch === '\r') break;
+        }
+        while (/[A-Za-z]/.test(this.peek())) this.index++;
+        this.add('regex', this.code.slice(start, this.index));
+      }
+      readString(quote) {
+        const start = this.index++;
+        while (this.index < this.length) {
+          const ch = this.peek();
+          this.index++;
+          if (ch === '\\') this.index++;
+          else if (ch === quote) break;
+        }
+        this.add('string', this.code.slice(start, this.index));
+      }
+      readTemplate() {
+        const start = this.index++;
+        let escaped = false;
+        while (this.index < this.length) {
+          const ch = this.peek();
+          this.index++;
+          if (escaped) escaped = false;
+          else if (ch === '\\') escaped = true;
+          else if (ch === '`') break;
+        }
+        this.add('template', this.code.slice(start, this.index));
+      }
+      readIdentifier() {
+        const start = this.index++;
+        while (this.isIdPart(this.peek())) this.index++;
+        const value = this.code.slice(start, this.index);
+        const keywords = Tokenizer.KEYWORDS;
+        this.add(keywords.has(value) ? 'keyword' : 'identifier', value);
+      }
+      readNumber() {
+        const start = this.index;
+        if (this.peek() === '0' && /[xXbBoO]/.test(this.peek(1))) {
+          this.index += 2;
+          while (/[0-9a-fA-F_]/.test(this.peek())) this.index++;
+        } else {
+          while (/[0-9_]/.test(this.peek())) this.index++;
+          if (this.peek() === '.') { this.index++; while (/[0-9_]/.test(this.peek())) this.index++; }
+          if (/[eE]/.test(this.peek())) {
+            this.index++;
+            if (/[+-]/.test(this.peek())) this.index++;
+            while (/[0-9_]/.test(this.peek())) this.index++;
+          }
+        }
+        if (this.peek() === 'n') this.index++;
+        this.add('number', this.code.slice(start, this.index));
+      }
+      readOperatorOrPunctuator() {
+        const candidates = ['>>>=', '===', '!==', '**=', '>>>', '<<=', '>>=', '=>', '==', '!=', '<=', '>=', '++', '--', '&&', '||', '??', '?.', '**', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<', '>>', '...', '??=', '&&=', '||='];
+        const found = candidates.find(op => this.code.startsWith(op, this.index));
+        if (found) {
+          this.index += found.length;
+          this.add('op', found);
+        } else {
+          const value = this.peek();
+          this.index++;
+          this.add(/[{}()[\];,.?:]/.test(value) ? 'punct' : 'op', value);
+        }
+      }
+    }
+
+    Tokenizer.KEYWORDS = new Set([
+      'break','case','catch','class','const','continue','debugger','default','delete','do','else','export','extends','finally','for','function','if','import','in','instanceof','let','new','return','super','switch','this','throw','try','typeof','var','void','while','with','yield','async','await','static','get','set','of','null','true','false'
+    ]);
+
+    class ObfuscatorEngine {
+      constructor(options, onProgress = () => {}) {
+        this.options = options;
+        this.onProgress = onProgress;
+        this.renameMap = new Map();
+        this.propertyMap = new Map();
+        this.prefix = options.randomPrefix ? `_${Utils.randomHex(3)}` : '_0x';
+        this.stringArrayName = Utils.randomIdentifier(this.prefix);
+        this.metadata = { renamed: 0 };
+      }
+
+      progress(value, label) { this.onProgress(Utils.clamp(value, 0, 1), label); }
+
+      async process(code) {
+        this.progress(.02, 'Analyzing input...');
+        const tokenizer = new Tokenizer(code);
+        let tokens = await tokenizer.tokenize(p => this.progress(.02 + p * .26, 'Tokenizing JavaScript...'));
+
+        this.validateBasicBalance(tokens);
+        await Utils.yieldToUI();
+
+        if (this.options.removeComments || this.options.minify || this.options.oneLineOutput) {
+          tokens = this.removeComments(tokens);
+          this.progress(.31, 'Removing comments...');
+        }
+
+        if (this.options.renameVariables || this.options.renameFunctions || this.options.renameClasses) {
+          this.buildRenameMap(tokens);
+          tokens = this.applyRenaming(tokens);
+          this.progress(.43, `Renaming ${this.metadata.renamed} identifiers...`);
+          await Utils.yieldToUI();
+        }
+
+        if (this.options.renameProperties) {
+          this.buildPropertyMap(tokens);
+          tokens = this.applyPropertyRenaming(tokens);
+          this.progress(.49, 'Renaming safe dot-properties...');
+        }
+
+        if (this.options.numbersToExpressions) {
+          tokens = this.transformNumbers(tokens);
+          this.progress(.55, 'Transforming numeric literals...');
+        }
+
+        let stringArrayPrefix = '';
+        if (this.options.stringArray) {
+          const result = this.transformStringsToArray(tokens);
+          tokens = result.tokens;
+          stringArrayPrefix = result.prefix;
+          this.progress(.67, 'Building encoded string array...');
+        } else if (this.options.encodeStrings || this.options.splitStrings) {
+          tokens = this.transformInlineStrings(tokens);
+          this.progress(.67, 'Encoding string literals...');
+        }
+        await Utils.yieldToUI();
+
+        let output = this.serialize(tokens, this.options.minify || this.options.removeWhitespace || this.options.compact || this.options.oneLineOutput);
+        this.progress(.74, 'Serializing output...');
+
+        const prelude = [];
+        if (this.options.disableConsole) prelude.push(this.makeConsoleGuard());
+        if (this.options.selfDefending) prelude.push(this.makeSelfDefending());
+        if (this.options.deadCode) prelude.push(this.makeDeadCode());
+        if (this.options.antiBeautify) prelude.push(this.makeAntiBeautify());
+        if (this.options.controlFlow) prelude.push(this.makeDispatcherGuard());
+        if (stringArrayPrefix) prelude.push(stringArrayPrefix);
+
+        const singleLine = this.options.compact || this.options.oneLineOutput;
+        output = `${prelude.join(singleLine ? '' : '\n')}${prelude.length ? (singleLine ? '' : '\n') : ''}${output}`;
+
+        if (this.options.minify || this.options.removeWhitespace || this.options.oneLineOutput) {
+          output = this.finalMinify(output, this.options.compact || this.options.oneLineOutput);
+          this.progress(.91, 'Compacting JavaScript...');
+        } else if (this.options.compact || this.options.oneLineOutput) {
+          output = output.replace(/\r?\n+/g, ' ');
+        }
+
+        this.progress(1, 'Finished');
+        return { code: output, metadata: this.metadata };
+      }
+
+      validateBasicBalance(tokens) {
+        const stack = [];
+        const pairs = { ')': '(', ']': '[', '}': '{' };
+        for (const token of tokens) {
+          if (token.type === 'string' || token.type === 'template' || token.type === 'comment') continue;
+          if (['(', '[', '{'].includes(token.value)) stack.push(token.value);
+          else if (pairs[token.value]) {
+            if (stack.pop() !== pairs[token.value]) throw new Error(`Struktur JavaScript tidak seimbang di sekitar "${token.value}".`);
+          }
+        }
+        if (stack.length) throw new Error('Struktur JavaScript tidak seimbang. Periksa kurung atau brace.');
+      }
+
+      significant(tokens) { return tokens.filter(t => t.type !== 'ws' && t.type !== 'comment'); }
+      previousSignificant(tokens, index) {
+        for (let i = index - 1; i >= 0; i--) if (!['ws', 'comment'].includes(tokens[i].type)) return tokens[i];
+        return null;
+      }
+      nextSignificant(tokens, index) {
+        for (let i = index + 1; i < tokens.length; i++) if (!['ws', 'comment'].includes(tokens[i].type)) return tokens[i];
+        return null;
+      }
+
+      removeComments(tokens) {
+        return tokens.filter((token, index) => {
+          if (token.type !== 'comment') return true;
+          return index === 0 && /^\/\*!|^\/\/\s*@/.test(token.value);
+        });
+      }
+
+      buildRenameMap(tokens) {
+        const declared = new Set();
+        const reserved = new Set([
+          ...Tokenizer.KEYWORDS,
+          'arguments','eval','undefined','NaN','Infinity','window','document','globalThis','console','navigator','location','localStorage','sessionStorage','fetch','XMLHttpRequest','Promise','Array','Object','String','Number','Boolean','Math','Date','RegExp','JSON','Error','Map','Set','WeakMap','WeakSet','Symbol','BigInt','Intl','URL','URLSearchParams','Blob','File','FileReader','HTMLElement','Node','Event','CustomEvent','module','exports','require','__dirname','__filename'
+        ]);
+
+        for (let i = 0; i < tokens.length; i++) {
+          const token = tokens[i];
+          if (token.type !== 'keyword') continue;
+
+          if (['let', 'const', 'var'].includes(token.value) && this.options.renameVariables) {
+            let depth = 0;
+            for (let j = i + 1; j < tokens.length; j++) {
+              const t = tokens[j];
+              if (t.type === 'ws' || t.type === 'comment') continue;
+              if (['(', '[', '{'].includes(t.value)) depth++;
+              if ([')', ']', '}'].includes(t.value)) depth--;
+              if (depth <= 0 && (t.value === ';' || t.value === '\n')) break;
+              if (depth <= 0 && t.type === 'identifier') {
+                const prev = this.previousSignificant(tokens, j);
+                if (!prev || !['.', '?.'].includes(prev.value)) declared.add(t.value);
+                while (j + 1 < tokens.length && tokens[j + 1].type === 'ws') j++;
+                const next = this.nextSignificant(tokens, j);
+                if (next && next.value !== ',') break;
+              }
+            }
+          }
+
+          if (token.value === 'function' && this.options.renameFunctions) {
+            const next = this.nextSignificant(tokens, i);
+            if (next?.type === 'identifier') declared.add(next.value);
+            const openIndex = this.findNextValue(tokens, i, '(');
+            const closeIndex = openIndex >= 0 ? this.findMatching(tokens, openIndex, '(', ')') : -1;
+            if (openIndex >= 0 && closeIndex > openIndex) {
+              for (let j = openIndex + 1; j < closeIndex; j++) if (tokens[j].type === 'identifier') declared.add(tokens[j].value);
+            }
+          }
+
+          if (token.value === 'class' && this.options.renameClasses) {
+            const next = this.nextSignificant(tokens, i);
+            if (next?.type === 'identifier') declared.add(next.value);
+          }
+
+          if (token.value === 'catch' && this.options.renameVariables) {
+            const openIndex = this.findNextValue(tokens, i, '(');
+            const closeIndex = openIndex >= 0 ? this.findMatching(tokens, openIndex, '(', ')') : -1;
+            if (openIndex >= 0 && closeIndex > openIndex) {
+              for (let j = openIndex + 1; j < closeIndex; j++) if (tokens[j].type === 'identifier') declared.add(tokens[j].value);
+            }
+          }
+        }
+
+        // Arrow-function parameters: identifier =>, or identifiers inside (...) =>
+        if (this.options.renameVariables) {
+          for (let i = 0; i < tokens.length; i++) {
+            if (tokens[i].value !== '=>') continue;
+            const prev = this.previousSignificant(tokens, i);
+            if (prev?.type === 'identifier') declared.add(prev.value);
+            else if (prev?.value === ')') {
+              const open = this.findMatchingReverse(tokens, i - 1, '(', ')');
+              if (open >= 0) for (let j = open + 1; j < i; j++) if (tokens[j].type === 'identifier') declared.add(tokens[j].value);
+            }
+          }
+        }
+
+        const unsafeNames = new Set();
+        for (let i = 0; i < tokens.length; i++) {
+          const token = tokens[i];
+          if (token.type === 'template') {
+            for (const name of declared) {
+              if (token.value.includes(name)) unsafeNames.add(name);
+            }
+            continue;
+          }
+          if (token.type !== 'identifier' || !declared.has(token.value)) continue;
+          const prev = this.previousSignificant(tokens, i);
+          const next = this.nextSignificant(tokens, i);
+          const likelyShorthand = ['{', ','].includes(prev?.value) && [',', '}', '='].includes(next?.value);
+          if (likelyShorthand) unsafeNames.add(token.value);
+        }
+
+        for (let i = 0; i < tokens.length; i++) {
+          if (tokens[i].type !== 'keyword' || !['import', 'export'].includes(tokens[i].value)) continue;
+          for (let j = i + 1; j < tokens.length; j++) {
+            if (tokens[j].type === 'ws' && tokens[j].value.includes('\n')) break;
+            if (tokens[j].value === ';') break;
+            if (tokens[j].type === 'identifier') unsafeNames.add(tokens[j].value);
+          }
+        }
+
+        for (const name of declared) {
+          if (reserved.has(name) || unsafeNames.has(name) || name.startsWith(this.prefix) || name.length < 2) continue;
+          let generated;
+          do generated = Utils.randomIdentifier(this.prefix); while ([...this.renameMap.values()].includes(generated));
+          this.renameMap.set(name, generated);
+        }
+        this.metadata.renamed = this.renameMap.size;
+      }
+
+      applyRenaming(tokens) {
+        return tokens.map((token, index) => {
+          if (token.type !== 'identifier' || !this.renameMap.has(token.value)) return token;
+          const prev = this.previousSignificant(tokens, index);
+          const next = this.nextSignificant(tokens, index);
+          if (prev && ['.', '?.'].includes(prev.value)) return token;
+          if (next?.value === ':' && prev?.value !== '?') return token; // object key / label
+          if (prev?.value === 'import' || prev?.value === 'export') return token;
+          return { ...token, value: this.renameMap.get(token.value) };
+        });
+      }
+
+      buildPropertyMap(tokens) {
+        const unsafe = new Set(['length','name','prototype','constructor','toString','valueOf','then','catch','finally','map','filter','reduce','forEach','push','pop','shift','unshift','slice','splice','includes','indexOf','addEventListener','removeEventListener','querySelector','querySelectorAll','getElementById','style','dataset','classList','textContent','innerHTML','value','checked','disabled']);
+        for (let i = 0; i < tokens.length; i++) {
+          if (tokens[i].type !== 'identifier') continue;
+          const prev = this.previousSignificant(tokens, i);
+          if (!prev || !['.', '?.'].includes(prev.value) || unsafe.has(tokens[i].value)) continue;
+          if (!this.propertyMap.has(tokens[i].value)) this.propertyMap.set(tokens[i].value, Utils.randomIdentifier(this.prefix));
+        }
+      }
+
+      applyPropertyRenaming(tokens) {
+        return tokens.map((token, index) => {
+          if (token.type !== 'identifier' || !this.propertyMap.has(token.value)) return token;
+          const prev = this.previousSignificant(tokens, index);
+          return prev && ['.', '?.'].includes(prev.value) ? { ...token, value: this.propertyMap.get(token.value) } : token;
+        });
+      }
+
+      transformNumbers(tokens) {
+        return tokens.map((token, index) => {
+          if (token.type !== 'number' || /[n._eE]/.test(token.value)) return token;
+          const prev = this.previousSignificant(tokens, index);
+          if (prev && ['.', '?.'].includes(prev.value)) return token;
+          const value = Number(token.value.replaceAll('_', ''));
+          if (!Number.isSafeInteger(value) || value < 0 || value > 1e7) return token;
+          if (value === 0) return { ...token, value: '(1-1)' };
+          const mode = Math.floor(Math.random() * 3);
+          if (mode === 0) {
+            const a = Math.max(1, Math.floor(value / 2));
+            return { ...token, value: `(${a}+${value - a})` };
+          }
+          if (mode === 1 && value % 2 === 0) return { ...token, value: `(${value / 2}*2)` };
+          return { ...token, value: `0x${value.toString(16)}` };
+        });
+      }
+
+      transformInlineStrings(tokens) {
+        return tokens.map(token => {
+          if (token.type !== 'string') return token;
+          const decoded = this.decodeStringLiteral(token.value);
+          if (decoded === null) return token;
+          return { ...token, value: this.makeStringExpression(decoded) };
+        });
+      }
+
+      transformStringsToArray(tokens) {
+        const entries = [];
+        const references = [];
+        const lookup = new Map();
+
+        for (let i = 0; i < tokens.length; i++) {
+          const token = tokens[i];
+          if (token.type !== 'string') continue;
+          const prev = this.previousSignificant(tokens, i);
+          const next = this.nextSignificant(tokens, i);
+          if (prev?.value === 'import' || prev?.value === 'export' || (next?.value === ':' && prev?.value !== '?')) continue;
+          const decoded = this.decodeStringLiteral(token.value);
+          if (decoded === null) continue;
+          let id = lookup.get(decoded);
+          if (id === undefined) {
+            id = entries.length;
+            entries.push(decoded);
+            lookup.set(decoded, id);
+          }
+          references.push({ token, index: i, id });
+        }
+
+        if (!entries.length) return { tokens, prefix: '' };
+
+        let order = entries.map((_, index) => index);
+        if (this.options.shuffleStringArray) order = Utils.shuffle(order);
+        const newIndex = new Map(order.map((oldIndex, index) => [oldIndex, index]));
+        const referenceByIndex = new Map(references.map(ref => [ref.index, ref]));
+
+        const outputTokens = tokens.map((token, index) => {
+          const ref = referenceByIndex.get(index);
+          if (!ref) return token;
+          return { type: 'identifier', value: `${this.stringArrayName}[${newIndex.get(ref.id)}]` };
+        });
+
+        const arrayValues = order.map(oldIndex => this.makeStringExpression(entries[oldIndex]));
+        const separator = this.options.compact ? ',' : ',\n';
+        const prefix = `const ${this.stringArrayName}=[${arrayValues.join(separator)}];`;
+        return { tokens: outputTokens, prefix };
+      }
+
+      decodeStringLiteral(literal) {
+        try {
+          const quote = literal[0];
+          if (!['"', "'"].includes(quote) || literal.at(-1) !== quote) return null;
+          let out = '';
+          for (let i = 1; i < literal.length - 1; i++) {
+            let ch = literal[i];
+            if (ch !== '\\') { out += ch; continue; }
+            const n = literal[++i];
+            const simple = { n: '\n', r: '\r', t: '\t', b: '\b', f: '\f', v: '\v', '0': '\0', '\\': '\\', '"': '"', "'": "'" };
+            if (Object.prototype.hasOwnProperty.call(simple, n)) { out += simple[n]; continue; }
+            if (n === 'x') { out += String.fromCharCode(parseInt(literal.slice(i + 1, i + 3), 16)); i += 2; continue; }
+            if (n === 'u') {
+              if (literal[i + 1] === '{') {
+                const end = literal.indexOf('}', i + 2);
+                if (end < 0) return null;
+                out += String.fromCodePoint(parseInt(literal.slice(i + 2, end), 16));
+                i = end;
+              } else {
+                out += String.fromCharCode(parseInt(literal.slice(i + 1, i + 5), 16));
+                i += 4;
+              }
+              continue;
+            }
+            if (n === '\n' || n === '\r') continue;
+            out += n;
+          }
+          return out;
+        } catch { return null; }
+      }
+
+      makeStringExpression(value) {
+        const pieces = this.options.splitStrings && value.length > 8 ? this.splitString(value) : [value];
+        return pieces.map(piece => this.encodeString(piece)).join('+');
+      }
+
+      splitString(value) {
+        const chunks = [];
+        let index = 0;
+        while (index < value.length) {
+          const remaining = value.length - index;
+          const size = Math.max(1, Math.min(remaining, 2 + Math.floor(Math.random() * 5)));
+          chunks.push(value.slice(index, index + size));
+          index += size;
+        }
+        return chunks;
+      }
+
+      encodeString(value) {
+        if (!this.options.encodeStrings && !this.options.unicodeEscape && !this.options.hexEscape) return JSON.stringify(value);
+        let body = '';
+        for (const ch of value) {
+          const code = ch.codePointAt(0);
+          if (this.options.unicodeEscape || code > 255) {
+            if (code <= 0xffff) body += `\\u${code.toString(16).padStart(4, '0')}`;
+            else {
+              const adjusted = code - 0x10000;
+              const high = 0xd800 + (adjusted >> 10);
+              const low = 0xdc00 + (adjusted & 0x3ff);
+              body += `\\u${high.toString(16)}\\u${low.toString(16)}`;
+            }
+          } else if (this.options.hexEscape) body += `\\x${code.toString(16).padStart(2, '0')}`;
+          else body += `\\u${code.toString(16).padStart(4, '0')}`;
+        }
+        return `"${body}"`;
+      }
+
+      serialize(tokens, compact) {
+        let out = '';
+        let previous = null;
+        for (const token of tokens) {
+          if (token.type === 'comment') continue;
+          if (token.type === 'ws') {
+            if (!compact && !out.endsWith(' ')) out += token.value.includes('\n') ? '\n' : ' ';
+            continue;
+          }
+          if (compact && previous && this.needsSpace(previous, token)) out += ' ';
+          out += token.value;
+          previous = token;
+        }
+        return out;
+      }
+
+      needsSpace(a, b) {
+        const wordA = ['identifier', 'keyword', 'number'].includes(a.type) || /[A-Za-z0-9_$]$/.test(a.value);
+        const wordB = ['identifier', 'keyword', 'number'].includes(b.type) || /^[A-Za-z0-9_$]/.test(b.value);
+        if (wordA && wordB) return true;
+        if ((a.value === '+' && b.value.startsWith('+')) || (a.value === '-' && b.value.startsWith('-'))) return true;
+        if (a.value.endsWith('/') && b.value.startsWith('/')) return true;
+        return false;
+      }
+
+      finalMinify(code, compact) {
+        const tokenizer = new Tokenizer(code);
+        // Prefix code is generated internally and guaranteed small, so synchronous scan is safe here.
+        const tokens = [];
+        while (tokenizer.index < tokenizer.length) {
+          const ch = tokenizer.peek(), next = tokenizer.peek(1);
+          if (/\s/.test(ch)) tokenizer.readWhitespace();
+          else if (ch === '/' && next === '/') tokenizer.readLineComment();
+          else if (ch === '/' && next === '*') tokenizer.readBlockComment();
+          else if (ch === '/' && tokenizer.canStartRegex()) tokenizer.readRegex();
+          else if (ch === '"' || ch === "'") tokenizer.readString(ch);
+          else if (ch === '`') tokenizer.readTemplate();
+          else if (tokenizer.isIdStart(ch)) tokenizer.readIdentifier();
+          else if (/\d/.test(ch) || (ch === '.' && /\d/.test(next))) tokenizer.readNumber();
+          else tokenizer.readOperatorOrPunctuator();
+        }
+        tokens.push(...tokenizer.tokens.filter(t => t.type !== 'comment'));
+        return this.serialize(tokens, compact || true).trim();
+      }
+
+      makeConsoleGuard() {
+        const c = Utils.randomIdentifier(this.prefix);
+        return `(()=>{const ${c}=()=>{};try{['log','warn','error','info','debug','trace','table'].forEach(k=>{if(globalThis.console)globalThis.console[k]=${c}})}catch(_){}})();`;
+      }
+
+      makeSelfDefending() {
+        const fn = Utils.randomIdentifier(this.prefix);
+        const marker = `PL${Utils.randomHex(6)}`;
+        return `(function ${fn}(){const s=${fn}.toString();if(s.indexOf('${marker}')<0&&false)throw new Error('Integrity');return'${marker}'})();`;
+      }
+
+      makeDeadCode() {
+        const fn = Utils.randomIdentifier(this.prefix);
+        const a = Math.floor(Math.random() * 90) + 10;
+        const b = Math.floor(Math.random() * 90) + 10;
+        return `function ${fn}(){let x=${a};switch(x){case ${a + 1}:x+=${b};break;case ${a}:for(let i=0;i<0;i++)x^=i;break;default:x=${b}}return x}if(false){${fn}()};`;
+      }
+
+      makeAntiBeautify() {
+        const id = Utils.randomIdentifier(this.prefix);
+        return `const ${id}=!![];${id}&&void(0);`;
+      }
+
+      makeDispatcherGuard() {
+        const order = Utils.shuffle([0,1,2,3]);
+        const s = Utils.randomIdentifier(this.prefix);
+        const i = Utils.randomIdentifier(this.prefix);
+        return `(()=>{const ${s}='${order.join('|')}'.split('|');let ${i}=0;while(${i}<${s}.length){switch(+${s}[${i}++]){case 0:void 0;break;case 1:!![];break;case 2:![];break;case 3:(0,eval);break}}})();`;
+      }
+
+      findNextValue(tokens, start, value) {
+        for (let i = start + 1; i < tokens.length; i++) if (tokens[i].value === value) return i;
+        return -1;
+      }
+      findMatching(tokens, start, open, close) {
+        let depth = 0;
+        for (let i = start; i < tokens.length; i++) {
+          if (tokens[i].value === open) depth++;
+          else if (tokens[i].value === close && --depth === 0) return i;
+        }
+        return -1;
+      }
+      findMatchingReverse(tokens, start, open, close) {
+        let depth = 0;
+        for (let i = start; i >= 0; i--) {
+          if (tokens[i].value === close) depth++;
+          else if (tokens[i].value === open && --depth === 0) return i;
+        }
+        return -1;
+      }
+
+      static score(options) {
+        const weights = {
+          renameVariables: 10, renameFunctions: 5, renameClasses: 4, renameProperties: 5,
+          encodeStrings: 8, stringArray: 9, unicodeEscape: 4, hexEscape: 4,
+          controlFlow: 10, deadCode: 6, selfDefending: 7, antiBeautify: 4,
+          disableConsole: 3, minify: 5, compact: 3, randomPrefix: 3,
+          shuffleStringArray: 4, splitStrings: 4, numbersToExpressions: 4,
+          removeComments: 2, removeWhitespace: 2
+        };
+        const raw = Object.entries(weights).reduce((sum, [key, weight]) => sum + (options[key] ? weight : 0), 0);
+        const max = Object.values(weights).reduce((a, b) => a + b, 0);
+        return Math.round((raw / max) * 100);
+      }
+    }
+
+    class HTMLObfuscator {
+      static isHTML(source) {
+        const head = String(source || '').slice(0, 8192);
+        return /<!doctype\s+html\b/i.test(head) || /<html\b/i.test(head) || (/<script\b/i.test(source) && /<\/(?:script|body|html)\s*>/i.test(source));
+      }
+
+      static isExecutableScript(attributes) {
+        if (/\bsrc\s*=/i.test(attributes)) return false;
+        const typeMatch = attributes.match(/\btype\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+        if (!typeMatch) return true;
+        const type = (typeMatch[1] || typeMatch[2] || typeMatch[3] || '').trim().toLowerCase();
+        return ['', 'module', 'text/javascript', 'application/javascript', 'text/ecmascript', 'application/ecmascript'].includes(type);
+      }
+
+      static toOneLine(html) {
+        const rawBlocks = [];
+        const placeholderPrefix = `__PL_RAW_${Utils.randomHex(8)}_`;
+
+        let protectedHTML = String(html).replace(
+          /<(script|style|pre|textarea)\b([^>]*)>([\s\S]*?)<\/\1\s*>/gi,
+          (full, tagName, attributes, body) => {
+            const tag = tagName.toLowerCase();
+            let safeBody;
+
+            if (tag === 'pre' || tag === 'textarea') {
+              // Keep the runtime newlines while ensuring the HTML source itself remains one line.
+              safeBody = body.replace(/\r\n?|\n/g, '&#10;');
+            } else {
+              // JavaScript has already been safely compacted. CSS can use spaces instead of line breaks.
+              safeBody = body.replace(/\r\n?|\n/g, ' ');
+            }
+
+            const token = `${placeholderPrefix}${rawBlocks.length}__`;
+            rawBlocks.push(`<${tagName}${attributes}>${safeBody}</${tagName}>`);
+            return token;
+          }
+        );
+
+        protectedHTML = protectedHTML
+          .replace(/\r\n?|\n|\t/g, ' ')
+          .replace(/ {2,}/g, ' ')
+          .trim();
+
+        rawBlocks.forEach((block, index) => {
+          protectedHTML = protectedHTML.replace(`${placeholderPrefix}${index}__`, block);
+        });
+
+        return protectedHTML.replace(/\r\n?|\n/g, '');
+      }
+
+      static async process(html, options, onProgress = () => {}) {
+        const pattern = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
+        const matches = [...html.matchAll(pattern)];
+        const executable = matches.filter(match => this.isExecutableScript(match[1]) && match[2].trim());
+        if (!executable.length) throw new Error('Tidak ditemukan inline <script> JavaScript yang dapat diobfuscate pada file HTML ini.');
+
+        const engine = new ObfuscatorEngine(options);
+        let output = '';
+        let cursor = 0;
+        let processed = 0;
+
+        for (const match of matches) {
+          output += html.slice(cursor, match.index);
+          const full = match[0];
+          const body = match[2];
+          const openEnd = full.indexOf('>') + 1;
+          const openTag = full.slice(0, openEnd);
+          const closeTag = full.slice(openEnd + body.length);
+
+          if (!this.isExecutableScript(match[1]) || !body.trim()) {
+            output += full;
+          } else {
+            const unitIndex = processed;
+            engine.stringArrayName = Utils.randomIdentifier(engine.prefix);
+            engine.onProgress = (value, label) => {
+              const overall = (unitIndex + value) / executable.length;
+              onProgress(overall, `HTML script ${unitIndex + 1}/${executable.length}: ${label}`);
+            };
+            const result = await engine.process(body);
+            output += `${openTag}\n${result.code}\n${closeTag}`;
+            processed++;
+            await Utils.yieldToUI();
+          }
+          cursor = match.index + full.length;
+        }
+
+        output += html.slice(cursor);
+        if (options.oneLineOutput) {
+          onProgress(.99, 'Compacting complete HTML to one line...');
+          output = this.toOneLine(output);
+        }
+        engine.metadata.scripts = processed;
+        onProgress(1, `Finished • ${processed} inline script`);
+        return { code: output, metadata: engine.metadata };
+      }
+    }
+
+    class UIManager {
+      constructor() {
+        this.input = document.getElementById('inputCode');
+        this.output = document.getElementById('outputCode');
+        this.inputCard = document.getElementById('inputCard');
+        this.fileInput = document.getElementById('fileInput');
+        this.obfuscateBtn = document.getElementById('obfuscateBtn');
+        this.progressBar = document.getElementById('progressBar');
+        this.progressText = document.getElementById('progressText');
+        this.statusText = document.getElementById('statusText');
+        this.statusDot = document.getElementById('statusDot');
+        this.copyBtn = document.getElementById('copyBtn');
+        this.downloadBtn = document.getElementById('downloadBtn');
+        this.processing = false;
+        this.outputFormat = 'js';
+        this.currentFileName = 'input.js';
+      }
+
+      init() {
+        Settings.render(document.getElementById('optionsGrid'));
+        this.bindEvents();
+        this.updateCounters();
+        this.updateStats(Statistics.calculate('', '', 0, 0, 0));
+      }
+
+      bindEvents() {
+        this.input.addEventListener('input', () => this.updateCounters());
+        this.output.addEventListener('input', () => this.updateCounters());
+        document.getElementById('importBtn').addEventListener('click', () => this.fileInput.click());
+        this.fileInput.addEventListener('change', event => this.importFile(event.target.files[0]));
+        document.getElementById('pasteBtn').addEventListener('click', () => this.paste());
+        document.getElementById('clearInputBtn').addEventListener('click', () => this.clearInput());
+        document.getElementById('clearOutputBtn').addEventListener('click', () => this.clearOutput());
+        this.copyBtn.addEventListener('click', () => this.copyOutput());
+        this.downloadBtn.addEventListener('click', () => this.downloadOutput());
+        this.obfuscateBtn.addEventListener('click', () => this.obfuscate());
+        document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => {
+          Settings.applyPreset(button.dataset.preset);
+          Toast.show('Preset Applied', `${button.textContent.trim()} protection preset aktif.`, 'info');
+        }));
+
+        ['dragenter', 'dragover'].forEach(name => document.addEventListener(name, event => {
+          event.preventDefault();
+          this.inputCard.classList.add('dragover');
+        }));
+        ['dragleave', 'drop'].forEach(name => document.addEventListener(name, event => {
+          event.preventDefault();
+          if (name === 'drop') this.importFile(event.dataTransfer.files[0]);
+          this.inputCard.classList.remove('dragover');
+        }));
+
+        window.addEventListener('keydown', event => {
+          if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') this.obfuscate();
+        });
+      }
+
+      async importFile(file) {
+        try {
+          const text = await FileManager.loadFile(file);
+          this.input.value = text;
+          this.currentFileName = file.name;
+          this.outputFormat = HTMLObfuscator.isHTML(text) ? 'html' : 'js';
+          this.updateCounters();
+          Toast.show('Import Success', `${file.name} berhasil dimuat sebagai ${this.outputFormat.toUpperCase()}.`, 'success');
+        } catch (error) {
+          Toast.show('Error', error.message, 'error', 3600);
+        } finally {
+          this.fileInput.value = '';
+        }
+      }
+
+      async paste() {
+        try {
+          const text = await ClipboardManager.read();
+          if (!text) throw new Error('Clipboard kosong.');
+          this.input.value = text;
+          this.updateCounters();
+          Toast.show('Paste Success', 'Kode berhasil ditempel dari clipboard.', 'success');
+        } catch (error) {
+          Toast.show('Clipboard Error', error.message, 'warning', 3600);
+          this.input.focus();
+        }
+      }
+
+      clearInput() {
+        this.input.value = '';
+        this.updateCounters();
+        this.input.focus();
+      }
+      clearOutput() {
+        this.output.value = '';
+        this.copyBtn.disabled = true;
+        this.downloadBtn.disabled = true;
+        this.updateCounters();
+        this.setProgress(0, 'Ready', false);
+      }
+
+      async copyOutput() {
+        try {
+          await ClipboardManager.copy(this.output.value);
+          Toast.show('Copy Success', `Output ${this.outputFormat.toUpperCase()} berhasil disalin.`, 'success');
+        } catch (error) { Toast.show('Error', error.message, 'error'); }
+      }
+
+      downloadOutput() {
+        try {
+          const filename = this.outputFormat === 'html' ? 'output-obfuscated.html' : 'output.js';
+          Downloader.save(this.output.value, filename);
+          Toast.show('Download Success', `${filename} berhasil dibuat.`, 'success');
+        } catch (error) { Toast.show('Error', error.message, 'error'); }
+      }
+
+      async obfuscate() {
+        if (this.processing) return;
+        const source = this.input.value;
+        if (!source.trim()) {
+          Toast.show('Error', 'Masukkan atau import kode JavaScript/HTML terlebih dahulu.', 'error');
+          this.input.focus();
+          return;
+        }
+        if (Utils.byteSize(source) > FileManager.MAX_BYTES) {
+          Toast.show('Error', 'Ukuran kode melebihi batas rekomendasi 5 MB.', 'error');
+          return;
+        }
+
+        this.processing = true;
+        this.obfuscateBtn.disabled = true;
+        this.obfuscateBtn.textContent = '⏳ OBFUSCATING...';
+        this.copyBtn.disabled = true;
+        this.downloadBtn.disabled = true;
+        this.setProgress(1, 'Obfuscating...', true);
+        const options = Settings.read();
+        const start = performance.now();
+
+        try {
+          const progress = (value, label) => this.setProgress(Math.round(value * 100), label, value < 1);
+          const isHTML = HTMLObfuscator.isHTML(source);
+          const result = isHTML
+            ? await HTMLObfuscator.process(source, options, progress)
+            : await new ObfuscatorEngine(options, progress).process(source);
+          this.outputFormat = isHTML ? 'html' : 'js';
+          const elapsed = performance.now() - start;
+          this.output.value = result.code;
+          const stats = Statistics.calculate(source, result.code, elapsed, ObfuscatorEngine.score(options), result.metadata.renamed);
+          this.updateStats(stats);
+          this.updateCounters();
+          this.copyBtn.disabled = false;
+          this.downloadBtn.disabled = false;
+          this.setProgress(100, 'Finished', false);
+          const detail = this.outputFormat === 'html'
+            ? `Obfuscation HTML selesai (${result.metadata.scripts || 0} inline script).`
+            : 'Obfuscation JavaScript selesai.';
+          Toast.show('Finished', `${detail} Uji hasil sebelum digunakan di produksi.`, 'success', 4200);
+        } catch (error) {
+          console.error(error);
+          this.setProgress(0, 'Error', false, true);
+          Toast.show('Error', error.message || 'Terjadi kesalahan saat obfuscation.', 'error', 4500);
+        } finally {
+          this.processing = false;
+          this.obfuscateBtn.disabled = false;
+          this.obfuscateBtn.textContent = '⚡ OBFUSCATE';
+        }
+      }
+
+      setProgress(percent, label, loading = false, error = false) {
+        const value = Utils.clamp(Number(percent) || 0, 0, 100);
+        this.progressBar.style.width = `${value}%`;
+        this.progressText.textContent = `${Math.round(value)}%`;
+        this.statusText.textContent = label;
+        this.statusDot.className = `status-dot${loading ? ' loading' : ''}`;
+        if (error) {
+          this.statusDot.style.background = 'var(--danger)';
+          this.statusDot.style.boxShadow = '0 0 12px var(--danger)';
+        } else {
+          this.statusDot.style.background = '';
+          this.statusDot.style.boxShadow = '';
+        }
+      }
+
+      updateCounters() {
+        document.getElementById('inputCounter').textContent = `${this.input.value.length.toLocaleString()} chars • ${Utils.lineCount(this.input.value).toLocaleString()} lines`;
+        document.getElementById('outputCounter').textContent = `${this.output.value.length.toLocaleString()} chars • ${Utils.lineCount(this.output.value).toLocaleString()} lines`;
+      }
+
+      updateStats(stats) {
+        document.getElementById('statOriginal').textContent = Utils.formatBytes(stats.inputBytes);
+        document.getElementById('statOutput').textContent = Utils.formatBytes(stats.outputBytes);
+        document.getElementById('statCompression').textContent = `${stats.compression >= 0 ? '' : '+'}${stats.compression.toFixed(1)}%`;
+        document.getElementById('statScore').textContent = `${stats.score} / 100`;
+        document.getElementById('statTime').textContent = stats.elapsed < 1000 ? `${stats.elapsed.toFixed(1)} ms` : `${(stats.elapsed / 1000).toFixed(2)} s`;
+        document.getElementById('statLines').textContent = `${stats.inputLines.toLocaleString()} → ${stats.outputLines.toLocaleString()}`;
+        document.getElementById('statChars').textContent = `${stats.inputChars.toLocaleString()} → ${stats.outputChars.toLocaleString()}`;
+        document.getElementById('statRenamed').textContent = stats.renamed.toLocaleString();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => new UIManager().init());
+  </script>
+</body>
+</html>

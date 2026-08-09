@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<link rel="icon" type="image/png" href="icon_128.png">
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradise License Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="header">
+    <div class="brandWrap">
+      <div class="brandMark">P</div>
+      <div>
+        <div id="logo">PARADISE</div>
+        <div class="brandMeta">License Management</div>
+      </div>
+    </div>
+    <div id="title">ADMIN PANEL</div>
+  </header>
+
+  <section id="dashboard" aria-label="License summary">
+    <div class="card metricTotal">
+      <div class="metricHead"><span class="metricDot"></span><div class="label">TOTAL LICENSE</div></div>
+      <div id="totalLicense" class="value">0</div>
+    </div>
+    <div class="card metricReady">
+      <div class="metricHead"><span class="metricDot"></span><div class="label">READY</div></div>
+      <div id="readyLicense" class="value">0</div>
+    </div>
+    <div class="card metricActive">
+      <div class="metricHead"><span class="metricDot"></span><div class="label">ACTIVE</div></div>
+      <div id="activeLicense" class="value">0</div>
+    </div>
+    <div class="card metricBlock">
+      <div class="metricHead"><span class="metricDot"></span><div class="label">BLOCKED</div></div>
+      <div id="blockLicense" class="value">0</div>
+    </div>
+  </section>
+
+  <section class="workspaceToolbar">
+    <div id="searchPanel">
+      <span class="searchIcon">⌕</span>
+      <input id="searchBox" type="text" placeholder="Cari license, owner, device, atau status..." autocomplete="off">
+    </div>
+
+    <div id="actionPanel" aria-label="License actions">
+      <div class="actionCard primaryAction" id="btnGenerate" role="button" tabindex="0">
+        <div class="actionIcon">＋</div><div class="actionText">GENERATE</div>
+      </div>
+      <div class="actionCard" id="btnReset" role="button" tabindex="0">
+        <div class="actionIcon">↻</div><div class="actionText">RESET</div>
+      </div>
+      <div class="actionCard dangerSoft" id="btnBlock" role="button" tabindex="0">
+        <div class="actionIcon">⊘</div><div class="actionText">BLOCK</div>
+      </div>
+      <div class="actionCard" id="btnUnblock" role="button" tabindex="0">
+        <div class="actionIcon">⌁</div><div class="actionText">UNBLOCK</div>
+      </div>
+      <div class="actionCard dangerAction" id="btnDelete" role="button" tabindex="0">
+        <div class="actionIcon">⌫</div><div class="actionText">DELETE</div>
+      </div>
+      <div class="actionCard" id="btnExport" role="button" tabindex="0" title="Klik untuk export JSON • Klik kanan untuk import JSON">
+        <div class="actionIcon">⇧</div><div class="actionText">EXPORT</div>
+      </div>
+    </div>
+  </section>
+
+  <main id="content">
+    <section id="leftPanel">
+      <div class="panelHeader">
+        <div>
+          <div class="panelTitle">LICENSE LIST</div>
+          <div class="panelSubtitle">Pilih license untuk melihat detail</div>
+        </div>
+      </div>
+      <div id="licenseList"></div>
+    </section>
+
+    <section id="rightPanel">
+      <div class="panelHeader detailHeader">
+        <div>
+          <div id="detailTitle">LICENSE DETAIL</div>
+          <div class="panelSubtitle">Informasi license terpilih</div>
+        </div>
+      </div>
+
+      <div id="profileCard">
+        <div class="profileTop">
+          <div id="profileStatus">🟢 READY</div>
+          <div class="profileBadge">PARADISE</div>
+        </div>
+        <div id="profileLicense">PLP-XXXX-XXXX-XXXX</div>
+        <div class="profileMetaGrid">
+          <div id="profileOwner">👤 Paradise</div>
+          <div id="profileDevice">💻 -</div>
+        </div>
+      </div>
+
+      <div id="detailContent">
+        <div class="detailRow"><span>LICENSE</span><div id="detailLicense">-</div></div>
+        <div class="detailRow"><span>STATUS</span><div id="detailStatus">-</div></div>
+        <div class="detailRow"><span>OWNER</span><div id="detailOwner">-</div></div>
+        <div class="detailRow"><span>DEVICE</span><div id="detailDevice">-</div></div>
+        <div class="detailRow"><span>CREATED</span><div id="detailCreated">-</div></div>
+        <div class="detailRow"><span>ACTIVATED</span><div id="detailActivated">-</div></div>
+        <div class="detailRow"><span>LAST LOGIN</span><div id="detailLastLogin">-</div></div>
+        <div class="detailRow"><span>EXPIRED</span><div id="detailExpired">-</div></div>
+        <div class="detailRow"><span>VERSION</span><div id="detailVersion">-</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="generateOverlay">
+  <div id="generateBox">
+    <div class="modalHead">
+      <div>
+        <div id="generateTitle">GENERATE LICENSE</div>
+        <div class="modalSubtitle">Buat license baru lalu sinkronkan ke database</div>
+      </div>
+      <div class="modalIcon">＋</div>
+    </div>
+
+    <div class="generateGrid">
+      <div class="generateItem"><label>PREFIX</label><input id="genPrefix" type="text" value="PLP"></div>
+      <div class="generateItem"><label>JUMLAH</label><input id="genTotal" type="number" min="1" max="500" value="100"></div>
+      <div class="generateItem"><label>OWNER</label><input id="genOwner" type="text" value="Paradise"></div>
+      <div class="generateItem"><label>VERSION</label><input id="genVersion" type="text" value="1"></div>
+    </div>
+
+    <div id="generateButtons">
+      <button id="generateCancel" type="button">BATAL</button>
+      <button id="generateOk" type="button">GENERATE</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<div id="confirmOverlay" class="hidden">
+  <div id="confirmBox">
+    <div id="confirmIcon">!</div>
+    <div id="confirmTitle">KONFIRMASI</div>
+    <div id="confirmMessage">Apakah Anda yakin?</div>
+    <div id="confirmButtons">
+      <button id="confirmCancel" type="button">BATAL</button>
+      <button id="confirmOk" type="button">YA, LANJUTKAN</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+<script src="script.js"></script>
+</body>
+</html>

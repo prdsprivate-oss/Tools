@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
   <title>Paradise Lab — JavaScript Obfuscator</title>
+  <link rel="icon" type="image/png" href="obfus.png">
   <style>
     :root {
       --bg: #08111f;
@@ -2029,7 +2030,7 @@
         const targets = archive.entries.filter(entry => !entry.isDirectory && /\.(?:js|mjs|cjs|html?|css|json)$/i.test(entry.name));
         const totalTargets = targets.length;
         const outEntries = [];
-        const successes = [];
+        const successes = { js: [], html: [], css: [], json: [] };
         const failures = [];
         const counts = { js: 0, html: 0, css: 0, json: 0 };
         let processed = 0;
@@ -2085,7 +2086,10 @@
                 processed++;
                 renamed += result.metadata?.renamed || 0;
                 const extra = isHTML ? ` (${result.metadata?.scripts || 0} script, ${result.metadata?.styles || 0} style)` : '';
-                successes.push(`${entry.name}${extra}`);
+                if (isJS) successes.js.push(entry.name);
+                else if (isHTML) successes.html.push(`${entry.name}${extra}`);
+                else if (isCSS) successes.css.push(entry.name);
+                else if (isJSON) successes.json.push(entry.name);
               }
             } catch (error) {
               failures.push(`${entry.name}: ${error.message || error}`);
@@ -2114,16 +2118,25 @@
           `Entries preserved: ${outEntries.length}`,
           `Source targets found: ${totalTargets}`,
           `Targets processed: ${processed}`,
-          `JavaScript processed: ${counts.js}`,
-          `HTML processed: ${counts.html}`,
-          `CSS processed: ${counts.css}`,
-          `JSON / Manifest processed: ${counts.json}`,
+          `JS protected: ${counts.js}`,
+          `HTML protected: ${counts.html}`,
+          `CSS minified: ${counts.css}`,
+          `JSON minified: ${counts.json}`,
           `Failures kept original: ${failures.length}`,
           `Extension Safe Mode: ${options.extensionSafe ? 'ON (cross-file identifier rename disabled)' : 'OFF'}`,
           `Renamed JS identifiers: ${renamed}`,
           '',
-          'PROCESSED:',
-          ...(successes.length ? successes.map(x => `✓ ${x}`) : ['— Tidak ada target yang berubah —']),
+          'JS PROTECTED:',
+          ...(successes.js.length ? successes.js.map(x => `✓ ${x}`) : ['— Tidak ada file JS —']),
+          '',
+          'HTML PROTECTED:',
+          ...(successes.html.length ? successes.html.map(x => `✓ ${x}`) : ['— Tidak ada file HTML —']),
+          '',
+          'CSS MINIFIED:',
+          ...(successes.css.length ? successes.css.map(x => `✓ ${x}`) : ['— Tidak ada file CSS —']),
+          '',
+          'JSON MINIFIED:',
+          ...(successes.json.length ? successes.json.map(x => `✓ ${x}`) : ['— Tidak ada file JSON / manifest —']),
           ...(failures.length ? ['', 'WARNINGS / ORIGINAL KEPT:', ...failures.map(x => `⚠ ${x}`)] : []),
           '',
           'JS = obfuscation. HTML/CSS = structure protection + minify. JSON/manifest = minify.',

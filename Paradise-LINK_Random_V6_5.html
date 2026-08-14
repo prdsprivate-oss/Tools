@@ -1760,6 +1760,86 @@ body[data-theme] ::-webkit-scrollbar-thumb{
     .theme-grid{grid-template-columns:1fr;}
 }
 
+
+/*==========================
+  EDITABLE LINK NAMES
+==========================*/
+.editable-link-name{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    cursor:pointer;
+    user-select:none;
+    border-radius:8px;
+    padding:2px 6px;
+    margin-left:-6px;
+    transition:.2s ease;
+}
+
+.editable-link-name::after{
+    content:"✎";
+    font-size:12px;
+    opacity:.55;
+    transition:.2s ease;
+}
+
+.editable-link-name:hover,
+.editable-link-name:focus-visible{
+    outline:none;
+    background:rgba(255,255,255,.08);
+    box-shadow:0 0 0 1px rgba(255,255,255,.10);
+}
+
+.editable-link-name:hover::after,
+.editable-link-name:focus-visible::after{
+    opacity:1;
+}
+
+body[data-theme] .editable-link-name:hover,
+body[data-theme] .editable-link-name:focus-visible{
+    background:var(--theme-input);
+    box-shadow:0 0 0 1px var(--theme-border),0 0 12px var(--theme-glow);
+}
+
+/*==========================
+  EDITABLE STATUS NAMES
+==========================*/
+.editable-status-name{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    cursor:pointer;
+    user-select:none;
+    border-radius:8px;
+    padding:2px 6px;
+    transition:.2s ease;
+}
+
+.editable-status-name::after{
+    content:"✎";
+    font-size:12px;
+    opacity:.55;
+    transition:.2s ease;
+}
+
+.editable-status-name:hover,
+.editable-status-name:focus-visible{
+    outline:none;
+    background:rgba(255,255,255,.08);
+    box-shadow:0 0 0 1px rgba(255,255,255,.10);
+}
+
+.editable-status-name:hover::after,
+.editable-status-name:focus-visible::after{
+    opacity:1;
+}
+
+body[data-theme] .editable-status-name:hover,
+body[data-theme] .editable-status-name:focus-visible{
+    background:var(--theme-input);
+    box-shadow:0 0 0 1px var(--theme-border),0 0 12px var(--theme-glow);
+}
+
 </style></head>
 <body>
 <body>
@@ -1808,7 +1888,7 @@ body[data-theme] ::-webkit-scrollbar-thumb{
              aria-expanded="false"
              title="Buka pilihan tema">
             <span aria-hidden="true">🚀</span>
-            <span>PARADISE</span>
+            <span>Paradise Lab</span>
             <span class="theme-chevron" aria-hidden="true">▼</span>
         </div>
 
@@ -1951,7 +2031,7 @@ body[data-theme] ::-webkit-scrollbar-thumb{
     <section class="panel">
 
         <div class="panel-title">
-            LINK 1 (<span id="t1">0</span>)
+            <span class="editable-link-name" data-link-name="1" role="button" tabindex="0" title="Klik untuk ganti nama">LINK 1</span> (<span id="t1">0</span>)
         </div>
 
         <textarea id="l1"></textarea>
@@ -1961,7 +2041,7 @@ body[data-theme] ::-webkit-scrollbar-thumb{
     <section class="panel">
 
         <div class="panel-title">
-            LINK 2 (<span id="t2">0</span>)
+            <span class="editable-link-name" data-link-name="2" role="button" tabindex="0" title="Klik untuk ganti nama">LINK 2</span> (<span id="t2">0</span>)
         </div>
 
         <textarea id="l2"></textarea>
@@ -1971,7 +2051,7 @@ body[data-theme] ::-webkit-scrollbar-thumb{
     <section class="panel">
 
         <div class="panel-title">
-            LINK 3 (<span id="t3">0</span>)
+            <span class="editable-link-name" data-link-name="3" role="button" tabindex="0" title="Klik untuk ganti nama">LINK 3</span> (<span id="t3">0</span>)
         </div>
 
         <textarea id="l3"></textarea>
@@ -2003,7 +2083,7 @@ body[data-theme] ::-webkit-scrollbar-thumb{
                     id="r1"
                     checked>
 
-                Link 1
+                <span id="srcName1">Link 1</span>
 
             </label>
 			
@@ -2014,7 +2094,7 @@ body[data-theme] ::-webkit-scrollbar-thumb{
                     name="src"
                     id="r2">
 
-                Link 2
+                <span id="srcName2">Link 2</span>
 
             </label>
 
@@ -2025,14 +2105,14 @@ body[data-theme] ::-webkit-scrollbar-thumb{
 					name="src"
 					id="r3">
 
-				Link 3
+				<span id="srcName3">Link 3</span>
 
 			</label>
 
             <div class="status-source-options" title="Pilih database status yang dipakai saat Generate">
-                <label><input type="radio" name="statusSrc" id="s1" value="statusDB" checked> Status 1</label>
-                <label><input type="radio" name="statusSrc" id="s2" value="statusDB2"> Status 2</label>
-                <label><input type="radio" name="statusSrc" id="s3" value="statusDB3"> Status 3</label>
+                <label><input type="radio" name="statusSrc" id="s1" value="statusDB" checked> <span id="statusSrcName1">Status 1</span></label>
+                <label><input type="radio" name="statusSrc" id="s2" value="statusDB2"> <span id="statusSrcName2">Status 2</span></label>
+                <label><input type="radio" name="statusSrc" id="s3" value="statusDB3"> <span id="statusSrcName3">Status 3</span></label>
             </div>
         </div>
 
@@ -2163,7 +2243,7 @@ DATABASE (<span id="dbCount">0</span>)
 
     <div class="panel-title">
 
-        STATUS DATABASE 1 (<span id="statusCount">0</span>)
+        STATUS DATABASE — <span class="editable-status-name" data-status-name="1" role="button" tabindex="0" title="Klik untuk ganti nama">Status 1</span> (<span id="statusCount">0</span>)
 
     </div>
 
@@ -2185,7 +2265,7 @@ DATABASE (<span id="dbCount">0</span>)
 
     <div class="panel-title">
 
-        STATUS DATABASE 2 (<span id="statusCount2">0</span>)
+        STATUS DATABASE — <span class="editable-status-name" data-status-name="2" role="button" tabindex="0" title="Klik untuk ganti nama">Status 2</span> (<span id="statusCount2">0</span>)
 
     </div>
 
@@ -2207,7 +2287,7 @@ DATABASE (<span id="dbCount">0</span>)
 
     <div class="panel-title">
 
-        STATUS DATABASE 3 (<span id="statusCount3">0</span>)
+        STATUS DATABASE — <span class="editable-status-name" data-status-name="3" role="button" tabindex="0" title="Klik untuk ganti nama">Status 3</span> (<span id="statusCount3">0</span>)
 
     </div>
 
@@ -2318,6 +2398,113 @@ if($('status')){
 
 }
 
+
+/*==========================================
+ LINK NAME STORAGE + EDITOR
+ - Hanya mengubah nama tampilan.
+ - ID internal l1/l2/l3 tetap sama.
+==========================================*/
+
+const LINK_NAME_DEFAULTS={
+    1:'LINK 1',
+    2:'LINK 2',
+    3:'LINK 3'
+};
+
+function getLinkName(index){
+    const saved=localStorage.getItem('paradiseLinkName'+index);
+
+    return saved && saved.trim()
+        ? saved.trim()
+        : LINK_NAME_DEFAULTS[index];
+}
+
+function saveLinkName(index,name){
+    const clean=(name||'').trim();
+
+    if(!clean){
+        toast('Nama tidak boleh kosong');
+        return false;
+    }
+
+    localStorage.setItem(
+        'paradiseLinkName'+index,
+        clean
+    );
+
+    return true;
+}
+
+function updateLinkNameUI(){
+
+    [1,2,3].forEach(index=>{
+
+        const name=getLinkName(index);
+
+        document
+            .querySelectorAll(
+                '.editable-link-name[data-link-name="'+index+'"]'
+            )
+            .forEach(el=>{
+                el.textContent=name;
+            });
+
+        const srcName=$('srcName'+index);
+
+        if(srcName){
+            srcName.textContent=name;
+        }
+
+    });
+
+}
+
+function editLinkName(index){
+
+    const current=getLinkName(index);
+
+    const next=window.prompt(
+        'Ganti nama '+LINK_NAME_DEFAULTS[index]+':',
+        current
+    );
+
+    if(next===null) return;
+
+    if(!saveLinkName(index,next)) return;
+
+    updateLinkNameUI();
+    refreshUI();
+
+    toast('Nama link disimpan');
+
+}
+
+document
+    .querySelectorAll('.editable-link-name')
+    .forEach(el=>{
+
+        const index=Number(el.dataset.linkName);
+
+        el.addEventListener('click',()=>{
+            editLinkName(index);
+        });
+
+        el.addEventListener('keydown',event=>{
+
+            if(
+                event.key==='Enter' ||
+                event.key===' '
+            ){
+                event.preventDefault();
+                editLinkName(index);
+            }
+
+        });
+
+    });
+
+updateLinkNameUI();
+
 /*==========================================
  COUNTER
 ==========================================*/
@@ -2350,19 +2537,24 @@ function activeTextarea(){
 
 function updateButtons(){
 
-    const total=APP.count(activeTextarea().id);
+    const active=activeTextarea();
+    const total=APP.count(active.id);
+
+    const activeIndex=
+        active.id==='l3' ? 3 :
+        active.id==='l2' ? 2 : 1;
 
     $('cut').textContent=
-        'CUT LINK ('+total+')';
+        'CUT '+getLinkName(activeIndex)+' ('+total+')';
 
     $('cut1').textContent=
-        'CUT LINK 1 ('+APP.count('l1')+')';
+        'CUT '+getLinkName(1)+' ('+APP.count('l1')+')';
 
     $('cut2').textContent=
-        'CUT LINK 2 ('+APP.count('l2')+')';
+        'CUT '+getLinkName(2)+' ('+APP.count('l2')+')';
 
     $('cut3').textContent=
-        'CUT LINK 3 ('+APP.count('l3')+')';
+        'CUT '+getLinkName(3)+' ('+APP.count('l3')+')';
 
 }
 /*==========================================
@@ -2956,6 +3148,126 @@ const STATUS_LABELS={
     statusDB2:'Status 2',
     statusDB3:'Status 3'
 };
+
+/*==========================================
+ STATUS NAME STORAGE + EDITOR
+ - Hanya mengubah nama tampilan Status 1/2/3.
+ - ID internal statusDB/statusDB2/statusDB3 tetap sama.
+==========================================*/
+
+const STATUS_NAME_DEFAULTS={
+    1:'Status 1',
+    2:'Status 2',
+    3:'Status 3'
+};
+
+const STATUS_NAME_DB_IDS={
+    1:'statusDB',
+    2:'statusDB2',
+    3:'statusDB3'
+};
+
+function getStatusName(index){
+    const saved=localStorage.getItem('paradiseStatusName'+index);
+
+    return saved && saved.trim()
+        ? saved.trim()
+        : STATUS_NAME_DEFAULTS[index];
+}
+
+function saveStatusName(index,name){
+    const clean=(name||'').trim();
+
+    if(!clean){
+        toast('Nama status tidak boleh kosong');
+        return false;
+    }
+
+    localStorage.setItem(
+        'paradiseStatusName'+index,
+        clean
+    );
+
+    return true;
+}
+
+function updateStatusNameUI(){
+
+    [1,2,3].forEach(index=>{
+
+        const name=getStatusName(index);
+        const dbId=STATUS_NAME_DB_IDS[index];
+
+        document
+            .querySelectorAll(
+                '.editable-status-name[data-status-name="'+index+'"]'
+            )
+            .forEach(el=>{
+                el.textContent=name;
+            });
+
+        const srcName=$('statusSrcName'+index);
+        if(srcName){
+            srcName.textContent=name;
+        }
+
+        const clearButton=$(STATUS_CLEAR_IDS[dbId]);
+        if(clearButton){
+            clearButton.textContent='✖ CLEAR '+name;
+        }
+
+        STATUS_LABELS[dbId]=name;
+
+    });
+
+}
+
+function editStatusName(index){
+
+    const current=getStatusName(index);
+
+    const next=window.prompt(
+        'Ganti nama '+STATUS_NAME_DEFAULTS[index]+':',
+        current
+    );
+
+    if(next===null) return;
+
+    if(!saveStatusName(index,next)) return;
+
+    updateStatusNameUI();
+
+    toast('Nama status disimpan');
+
+}
+
+document
+    .querySelectorAll('.editable-status-name')
+    .forEach(el=>{
+
+        const index=Number(el.dataset.statusName);
+
+        el.addEventListener('click',event=>{
+            event.stopPropagation();
+            editStatusName(index);
+        });
+
+        el.addEventListener('keydown',event=>{
+
+            if(
+                event.key==='Enter' ||
+                event.key===' '
+            ){
+                event.preventDefault();
+                event.stopPropagation();
+                editStatusName(index);
+            }
+
+        });
+
+    });
+
+updateStatusNameUI();
 
 const statusPools={
     statusDB:[],

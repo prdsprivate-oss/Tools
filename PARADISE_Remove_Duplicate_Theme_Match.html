@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PARADISE - Remove Duplicate Status</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;width:100%}
+
+.paradiseCleaner,
+.paradiseCleaner *{box-sizing:border-box}
+
+.paradiseCleaner{
+  --pg-bg-1:#08111f;
+  --pg-bg-2:#0d1728;
+  --pg-bg-3:#111c30;
+  --pg-primary:#00c8ff;
+  --pg-primary-2:#1da1ff;
+  --pg-text:#ffffff;
+  --pg-text-secondary:#c8d8e8;
+  --pg-border:rgba(0,200,255,.15);
+  --pg-border-hover:rgba(0,200,255,.45);
+  --pg-glow:rgba(0,200,255,.35);
+  --pg-glow-soft:rgba(0,200,255,.12);
+
+  width:100%;
+  min-height:100vh;
+  position:relative;
+  isolation:isolate;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:50px 18px;
+  overflow:hidden;
+  color:var(--pg-text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(29,161,255,.20),transparent 30%),
+    radial-gradient(circle at 85% 85%,rgba(0,200,255,.12),transparent 32%),
+    linear-gradient(145deg,var(--pg-bg-1),#050b14 48%,var(--pg-bg-2));
+}
+
+.paradiseCleaner::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.7;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.75) 1px,transparent 1.5px),
+    radial-gradient(circle,rgba(0,200,255,.7) 1px,transparent 1.5px);
+  background-size:75px 75px,115px 115px;
+  background-position:0 0,35px 45px;
+  animation:pgStarsMove 45s linear infinite;
+}
+
+.paradiseCleaner::after{
+  content:"";
+  position:absolute;
+  width:680px;
+  height:680px;
+  top:-340px;
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:50%;
+  pointer-events:none;
+  background:rgba(0,200,255,.18);
+  filter:blur(130px);
+  animation:pgAmbientPulse 6s ease-in-out infinite alternate;
+}
+
+.pg-box{
+  width:100%;
+  max-width:920px;
+  position:relative;
+  z-index:2;
+  overflow:hidden;
+  padding:28px;
+  border:1px solid var(--pg-border);
+  border-radius:26px;
+  background:linear-gradient(145deg,rgba(17,28,48,.78),rgba(8,17,31,.66));
+  backdrop-filter:blur(28px) saturate(140%);
+  -webkit-backdrop-filter:blur(28px) saturate(140%);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.5),
+    0 0 40px rgba(0,200,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  animation:pgCardEnter .7s ease both;
+}
+
+.pg-box::before{
+  content:"";
+  position:absolute;
+  width:70%;
+  height:180%;
+  top:-60%;
+  left:-90%;
+  pointer-events:none;
+  transform:rotate(22deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);
+  animation:pgGlassReflection 8s ease-in-out infinite;
+}
+
+.pg-box::after{
+  content:"";
+  position:absolute;
+  width:260px;
+  height:260px;
+  right:-140px;
+  bottom:-150px;
+  pointer-events:none;
+  border-radius:50%;
+  background:rgba(0,200,255,.16);
+  filter:blur(65px);
+}
+
+.badge{
+  display:inline-block;
+  position:relative;
+  z-index:3;
+  overflow:hidden;
+  padding:8px 18px;
+  margin-bottom:16px;
+  border-radius:50px;
+  background:linear-gradient(135deg,#00d4ff,#0078ff);
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:1px;
+  box-shadow:0 0 18px rgba(0,212,255,.45);
+  animation:badgeGlow 3.5s ease-in-out infinite;
+}
+
+.badge::after{
+  content:"";
+  position:absolute;
+  top:-70%;
+  left:-120%;
+  width:45%;
+  height:250%;
+  transform:rotate(25deg);
+  background:linear-gradient(transparent,rgba(255,255,255,.45),transparent);
+  animation:badgeShine 6s linear infinite;
+}
+
+.pg-header{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:24px;
+  padding-bottom:20px;
+  border-bottom:1px solid rgba(0,200,255,.10);
+}
+
+.pg-header-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.pg-title{
+  margin:0;
+  color:#fff;
+  font-size:clamp(23px,4vw,31px);
+  font-weight:750;
+  letter-spacing:-.6px;
+  animation:titleGlow 3s ease-in-out infinite alternate;
+}
+
+.pg-status{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+  padding:9px 13px;
+  border:1px solid rgba(0,200,255,.20);
+  border-radius:999px;
+  color:#bfeeff;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.6px;
+  background:rgba(0,200,255,.07);
+  box-shadow:inset 0 0 15px rgba(0,200,255,.05);
+}
+
+.pg-status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--pg-primary);
+  box-shadow:0 0 10px var(--pg-primary),0 0 20px var(--pg-glow);
+  animation:pgStatusPulse 1.8s ease-in-out infinite;
+}
+
+.pg-panel{
+  position:relative;
+  z-index:2;
+  padding:18px;
+  margin-top:15px;
+  border:1px solid rgba(0,200,255,.11);
+  border-radius:19px;
+  background:rgba(6,15,28,.48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:border-color .3s ease,box-shadow .3s ease,transform .3s ease;
+}
+
+.pg-panel:hover{
+  border-color:rgba(0,200,255,.23);
+  box-shadow:0 15px 35px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.pg-label-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:11px;
+}
+
+.pg-label{
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.3px;
+}
+
+.pg-counter{
+  color:#8fdfff;
+  font-size:12px;
+  font-weight:600;
+}
+
+.pg-textarea{
+  display:block;
+  width:100%;
+  height:215px;
+  padding:17px;
+  resize:vertical;
+  outline:none;
+  border:1px solid rgba(0,200,255,.10);
+  border-radius:14px;
+  color:var(--pg-text);
+  caret-color:var(--pg-primary);
+  font-family:"Segoe UI",Arial,sans-serif;
+  font-size:14px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  background:linear-gradient(145deg,rgba(8,17,31,.82),rgba(13,23,40,.7));
+  box-shadow:inset 0 4px 18px rgba(0,0,0,.18);
+  transition:border-color .3s ease,box-shadow .3s ease,background .3s ease;
+}
+
+.pg-textarea::placeholder{color:rgba(200,216,232,.48)}
+.pg-textarea:hover{border-color:rgba(0,200,255,.22)}
+.pg-textarea:focus{
+  border-color:rgba(0,200,255,.55);
+  background:rgba(8,17,31,.92);
+  box-shadow:
+    0 0 0 4px rgba(0,200,255,.07),
+    0 0 25px rgba(0,200,255,.10),
+    inset 0 4px 18px rgba(0,0,0,.20);
+}
+
+#output{height:245px}
+
+.pg-separator-options{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+
+.pg-separator-option{
+  position:relative;
+  display:block;
+  cursor:pointer;
+}
+
+.pg-separator-option input{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+.pg-separator-card{
+  min-height:72px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:5px;
+  padding:12px 9px;
+  border:1px solid rgba(0,200,255,.12);
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(8,17,31,.76),rgba(13,23,40,.62));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:border-color .25s ease,background .25s ease,box-shadow .25s ease,transform .25s ease;
+}
+
+.pg-separator-option:hover .pg-separator-card{
+  transform:translateY(-2px);
+  border-color:rgba(0,200,255,.34);
+}
+
+.pg-separator-symbol{
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+  line-height:1;
+}
+
+.pg-separator-name{
+  color:var(--pg-text-secondary);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.25px;
+  text-align:center;
+}
+
+.pg-separator-option input:checked + .pg-separator-card{
+  border-color:rgba(0,200,255,.65);
+  background:linear-gradient(145deg,rgba(0,200,255,.18),rgba(29,161,255,.08));
+  box-shadow:
+    0 0 0 3px rgba(0,200,255,.07),
+    0 0 24px rgba(0,200,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.pg-separator-option input:focus-visible + .pg-separator-card{
+  outline:2px solid rgba(91,220,255,.9);
+  outline-offset:3px;
+}
+
+.pg-actions{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+  margin:15px 0;
+}
+
+.pg-btn{
+  position:relative;
+  min-height:54px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  overflow:hidden;
+  border:1px solid rgba(0,200,255,.32);
+  border-radius:14px;
+  outline:none;
+  cursor:pointer;
+  color:#fff;
+  font-size:13px;
+  font-weight:750;
+  letter-spacing:.65px;
+  background:linear-gradient(135deg,rgba(0,200,255,.92),rgba(29,161,255,.88));
+  box-shadow:0 10px 25px rgba(0,120,255,.20),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .28s ease,box-shadow .28s ease,filter .28s ease;
+}
+
+.pg-btn::before{
+  content:"";
+  position:absolute;
+  width:40px;
+  height:180%;
+  top:-40%;
+  left:-70px;
+  transform:rotate(20deg);
+  background:rgba(255,255,255,.28);
+  filter:blur(4px);
+  transition:left .55s ease;
+}
+
+.pg-btn:hover{
+  transform:translateY(-3px);
+  filter:brightness(1.08);
+  box-shadow:
+    0 14px 32px rgba(0,140,255,.28),
+    0 0 25px rgba(0,200,255,.20),
+    inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+.pg-btn:hover::before{left:calc(100% + 35px)}
+.pg-btn:active{transform:translateY(0) scale(.985)}
+
+.pg-btn-secondary{
+  background:linear-gradient(145deg,rgba(17,28,48,.92),rgba(8,17,31,.90));
+  color:#cceeff;
+  border-color:rgba(0,200,255,.20);
+  box-shadow:0 10px 25px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+.pg-btn-secondary:hover{
+  border-color:rgba(0,200,255,.48);
+  box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(0,200,255,.13),inset 0 1px 0 rgba(255,255,255,.065);
+}
+
+.pg-btn-danger{
+  background:linear-gradient(145deg,rgba(63,23,35,.92),rgba(28,11,20,.90));
+  color:#ffd2df;
+  border-color:rgba(255,83,132,.24);
+  box-shadow:0 10px 25px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.pg-btn-danger:hover{
+  border-color:rgba(255,83,132,.48);
+  box-shadow:0 12px 30px rgba(0,0,0,.25),0 0 25px rgba(255,83,132,.12);
+}
+
+.pg-btn-icon{font-size:17px}
+
+.pg-stats{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
+}
+
+.pg-stat{
+  flex:1 1 150px;
+  padding:12px 14px;
+  border:1px solid rgba(0,200,255,.12);
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(8,17,31,.76),rgba(13,23,40,.62));
+  color:#bfeeff;
+  font-size:12px;
+  font-weight:700;
+  text-align:center;
+}
+
+.pg-stat b{
+  display:block;
+  margin-top:3px;
+  color:#fff;
+  font-size:18px;
+  text-shadow:0 0 14px rgba(0,200,255,.25);
+}
+
+#pgToast{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:99999;
+  max-width:calc(100% - 44px);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:15px 19px;
+  border:1px solid rgba(0,200,255,.32);
+  border-radius:14px;
+  color:#fff;
+  font-family:"Segoe UI",Arial,sans-serif;
+  font-size:13px;
+  font-weight:650;
+  background:linear-gradient(145deg,rgba(13,23,40,.96),rgba(8,17,31,.96));
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 18px 45px rgba(0,0,0,.42),0 0 25px rgba(0,200,255,.15),inset 0 1px 0 rgba(255,255,255,.05);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(25px) scale(.96);
+  transition:opacity .35s ease,visibility .35s ease,transform .35s ease;
+}
+
+#pgToast::before{
+  content:"";
+  width:9px;
+  height:9px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:var(--pg-primary,#00c8ff);
+  box-shadow:0 0 12px #00c8ff;
+}
+
+#pgToast.show{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0) scale(1);
+}
+
+.pg-textarea::-webkit-scrollbar{width:9px}
+.pg-textarea::-webkit-scrollbar-track{background:rgba(8,17,31,.65);border-radius:20px}
+.pg-textarea::-webkit-scrollbar-thumb{
+  border:2px solid rgba(8,17,31,.8);
+  border-radius:20px;
+  background:linear-gradient(#00c8ff,#1da1ff);
+}
+.pg-textarea::-webkit-scrollbar-thumb:hover{background:#5bdcff}
+
+@keyframes pgStarsMove{
+  from{background-position:0 0,35px 45px}
+  to{background-position:150px 250px,-120px 220px}
+}
+@keyframes pgAmbientPulse{
+  from{opacity:.55;transform:translateX(-50%) scale(.92)}
+  to{opacity:1;transform:translateX(-50%) scale(1.08)}
+}
+@keyframes pgCardEnter{
+  from{opacity:0;transform:translateY(24px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes pgGlassReflection{
+  0%,35%{left:-90%}
+  65%,100%{left:140%}
+}
+@keyframes pgStatusPulse{
+  0%,100%{opacity:.65;transform:scale(.85)}
+  50%{opacity:1;transform:scale(1.15)}
+}
+@keyframes badgeGlow{
+  0%,100%{box-shadow:0 0 10px rgba(0,212,255,.25)}
+  50%{box-shadow:0 0 18px rgba(0,212,255,.55),0 0 30px rgba(0,212,255,.18)}
+}
+@keyframes badgeShine{
+  0%{left:-120%}
+  20%{left:150%}
+  100%{left:150%}
+}
+@keyframes titleGlow{
+  from{text-shadow:0 0 8px rgba(0,212,255,.35)}
+  to{text-shadow:0 0 20px rgba(0,212,255,.9),0 0 35px rgba(0,212,255,.35)}
+}
+
+@media(max-width:650px){
+  .paradiseCleaner{padding:22px 12px}
+  .pg-box{padding:17px;border-radius:20px}
+  .pg-header{align-items:flex-start}
+  .pg-status{display:none}
+  .pg-panel{padding:13px}
+  .pg-separator-options{grid-template-columns:1fr}
+  .pg-actions{grid-template-columns:1fr}
+  .pg-textarea{height:180px}
+  #output{height:220px}
+  #pgToast{right:12px;bottom:12px;max-width:calc(100% - 24px)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .paradiseCleaner::before,
+  .paradiseCleaner::after,
+  .pg-box,
+  .pg-box::before,
+  .pg-status-dot,
+  .badge,
+  .badge::after,
+  .pg-title{animation:none!important}
+  .pg-btn,.pg-panel,.pg-textarea,#pgToast{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="paradiseCleaner">
+  <div class="pg-box">
+
+    <div class="badge">🚀 PARADISE</div>
+
+    <div class="pg-header">
+      <div class="pg-header-left">
+        <div>
+          <h1 class="pg-title">Remove Duplicate Status</h1>
+        </div>
+      </div>
+
+      <div class="pg-status">
+        <span class="pg-status-dot"></span>
+        SYSTEM ONLINE
+      </div>
+    </div>
+
+    <div class="pg-panel">
+      <div class="pg-label-row">
+        <label class="pg-label" for="input">Hasil Export Status</label>
+        <span class="pg-counter" id="inputCount">0 status</span>
+      </div>
+
+      <textarea
+        id="input"
+        class="pg-textarea"
+        placeholder="Paste hasil export status di sini..."
+        spellcheck="false"></textarea>
+    </div>
+
+    <div class="pg-panel">
+      <div class="pg-label-row">
+        <span class="pg-label">Pemisah Status Saat Dibaca</span>
+        <span class="pg-counter">Pilih format</span>
+      </div>
+
+      <div class="pg-separator-options" role="radiogroup" aria-label="Pemisah status saat dibaca">
+
+        <label class="pg-separator-option">
+          <input type="radio" name="inputSeparator" value="dash" checked>
+          <span class="pg-separator-card">
+            <span class="pg-separator-symbol">−</span>
+            <span class="pg-separator-name">Enter - Enter</span>
+          </span>
+        </label>
+
+        <label class="pg-separator-option">
+          <input type="radio" name="inputSeparator" value="blank1">
+          <span class="pg-separator-card">
+            <span class="pg-separator-symbol">↵↵</span>
+            <span class="pg-separator-name">1 Baris Kosong</span>
+          </span>
+        </label>
+
+        <label class="pg-separator-option">
+          <input type="radio" name="inputSeparator" value="blank2">
+          <span class="pg-separator-card">
+            <span class="pg-separator-symbol">↵↵↵</span>
+            <span class="pg-separator-name">2 Baris Kosong</span>
+          </span>
+        </label>
+
+      </div>
+    </div>
+
+    <div class="pg-panel">
+      <div class="pg-label-row">
+        <span class="pg-label">Pemisah Hasil</span>
+        <span class="pg-counter">Pilih format</span>
+      </div>
+
+      <div class="pg-separator-options" role="radiogroup" aria-label="Pemisah hasil">
+
+        <label class="pg-separator-option">
+          <input type="radio" name="outputSeparator" value="dash" checked>
+          <span class="pg-separator-card">
+            <span class="pg-separator-symbol">−</span>
+            <span class="pg-separator-name">Enter - Enter</span>
+          </span>
+        </label>
+
+        <label class="pg-separator-option">
+          <input type="radio" name="outputSeparator" value="blank1">
+          <span class="pg-separator-card">
+            <span class="pg-separator-symbol">↵↵</span>
+            <span class="pg-separator-name">1 Baris Kosong</span>
+          </span>
+        </label>
+
+        <label class="pg-separator-option">
+          <input type="radio" name="outputSeparator" value="blank2">
+          <span class="pg-separator-card">
+            <span class="pg-separator-symbol">↵↵↵</span>
+            <span class="pg-separator-name">2 Baris Kosong</span>
+          </span>
+        </label>
+
+      </div>
+    </div>
+
+    <div class="pg-actions">
+      <button type="button" class="pg-btn" id="removeBtn">
+        <span class="pg-btn-icon">✦</span>
+        HAPUS DUPLIKAT
+      </button>
+
+      <button type="button" class="pg-btn pg-btn-danger" id="clearBtn">
+        <span class="pg-btn-icon">×</span>
+        RESET
+      </button>
+    </div>
+
+    <div class="pg-panel">
+      <div class="pg-label-row">
+        <label class="pg-label" for="output">Hasil Tanpa Duplikat</label>
+        <span class="pg-counter" id="outputCount">0 status</span>
+      </div>
+
+      <textarea
+        id="output"
+        class="pg-textarea"
+        readonly
+        placeholder="Hasil tanpa duplikat akan muncul di sini..."
+        spellcheck="false"></textarea>
+
+      <div class="pg-stats">
+        <div class="pg-stat">TOTAL STATUS<b id="statTotal">0</b></div>
+        <div class="pg-stat">STATUS UNIK<b id="statUnique">0</b></div>
+        <div class="pg-stat">DUPLIKAT DIHAPUS<b id="statRemoved">0</b></div>
+      </div>
+    </div>
+
+    <div class="pg-actions">
+      <button type="button" class="pg-btn" id="copyBtn">
+        <span class="pg-btn-icon">⧉</span>
+        COPY HASIL
+      </button>
+
+      <button type="button" class="pg-btn pg-btn-secondary" id="downloadBtn">
+        <span class="pg-btn-icon">↓</span>
+        DOWNLOAD TXT
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div id="pgToast"></div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+
+  const input=$('input');
+  const output=$('output');
+  const inputCount=$('inputCount');
+  const outputCount=$('outputCount');
+  const statTotal=$('statTotal');
+  const statUnique=$('statUnique');
+  const statRemoved=$('statRemoved');
+
+  function getRadioValue(name){
+    const selected=document.querySelector('input[name="'+name+'"]:checked');
+    return selected ? selected.value : 'dash';
+  }
+
+  function splitStatuses(text,mode){
+    const normalized=text.replace(/\r\n?/g,'\n');
+    if(!normalized.trim()) return [];
+
+    let parts;
+
+    if(mode==='dash'){
+      parts=normalized.split(/\n[ \t]*-[ \t]*\n/);
+    }else if(mode==='blank2'){
+      parts=normalized.split(/\n[ \t]*\n[ \t]*\n+/);
+    }else if(mode==='blank1'){
+      parts=normalized.split(/\n[ \t]*\n+/);
+    }else{
+      parts=normalized.split(/\n/);
+    }
+
+    return parts
+      .map(x=>x.replace(/^\n+|\n+$/g,''))
+      .filter(x=>x.trim().length>0);
+  }
+
+  function getOutputSeparator(mode){
+    if(mode==='dash') return '\n-\n';
+    if(mode==='blank2') return '\n\n\n';
+    if(mode==='blank1') return '\n\n';
+    return '\n';
+  }
+
+  function normalizeForCompare(text){
+    return text
+      .replace(/\r\n?/g,'\n')
+      .replace(/[ \t]+$/gm,'')
+      .trim();
+  }
+
+  function refreshInputCount(){
+    const total=splitStatuses(input.value,getRadioValue('inputSeparator')).length;
+    inputCount.textContent=total+' status';
+  }
+
+  function refreshOutputCount(){
+    const total=splitStatuses(output.value,getRadioValue('outputSeparator')).length;
+    outputCount.textContent=total+' status';
+  }
+
+  function toast(text){
+    const el=$('pgToast');
+    el.textContent=text;
+    el.classList.add('show');
+    clearTimeout(window.pgToastTimer);
+    window.pgToastTimer=setTimeout(()=>el.classList.remove('show'),2500);
+  }
+
+  function removeDuplicates(){
+    if(!input.value.trim()){
+      toast('Masukkan hasil export status terlebih dahulu');
+      return;
+    }
+
+    const parts=splitStatuses(input.value,getRadioValue('inputSeparator'));
+    const seen=new Set();
+    const unique=[];
+
+    for(const original of parts){
+      const key=normalizeForCompare(original);
+
+      if(!seen.has(key)){
+        seen.add(key);
+        unique.push(original);
+      }
+    }
+
+    output.value=unique.join(getOutputSeparator(getRadioValue('outputSeparator')));
+
+    const removed=parts.length-unique.length;
+
+    statTotal.textContent=parts.length;
+    statUnique.textContent=unique.length;
+    statRemoved.textContent=removed;
+
+    refreshInputCount();
+    refreshOutputCount();
+
+    toast(removed+' status duplikat berhasil dihapus');
+  }
+
+  input.addEventListener('input',refreshInputCount);
+
+  document.querySelectorAll('input[name="inputSeparator"]').forEach(el=>{
+    el.addEventListener('change',refreshInputCount);
+  });
+
+  document.querySelectorAll('input[name="outputSeparator"]').forEach(el=>{
+    el.addEventListener('change',function(){
+      if(output.value){
+        const previous=this.dataset.previousMode || window.pgLastOutputMode || 'dash';
+        const current=splitStatuses(output.value,previous);
+        output.value=current.join(getOutputSeparator(getRadioValue('outputSeparator')));
+      }
+
+      window.pgLastOutputMode=getRadioValue('outputSeparator');
+      refreshOutputCount();
+    });
+  });
+
+  window.pgLastOutputMode='dash';
+
+  $('removeBtn').addEventListener('click',removeDuplicates);
+
+  $('copyBtn').addEventListener('click',async function(){
+    if(!output.value){
+      toast('Belum ada hasil untuk disalin');
+      return;
+    }
+
+    try{
+      await navigator.clipboard.writeText(output.value);
+      toast('Hasil berhasil disalin');
+    }catch(error){
+      output.focus();
+      output.select();
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      toast('Hasil berhasil disalin');
+    }
+  });
+
+  $('downloadBtn').addEventListener('click',function(){
+    if(!output.value){
+      toast('Belum ada hasil untuk diunduh');
+      return;
+    }
+
+    const blob=new Blob([output.value],{type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');
+
+    link.href=url;
+    link.download='PARADISE-Status-Unique.txt';
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+    toast('File TXT berhasil dibuat');
+  });
+
+  $('clearBtn').addEventListener('click',function(){
+    input.value='';
+    output.value='';
+
+    document.querySelector('input[name="inputSeparator"][value="dash"]').checked=true;
+    document.querySelector('input[name="outputSeparator"][value="dash"]').checked=true;
+    window.pgLastOutputMode='dash';
+
+    statTotal.textContent='0';
+    statUnique.textContent='0';
+    statRemoved.textContent='0';
+
+    refreshInputCount();
+    refreshOutputCount();
+
+    input.focus();
+    toast('Semua data telah dibersihkan');
+  });
+
+  refreshInputCount();
+  refreshOutputCount();
+})();
+</script>
+
+</body>
+</html>

@@ -235,6 +235,68 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
 #announcement-modal{display:none!important;pointer-events:none!important}
 </style>
 
+
+<style id="me-side-by-side-only">
+/* Hanya mengubah tata letak menu ME */
+#me-two-column-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    align-items: start;
+}
+
+#me-two-column-grid > section{
+    min-width: 0;
+    width: 100%;
+}
+
+/* Supaya isi tabel tidak memaksa card turun ke baris berikutnya */
+#me-two-column-grid .overflow-x-auto{
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Di HP tetap kiri-kanan sesuai permintaan */
+@media (max-width: 640px){
+    #performance-page{
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    #me-two-column-grid{
+        gap: 8px !important;
+    }
+
+    #me-two-column-grid > section{
+        border-radius: 16px !important;
+    }
+
+    #me-two-column-grid > section > div:first-child{
+        padding: 12px 10px !important;
+    }
+
+    #me-two-column-grid h3{
+        font-size: 15px !important;
+    }
+
+    #me-two-column-grid [id$="-count"]{
+        font-size: 18px !important;
+    }
+
+    #me-two-column-grid [id$="-earning"]{
+        font-size: 14px !important;
+    }
+
+    #me-two-column-grid table{
+        min-width: 330px !important;
+    }
+
+    #me-two-column-grid th,
+    #me-two-column-grid td{
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+</style>
+
 </head>
 <body class="antialiased font-sans min-h-screen relative selection:bg-cyan-500/30">
 
@@ -494,7 +556,7 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
             </div>
         </div>
 
-        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-4 sm:gap-6" id="me-two-column-grid">
             <!-- UPIN -->
             <section class="glass-panel rounded-2xl overflow-hidden">
                 <div class="px-5 sm:px-6 py-5 border-b border-white/5 bg-gradient-to-r from-cyan-500/[0.08] to-transparent">

@@ -297,6 +297,33 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
 }
 </style>
 
+<style id="me-date-total-pill-only">
+#me-period-earning-pill{
+    max-width:100%;
+    background:rgba(255,255,255,0.04);
+    backdrop-filter:blur(24px) saturate(180%);
+    box-shadow:0 8px 30px rgba(0,0,0,.22);
+}
+#me-period-earning-pill #me-period{
+    max-width:220px;
+}
+@media (max-width:640px){
+    #performance-page > .mb-6{
+        align-items:stretch !important;
+    }
+    #me-period-earning-pill{
+        align-self:flex-end;
+        padding-left:14px !important;
+        padding-right:14px !important;
+        gap:12px !important;
+        max-width:100%;
+    }
+    #me-period-earning-pill #me-period{
+        max-width:150px;
+    }
+}
+</style>
+
 </head>
 <body class="antialiased font-sans min-h-screen relative selection:bg-cyan-500/30">
 
@@ -550,12 +577,17 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">ME</h2>
                 <p class="text-sm text-slate-400 mt-1">Semangat bekerja demi keluarga kecilku dan semua orang yang kusayangi</p>
             </div>
-            <div class="glass-panel rounded-xl px-4 py-2.5 border border-white/10">
-                <div class="text-[9px] uppercase tracking-widest font-bold text-slate-500 mb-0.5">Periode Aktif</div>
-                <div id="me-period" class="text-xs sm:text-sm font-semibold text-slate-200">Hari ini</div>
+            <div id="me-period-earning-pill" class="glass-panel rounded-full px-4 sm:px-5 py-2.5 border border-white/10 flex items-center gap-4 sm:gap-6 min-w-0">
+                <div class="min-w-0">
+                    <div class="text-[8px] uppercase tracking-widest font-bold text-slate-500 mb-0.5">Periode Aktif</div>
+                    <div id="me-period" class="text-[11px] sm:text-sm font-semibold text-slate-200 truncate">Hari ini</div>
+                </div>
+                <div class="h-8 w-px bg-white/10 shrink-0"></div>
+                <div class="text-lg sm:text-2xl font-extrabold text-emerald-400 text-glow-emerald tracking-tight whitespace-nowrap">
+                    $<span id="me-all-earning">0.00</span>
+                </div>
             </div>
         </div>
-
         <div class="grid grid-cols-2 gap-4 sm:gap-6" id="me-two-column-grid">
             <!-- UPIN -->
             <section class="glass-panel rounded-2xl overflow-hidden">
@@ -631,6 +663,8 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
                 </div>
             </section>
         </div>
+
+        
     </div>
 
 
@@ -1492,6 +1526,12 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
 
             renderMEId('UPIN', 'me-upin');
             renderMEId('KAYARAYA', 'me-kayaraya');
+
+            // Total $ gabungan UPIN + KAYARAYA.
+            var upinEarning = Number((document.getElementById('me-upin-earning') || {}).textContent || 0);
+            var kayarayaEarning = Number((document.getElementById('me-kayaraya-earning') || {}).textContent || 0);
+            var allEarning = document.getElementById('me-all-earning');
+            if (allEarning) allEarning.textContent = (upinEarning + kayarayaEarning).toFixed(2);
         };
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -1701,6 +1741,5 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
   else disableAnnouncementPopup();
 })();
 </script>
-
 </body>
 </html>

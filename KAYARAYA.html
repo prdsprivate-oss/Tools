@@ -1688,7 +1688,12 @@ input#dateinput:focus,input#lookingfor:focus,input#header-lookingfor:focus{borde
                                 $('#leadlist tbody').prepend(window.generateRowHTML(data, false));                                
                                 window.currentRenderedCount++; // Tambah count agar scroll tidak terganggu
                                 
-                                if (!window.isSoundMuted) window.PlaySound('https://sound.koppi.top/?teks='+ data.click_id);                                
+                                if (
+									!window.isSoundMuted &&
+									['UPIN','KAYARAYA'].includes(String(data.click_id).toUpperCase())
+								) {
+									window.PlaySound('https://sound.koppi.top/?teks=' + data.click_id);
+								}                                
                                 window.notifyMe(data);                            
                             }                        
                         }                    

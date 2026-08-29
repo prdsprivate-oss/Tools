@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PARADISE GALAXY RANDOMIZER V2</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+min-height:100vh;
+font-family:'Segoe UI',Arial,sans-serif;
+color:white;
+background:
+radial-gradient(circle at top,#6b00ff,#111633 45%,#050714);
+overflow-x:hidden;
+}
+
+body:before{
+content:"";
+position:fixed;
+inset:0;
+background-image:
+radial-gradient(#fff 1px,transparent 1px),
+radial-gradient(#00eaff 1px,transparent 1px);
+background-size:90px 90px,160px 160px;
+animation:move 25s linear infinite;
+opacity:.25;
+z-index:-1;
+}
+
+@keyframes move{
+from{transform:translateY(0)}
+to{transform:translateY(250px)}
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+padding:35px;
+}
+
+h1{
+text-align:center;
+font-size:45px;
+letter-spacing:2px;
+text-shadow:0 0 25px #00ffff;
+}
+
+.top{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:12px;
+margin:25px 0;
+}
+
+button{
+border:0;
+padding:13px 28px;
+border-radius:30px;
+background:linear-gradient(135deg,#00eaff,#9b00ff);
+color:white;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 0 25px #7200ff;
+}
+
+button:hover{
+transform:translateY(-3px) scale(1.04);
+box-shadow:0 0 35px #00ffff;
+}
+
+#boxes{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:25px;
+}
+
+.box{
+position:relative;
+background:rgba(10,15,45,.75);
+backdrop-filter:blur(15px);
+padding:22px;
+border-radius:25px;
+border:1px solid rgba(0,238,255,.5);
+box-shadow:0 0 35px rgba(130,0,255,.4);
+}
+
+.close{
+position:absolute;
+right:15px;
+top:15px;
+background:#ff315c;
+padding:8px 12px;
+border-radius:50%;
+}
+
+textarea{
+width:100%;
+height:210px;
+resize:none;
+background:#050816;
+color:#00ffff;
+border:1px solid #00eaff;
+border-radius:18px;
+padding:15px;
+font-size:15px;
+}
+
+.count{
+margin-top:12px;
+color:#00ffcc;
+font-weight:bold;
+}
+
+.clear{
+width:100%;
+margin-top:15px;
+background:linear-gradient(135deg,#ff003c,#ff9900);
+}
+
+.result{
+margin-top:25px;
+padding:30px;
+background:rgba(0,0,0,.55);
+border-radius:25px;
+min-height:150px;
+white-space:pre-line;
+color:#00ffcc;
+border:1px solid #00ffff;
+box-shadow:0 0 30px #00ffff44;
+}
+
+#toast{
+position:fixed;
+right:30px;
+bottom:30px;
+padding:15px 25px;
+border-radius:20px;
+background:rgba(0,0,0,.8);
+border:1px solid #00ffff;
+box-shadow:0 0 25px #00ffff;
+opacity:0;
+transform:translateY(30px);
+transition:.4s;
+}
+
+#toast.show{
+opacity:1;
+transform:translateY(0);
+}
+</style>
+</head>
+
+<body>
+<div id="toast"></div>
+
+<div class="container">
+
+<h1>🌌 PARADISE GALAXY RANDOMIZER V2</h1>
+
+<div class="top">
+<button onclick="tambahLink()">➕ TAMBAH LINK</button>
+<button onclick="randomkan()">🎲 RANDOM</button>
+<button onclick="copyHasil()">📋 COPY</button>
+</div>
+
+<div id="boxes"></div>
+
+<h2>🚀 HASIL RANDOM</h2>
+<div class="result" id="hasil">Belum ada hasil...</div>
+
+</div>
+
+
+<script>
+
+let jumlahLink=0;
+
+
+function tambahLink(){
+
+jumlahLink++;
+
+let box=document.createElement("div");
+
+box.className="box";
+
+box.innerHTML=`
+
+<button class="close" onclick="hapusBox(this)">×</button><h2>🔗 LINK ${jumlahLink}</h2>
+
+<textarea oninput="hitung(this)"></textarea>
+
+<div class="count">
+TOTAL ISI : <span>0</span>
+</div>
+
+<button class="clear" onclick="clearBox(this)">
+🗑 CLEAR LINK ${jumlahLink}
+</button>
+
+`;
+
+document.getElementById("boxes").appendChild(box);
+
+}
+
+
+function hitung(area){
+
+let total=area.value
+.split("\n")
+.filter(x=>x.trim()!="")
+.length;
+
+area.parentElement.querySelector(".count span")
+.innerText=total;
+
+}
+
+
+function showToast(msg){
+let t=document.getElementById("toast");
+t.innerText=msg;
+t.classList.add("show");
+setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+function hapusBox(btn){
+btn.parentElement.remove();
+showToast("❌ Kotak LINK dihapus");
+}
+
+function clearBox(btn){
+
+let box=btn.parentElement;
+
+box.querySelector("textarea").value="";
+
+box.querySelector(".count span")
+.innerText="0";
+
+}
+
+
+
+function shuffle(arr){
+return arr.sort(()=>Math.random()-0.5);
+}
+
+
+function randomkan(){
+
+let semua=[];
+
+document.querySelectorAll("textarea")
+.forEach(t=>{
+
+let data=t.value
+.split("\n")
+.map(x=>x.trim())
+.filter(x=>x!="");
+
+semua.push(shuffle(data));
+
+});
+
+
+let hasil=[];
+
+let max=Math.max(...semua.map(x=>x.length),0);
+
+
+for(let i=0;i<max;i++){
+
+semua.forEach(link=>{
+
+if(link[i])
+hasil.push(link[i]);
+
+});
+
+}
+
+
+document.getElementById("hasil")
+.innerText=
+hasil.join("\n");
+
+}
+
+
+function copyHasil(){
+
+navigator.clipboard.writeText(
+document.getElementById("hasil").innerText
+);
+
+showToast("✅ HASIL BERHASIL DICOPY");
+
+}
+
+
+// default
+
+tambahLink();
+tambahLink();
+
+</script>
+
+</body>
+</html>

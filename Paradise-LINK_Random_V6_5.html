@@ -1840,9 +1840,51 @@ body[data-theme] .editable-status-name:focus-visible{
     box-shadow:0 0 0 1px var(--theme-border),0 0 12px var(--theme-glow);
 }
 
+
+/* ==========================
+   LIVE PING WIDGET
+========================== */
+#livePing{
+    position:fixed;
+    top:145px;
+    right:20px;
+    z-index:99999;
+    width:145px;
+    padding:12px 18px;
+    border-radius:14px;
+    background:rgba(15,23,42,.55);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 0 20px rgba(56,189,248,.15);
+    font-family:Consolas,monospace;
+}
+#livePing .pingTitle{
+    font-size:12px;
+    font-weight:bold;
+    color:#9ecbff;
+    margin-bottom:8px;
+}
+#pingList{
+    font-size:12px;
+    line-height:1.55;
+    color:#fff;
+}
+.pingOk{color:#7cff9b;}
+.pingSlow{color:#ffe27a;}
+.pingBad{color:#ff7b7b;}
+@media(max-width:900px){
+ #livePing{display:none;}
+}
+
 </style></head>
 <body>
 <body>
+
+
+<div id="livePing">
+    <div class="pingTitle">LIVE PING</div>
+    <div id="pingList">Loading...</div>
+</div>
 
 <div id="usaClock" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-controls="clockPopup" title="Klik untuk pilih jam">
 
@@ -3483,6 +3525,37 @@ toast('Paradise Manager Auto Update Ready');
     });
 
     applyTheme(localStorage.getItem(STORAGE_KEY) || 'default',false);
+})();
+</script>
+
+<script>
+/* ==========================
+   LIVE PING MONITOR
+   Update 1 detik - 10 baris
+========================== */
+(function(){
+ const list=document.getElementById('pingList');
+ if(!list) return;
+ let history=[];
+ let count=0;
+ async function pingGoogle(){
+   const start=performance.now();
+   try{
+     await fetch('https://www.google.com/generate_204?x='+Date.now(),{mode:'no-cors',cache:'no-store'});
+     const ms=Math.round(performance.now()-start);
+     history.push(ms);
+   }catch(e){
+     history.push('TIMEOUT');
+   }
+   if(history.length>10) history.shift();
+   count++;
+   list.innerHTML=history.map((v,i)=>{
+      let cls=typeof v==='number'?(v<100?'pingOk':v<300?'pingSlow':'pingBad'):'pingBad';
+      return 'Ping '+(count-history.length+i+1)+' : <span class="'+cls+'">'+v+(typeof v==='number'?'ms':'')+'</span>';
+   }).join('<br>');
+ }
+ pingGoogle();
+ setInterval(pingGoogle,1000);
 })();
 </script>
 

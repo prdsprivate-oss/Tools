@@ -3540,18 +3540,39 @@ toast('Paradise Manager Auto Update Ready');
  let count=0;
  async function pingGoogle(){
    const start=performance.now();
+   let result='TIMEOUT';
+
    try{
-     await fetch('https://www.google.com/generate_204?x='+Date.now(),{mode:'no-cors',cache:'no-store'});
+     const controller = new AbortController();
+     const timeout = setTimeout(()=>controller.abort(),3000);
+
+     await fetch('https://www.google.com/generate_204?x='+Date.now(),{
+        mode:'no-cors',
+        cache:'no-store',
+        signal:controller.signal
+     });
+
+     clearTimeout(timeout);
+
      const ms=Math.round(performance.now()-start);
-     history.push(ms);
+     result=ms;
    }catch(e){
-     history.push('TIMEOUT');
+     result='TIMEOUT';
    }
+
+   history.push(result);
+
    if(history.length>10) history.shift();
-   count++;
-   list.innerHTML=history.map((v,i)=>{
-      let cls=typeof v==='number'?(v<100?'pingOk':v<300?'pingSlow':'pingBad'):'pingBad';
-      return 'Ping : <span class="'+cls+'">'+v+(typeof v==='number'?'ms':'')+'</span>';
+
+   list.innerHTML=history.map((v)=>{
+      let cls=typeof v==='number'
+        ? (v<100?'pingOk':v<300?'pingSlow':'pingBad')
+        : 'pingBad';
+
+      return 'Ping : <span class="'+cls+'">'+
+             v+
+             (typeof v==='number'?'ms':'')+
+             '</span>';
    }).join('<br>');
  }
  pingGoogle();

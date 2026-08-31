@@ -1914,10 +1914,30 @@ body[data-theme="rgb"] #livePing{
 }
 
 #myIP.ipChanged{
-    color:#39ff14;
+    color:#ccff00;
+    background:rgba(204,255,0,0.15);
+    border-radius:8px;
+    padding:4px 8px;
     text-shadow:
-        0 0 8px #39ff14,
-        0 0 15px #39ff14;
+        0 0 5px #ccff00,
+        0 0 15px #ccff00,
+        0 0 30px #99ff00,
+        0 0 50px #66ff00;
+    box-shadow:
+        0 0 10px #ccff00,
+        0 0 25px rgba(204,255,0,.8);
+    animation:ipFlash .8s ease-in-out infinite alternate;
+}
+
+@keyframes ipFlash{
+    from{
+        filter:brightness(1);
+        transform:scale(1);
+    }
+    to{
+        filter:brightness(1.8);
+        transform:scale(1.03);
+    }
 }
 #pingList{
     font-size:12px;
@@ -3657,7 +3677,7 @@ async function loadMyIP(){
 
             setTimeout(()=>{
                 el.classList.remove("ipChanged");
-            },5000);
+            },10000);
         }
     }catch(e){
         el.textContent="IP : -";

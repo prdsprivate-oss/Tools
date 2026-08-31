@@ -1864,6 +1864,27 @@ body[data-theme] .editable-status-name:focus-visible{
     color:#9ecbff;
     margin-bottom:8px;
 }
+.pingDot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#22c55e;
+    margin-right:6px;
+    animation:pingPulse .65s ease-in-out infinite;
+    box-shadow:0 0 10px #22c55e;
+}
+@keyframes pingPulse{
+    0%,100%{transform:scale(1);opacity:1;}
+    50%{transform:scale(1.8);opacity:.45;}
+}
+#myIP{
+    font-size:12px;
+    line-height:1.55;
+    color:#7dd3fc;
+    margin-bottom:8px;
+    font-family:Consolas,monospace;
+}
 #pingList{
     font-size:12px;
     line-height:1.55;
@@ -1882,7 +1903,8 @@ body[data-theme] .editable-status-name:focus-visible{
 
 
 <div id="livePing">
-    <div class="pingTitle">LIVE PING</div>
+    <div id="myIP">IP : Loading...</div>
+    <div class="pingTitle"><span class="pingDot"></span>LIVE PING</div>
     <div id="pingList">Loading...</div>
 </div>
 
@@ -3580,5 +3602,29 @@ toast('Paradise Manager Auto Update Ready');
 })();
 </script>
 
+
+<script>
+let lastIP="";
+
+async function loadMyIP(){
+    const el=document.getElementById("myIP");
+    if(!el) return;
+
+    try{
+        const res=await fetch("https://api.ipify.org?format=json&cache="+Date.now());
+        const data=await res.json();
+
+        if(data.ip!==lastIP){
+            lastIP=data.ip;
+            el.textContent="IP : "+data.ip;
+        }
+    }catch(e){
+        el.textContent="IP : -";
+    }
+}
+
+loadMyIP();
+setInterval(loadMyIP,10000);
+</script>
 </body>
 </html>

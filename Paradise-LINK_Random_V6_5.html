@@ -1881,9 +1881,17 @@ body[data-theme] .editable-status-name:focus-visible{
 #myIP{
     font-size:12px;
     line-height:1.55;
-    color:#7dd3fc;
+    color:#00e5ff;
     margin-bottom:8px;
     font-family:Consolas,monospace;
+    transition:.3s ease;
+}
+
+#myIP.ipChanged{
+    color:#39ff14;
+    text-shadow:
+        0 0 8px #39ff14,
+        0 0 15px #39ff14;
 }
 #pingList{
     font-size:12px;
@@ -3617,6 +3625,13 @@ async function loadMyIP(){
         if(data.ip!==lastIP){
             lastIP=data.ip;
             el.textContent="IP : "+data.ip;
+
+            // indikator IP baru
+            el.classList.add("ipChanged");
+
+            setTimeout(()=>{
+                el.classList.remove("ipChanged");
+            },5000);
         }
     }catch(e){
         el.textContent="IP : -";

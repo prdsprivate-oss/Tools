@@ -1852,12 +1852,38 @@ body[data-theme] .editable-status-name:focus-visible{
     width:145px;
     padding:12px 18px;
     border-radius:14px;
-    background:rgba(15,23,42,.55);
+    background:var(--theme-panel,rgba(15,23,42,.55));
     backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.12);
-    box-shadow:0 0 20px rgba(56,189,248,.15);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--theme-border,rgba(255,255,255,.12));
+    box-shadow:0 0 20px var(--theme-glow,rgba(56,189,248,.15));
     font-family:Consolas,monospace;
+    color:var(--theme-text,#fff);
 }
+
+body[data-theme] #livePing{
+    background:var(--theme-panel);
+    border-color:var(--theme-border);
+    box-shadow:0 0 22px var(--theme-glow);
+}
+
+body[data-theme] #livePing .pingTitle{
+    color:var(--theme-muted);
+}
+
+body[data-theme] #livePing #pingList{
+    color:var(--theme-text);
+}
+
+body[data-theme="rgb"] #livePing{
+    border-color:transparent;
+    background:
+    linear-gradient(rgba(8,14,30,.86),rgba(8,14,30,.86)) padding-box,
+    linear-gradient(90deg,#ff1744,#ff9100,#ffea00,#00e676,#00e5ff,#2979ff,#d500f9,#ff1744) border-box;
+    background-size:100% 100%,300% 300%;
+    animation:rgbBorderFlow 7s linear infinite;
+}
+
 #livePing .pingTitle{
     font-size:12px;
     font-weight:bold;

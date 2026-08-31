@@ -3551,7 +3551,7 @@ toast('Paradise Manager Auto Update Ready');
    count++;
    list.innerHTML=history.map((v,i)=>{
       let cls=typeof v==='number'?(v<100?'pingOk':v<300?'pingSlow':'pingBad'):'pingBad';
-      return 'Ping '+(count-history.length+i+1)+' : <span class="'+cls+'">'+v+(typeof v==='number'?'ms':'')+'</span>';
+      return 'Ping : <span class="'+cls+'">'+v+(typeof v==='number'?'ms':'')+'</span>';
    }).join('<br>');
  }
  pingGoogle();

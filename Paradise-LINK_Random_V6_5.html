@@ -3659,6 +3659,68 @@ toast('Paradise Manager Auto Update Ready');
 
 <script>
 let lastIP="";
+let ipAudioContext=null;
+
+function getIPAudioContext(){
+    if(ipAudioContext) return ipAudioContext;
+
+    const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+    if(!AudioContextClass) return null;
+
+    ipAudioContext=new AudioContextClass();
+    return ipAudioContext;
+}
+
+async function unlockIPChangeSound(){
+    const context=getIPAudioContext();
+    if(!context) return;
+
+    try{
+        if(context.state==='suspended') await context.resume();
+
+        if(context.state==='running'){
+            document.removeEventListener('pointerdown',unlockIPChangeSound);
+            document.removeEventListener('keydown',unlockIPChangeSound);
+            document.removeEventListener('touchstart',unlockIPChangeSound);
+        }
+    }catch(e){
+        // Browser akan mencoba lagi pada interaksi pengguna berikutnya.
+    }
+}
+
+function playIPChangeSound(){
+    const context=getIPAudioContext();
+    if(!context||context.state!=='running') return;
+
+    const start=context.currentTime;
+    const notes=[
+        {frequency:880,delay:0,duration:.13},
+        {frequency:1174.66,delay:.14,duration:.13},
+        {frequency:1567.98,delay:.28,duration:.22}
+    ];
+
+    notes.forEach(note=>{
+        const oscillator=context.createOscillator();
+        const gain=context.createGain();
+        const noteStart=start+note.delay;
+        const noteEnd=noteStart+note.duration;
+
+        oscillator.type='sine';
+        oscillator.frequency.setValueAtTime(note.frequency,noteStart);
+        gain.gain.setValueAtTime(.0001,noteStart);
+        gain.gain.exponentialRampToValueAtTime(.22,noteStart+.02);
+        gain.gain.exponentialRampToValueAtTime(.0001,noteEnd);
+
+        oscillator.connect(gain);
+        gain.connect(context.destination);
+        oscillator.start(noteStart);
+        oscillator.stop(noteEnd+.02);
+    });
+}
+
+document.addEventListener('pointerdown',unlockIPChangeSound);
+document.addEventListener('keydown',unlockIPChangeSound);
+document.addEventListener('touchstart',unlockIPChangeSound,{passive:true});
 
 async function loadMyIP(){
     const el=document.getElementById("myIP");
@@ -3667,13 +3729,20 @@ async function loadMyIP(){
     try{
         const res=await fetch("https://api.ipify.org?format=json&cache="+Date.now());
         const data=await res.json();
+        const currentIP=String(data.ip||'').trim();
 
-        if(data.ip!==lastIP){
-            lastIP=data.ip;
-            el.textContent="IP : "+data.ip;
+        if(!currentIP) throw new Error('IP tidak tersedia');
+
+        if(currentIP!==lastIP){
+            const isIPChange=lastIP!=="";
+            lastIP=currentIP;
+            el.textContent="IP : "+currentIP;
 
             // indikator IP baru
             el.classList.add("ipChanged");
+
+            // Bunyi hanya saat IP benar-benar berganti, bukan saat pemuatan awal.
+            if(isIPChange) playIPChangeSound();
 
             setTimeout(()=>{
                 el.classList.remove("ipChanged");

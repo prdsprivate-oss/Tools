@@ -3666,21 +3666,63 @@ toast('Paradise Manager Auto Update Ready');
  const chart=document.getElementById('hudChart');
  let history=[];
  
- async function ping(){
-  let ms;
+ function getLatencyState(ms){
+   ms=Number(ms);
+   if(!Number.isFinite(ms)) return {label:"OFFLINE 🔴", className:"latency-bad"};
+   if(ms<=80) return {label:"Excellent 🟢", className:"latency-good"};
+   if(ms<=180) return {label:"Normal 🟡", className:"latency-warn"};
+   return {label:"Poor 🔴", className:"latency-bad"};
+}
+
+async function ping(){
+  let ms=null;
   let t=performance.now();
-  try{await fetch('https://www.google.com/generate_204?x='+Date.now(),{mode:'no-cors',cache:'no-store'});ms=Math.round(performance.now()-t)}catch(e){ms=999}
-  history.push(ms); if(history.length>20)history.shift();
-  main.textContent=ms<999?ms+' ms':'OFFLINE';
-  latency.textContent=main.textContent;
-  quality.textContent=ms<50?'Excellent 🟢':ms<150?'Normal 🟡':'Poor 🔴';
+
+  try{
+    await fetch('https://www.google.com/generate_204?x='+Date.now(),
+      {mode:'no-cors',cache:'no-store'});
+    ms=Math.round(performance.now()-t);
+  }catch(e){
+    ms=null;
+  }
+
+  // simpan timeout juga agar grafik tetap hidup
+  history.push(ms);
+  if(history.length>40) history.shift();
+
+  if(ms===null){
+    main.textContent='TIMED OUT';
+    latency.textContent='TIMED OUT';
+    quality.textContent='OFFLINE 🔴';
+    quality.className='latency-bad';
+  }else{
+    main.textContent=ms+' ms';
+    latency.textContent=ms+' ms';
+
+    const state=getLatencyState(ms);
+    quality.textContent=state.label;
+    quality.className=state.className;
+  }
+
   list.innerHTML=history.slice(-5).reverse().map(x=>{
-    let cls = x < 50 ? 'pingOk' : x < 150 ? 'pingSlow' : 'pingBad';
+    if(x===null){
+      return 'Ping <b class="latency-bad">TIMED OUT</b>';
+    }
+    const cls=getLatencyState(x).className;
     return 'Ping <b class="'+cls+'">'+x+'ms</b>';
-}).join('<br>');
-  chart.innerHTML=history.map(x=>'<i class="hudBar" style="height:'+Math.min(40,Math.max(5,x/5))+'px"></i>').join('');
- }
- ping();setInterval(ping,1000);
+  }).join('<br>');
+
+  chart.innerHTML=history.map(x=>{
+    if(x===null){
+      return '<i class="hudBar" style="height:40px;background:#ef4444"></i>';
+    }
+    const state=getLatencyState(x);
+    const color=state.className==='latency-good'?'#22c55e':
+                state.className==='latency-warn'?'#facc15':'#ef4444';
+    return '<i class="hudBar" style="height:'+Math.min(40,Math.max(5,x/5))+'px;background:'+color+'"></i>';
+  }).join('');
+}
+ping();setInterval(ping,1000);
 })();
 </script>
 
@@ -3804,7 +3846,7 @@ async function paradiseHUD(){
         lat.textContent=ping+" ms";
 
         points.push(ping);
-        if(points.length>10) points.shift();
+        if(points.length>20) points.shift();
         document.getElementById("hudChart").textContent =
             points.map(x=>x<30?"▁":x<80?"▃":"▆").join("");
 
@@ -3821,5 +3863,109 @@ setInterval(paradiseHUD,10000);
 })();
 </script>
 
+
+
+<style>
+/* NETWORK GRAPH PRO UPGRADE */
+.network-pro{position:relative;overflow:hidden}
+.network-pro canvas{width:100%;height:260px;display:block;border-radius:14px;background:rgba(0,0,0,.18)}
+.radar-scan{position:absolute;inset:20px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,rgba(0,212,255,.35),transparent 25%);animation:radarSpin 3s linear infinite;mix-blend-mode:screen}
+@keyframes radarSpin{to{transform:rotate(360deg)}}
+.latency-good{color:#22c55e!important;text-shadow:0 0 12px #22c55e}
+.latency-warn{color:#facc15!important;text-shadow:0 0 12px #facc15}
+.latency-bad{color:#ef4444!important;text-shadow:0 0 12px #ef4444}
+.graph-stat{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.graph-stat div{flex:1;min-width:90px;padding:10px;border-radius:12px;background:rgba(0,0,0,.2);text-align:center;font-family:Consolas}
+</style>
+<script>
+(function(){
+let pingHistory=[];
+const maxPoints=40;
+let lastPing=0;
+
+function latencyClass(v){
+ if(v<=80)return 'latency-good';
+ if(v<=180)return 'latency-warn';
+ return 'latency-bad';
+}
+
+async function realPing(){
+ const start=performance.now();
+ try{
+   await fetch('https://api.ipify.org?format=json&cache='+Date.now(),{cache:'no-store'});
+   return Math.round(performance.now()-start);
+ }catch(e){return null;}
+}
+
+function drawGraph(){
+ const c=document.getElementById('networkGraphCanvas');
+ if(!c)return;
+ const ctx=c.getContext('2d');
+ const w=c.clientWidth,h=c.clientHeight;
+ c.width=w*devicePixelRatio;c.height=h*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+ ctx.clearRect(0,0,w,h);
+ ctx.strokeStyle='rgba(255,255,255,.08)';
+ for(let y=20;y<h;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+ if(pingHistory.length<1)return;
+ const step=w/(maxPoints-1);
+ pingHistory.forEach((p,i)=>{
+  const x=i*step;
+  const timeout=p===null;
+  const value=timeout?h-25:Math.max(15, h-(Math.min(p,300)/300*h));
+  ctx.beginPath();
+  ctx.arc(x,value,5,0,Math.PI*2);
+  ctx.fillStyle=timeout?'#ef4444':(p<=80?'#22c55e':p<=180?'#facc15':'#ef4444');
+  ctx.shadowBlur=14;ctx.shadowColor=ctx.fillStyle;
+  ctx.fill();
+  ctx.shadowBlur=0;
+ });
+ ctx.beginPath();
+ pingHistory.forEach((p,i)=>{
+  const x=i*step;
+  const y=p===null?h-25:Math.max(15,h-(Math.min(p,300)/300*h));
+  if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+ });
+ ctx.lineWidth=3;
+ ctx.strokeStyle='#00e5ff';
+ ctx.stroke();
+}
+
+async function updateNetworkGraph(){
+ let p=await realPing();
+
+ if(p===null){
+    pingHistory.push(null); if(pingHistory.length>maxPoints)pingHistory.shift();
+    let el=document.getElementById('graphPing');
+    if(el){el.textContent='TIMED OUT';el.className='latency-bad';}
+    let st=document.getElementById('graphStatus');
+    if(st)st.textContent='TIMED OUT';
+    let jit=document.getElementById('graphJitter');
+    if(jit)jit.textContent='--';
+    drawGraph();
+    return;
+ }
+
+ lastPing=p;
+ pingHistory.push(p); if(pingHistory.length>maxPoints)pingHistory.shift();
+ drawGraph();
+
+ let el=document.getElementById('graphPing');
+ if(el){el.textContent=p+' ms';el.className=latencyClass(p)}
+
+ let st=document.getElementById('graphStatus');
+ if(st)st.textContent=p<=80?'STABLE':p<=180?'WARNING':'BAD';
+
+ let jit=document.getElementById('graphJitter');
+ if(jit)jit.textContent=Math.abs(p-(pingHistory.at(-2)||p))+' ms';
+}
+
+window.addEventListener('load',()=>{
+ let box=document.querySelector('.network-pro');
+ if(!box)return;
+ box.insertAdjacentHTML('beforeend',`<canvas id="networkGraphCanvas"></canvas><div class="radar-scan"></div><div class="graph-stat"><div>Ping<br><b id="graphPing">--</b></div><div>Jitter<br><b id="graphJitter">--</b></div><div>Status<br><b id="graphStatus">CHECK</b></div></div>`);
+ updateNetworkGraph();setInterval(updateNetworkGraph,3000);
+});
+})();
+</script>
 </body>
 </html>

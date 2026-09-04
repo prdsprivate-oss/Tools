@@ -3837,7 +3837,10 @@ async function unlockIPChangeSound(){
 
 function playIPChangeSound(){
     const context=getIPAudioContext();
-    if(!context||context.state!=='running') return;
+    if(!context) return;
+    if(context.state==='suspended'){
+        context.resume();
+    }
 
     const start=context.currentTime;
     const notes=[

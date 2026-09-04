@@ -2062,7 +2062,39 @@ body[data-theme="rgb"] #livePing{
 .graph-header b{color:#22c55e;text-shadow:0 0 10px #22c55e;font-size:12px;}
 .big-chart{height:150px!important;display:flex;align-items:end;gap:5px;padding:15px;background:rgba(0,0,0,.18);border-radius:14px;border:1px solid rgba(255,255,255,.08);overflow:hidden;}
 .big-chart .hudBar{width:10px;min-height:8px;border-radius:8px;}
+.line-chart{width:100%;height:240px;display:block;background:rgba(0,0,0,.18);border-radius:14px;border:1px solid rgba(255,255,255,.08)}
 .graph-info{display:flex;justify-content:space-between;margin-top:14px;font-size:12px;color:#9ecbff;}
+
+/* PARADISE FIXED SCALE GRAPH PATCH */
+.graph-grid-20 {
+    background-size: 100% 5%;
+}
+.graph-line {
+    stroke-width: 2px !important;
+}
+.graph-timeout {
+    stroke: #ef4444 !important;
+    fill: #ef4444 !important;
+}
+
+
+/* PARADISE FIXED SCALE SPACED LEVEL PATCH */
+.big-chart,
+.graph-area,
+#lineGraph,
+#networkGraph {
+    min-height: 320px !important;
+}
+
+/* PARADISE RELATIVE PING GRAPH PATCH */
+.relative-ping-line {
+    stroke-width: 2px !important;
+}
+
+/* FIXED LATENCY SCALE PATCH */
+:root {
+  --latency-max-scale: 120;
+}
 </style></head>
 <body>
 <body>
@@ -2419,7 +2451,7 @@ body[data-theme="rgb"] #livePing{
                 <span>Ping History</span>
                 <b id="graphStatus">LIVE</b>
             </div>
-            <div class="hudChart big-chart" id="hudChart"></div>
+            <canvas id="hudChart" class="line-chart"></canvas>
             <div class="graph-info">
                 <span>Latency Monitor</span>
                 <span>Realtime Connection</span>
@@ -3712,15 +3744,60 @@ async function ping(){
     return 'Ping <b class="'+cls+'">'+x+'ms</b>';
   }).join('<br>');
 
-  chart.innerHTML=history.map(x=>{
-    if(x===null){
-      return '<i class="hudBar" style="height:40px;background:#ef4444"></i>';
-    }
-    const state=getLatencyState(x);
-    const color=state.className==='latency-good'?'#22c55e':
-                state.className==='latency-warn'?'#facc15':'#ef4444';
-    return '<i class="hudBar" style="height:'+Math.min(40,Math.max(5,x/5))+'px;background:'+color+'"></i>';
-  }).join('');
+  const canvas=chart;
+  const ctx=canvas.getContext('2d');
+  const w=canvas.clientWidth;
+  const h=canvas.clientHeight;
+  canvas.width=w*2; canvas.height=h*2;
+  ctx.scale(2,2);
+  ctx.clearRect(0,0,w,h);
+  // subtle grid
+  ctx.strokeStyle='rgba(255,255,255,0.08)';
+  ctx.lineWidth=1;
+  for(let y=0;y<=4;y++){
+    const gy=(h-20)-(y/4)*(h-20);
+    ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(w,gy); ctx.stroke();
+  }
+  if(history.length<2) return;
+  const max=120;
+  const step=w/(history.length-1);
+  let pts=[];
+  history.forEach((v,i)=>{
+    const val=v===null?0:Math.min(v,max);
+    pts.push([i*step,h-(val/max)*(h-20)-10,v]);
+  });
+
+  // latency monitor grid labels
+  ctx.fillStyle='rgba(255,255,255,0.65)';
+  ctx.font='11px monospace';
+  [0,40,80,120].forEach((n)=>{
+    const yy=(h-20)-(n/max)*(h-20)-10;
+    ctx.fillText(n,5,yy-2);
+  });
+
+  ctx.beginPath();
+  pts.forEach((p,i)=> i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+  ctx.strokeStyle='#22c55e';
+  ctx.lineWidth=2;
+  ctx.shadowColor='#22c55e';
+  ctx.shadowBlur=12;
+  ctx.stroke();
+
+  // fill area under line
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0],h-10);
+  pts.forEach(p=>ctx.lineTo(p[0],p[1]));
+  ctx.lineTo(pts[pts.length-1][0],h-10);
+  ctx.closePath();
+  ctx.fillStyle='rgba(34,197,94,0.10)';
+  ctx.fill();
+  ctx.shadowBlur=0;
+  pts.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p[0],p[1],5,0,Math.PI*2);
+    ctx.fillStyle=p[2]===null?'#ef4444':'#22c55e';
+    ctx.fill();
+  });
 }
 ping();setInterval(ping,1000);
 })();
@@ -3902,32 +3979,59 @@ function drawGraph(){
  if(!c)return;
  const ctx=c.getContext('2d');
  const w=c.clientWidth,h=c.clientHeight;
- c.width=w*devicePixelRatio;c.height=h*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+ c.width=w*devicePixelRatio;c.height=h*devicePixelRatio;
+ ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
  ctx.clearRect(0,0,w,h);
+
+ const padTop=18, padBottom=22;
+ const maxLatency=120;
+
+ // fixed grid
  ctx.strokeStyle='rgba(255,255,255,.08)';
- for(let y=20;y<h;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+ ctx.lineWidth=1;
+ for(let ms=0; ms<=120; ms+=20){
+   const y=h-padBottom-(ms/maxLatency)*(h-padTop-padBottom);
+   ctx.beginPath();
+   ctx.moveTo(0,y);
+   ctx.lineTo(w,y);
+   ctx.stroke();
+ }
+
  if(pingHistory.length<1)return;
+
  const step=w/(maxPoints-1);
+ const points=[];
+
  pingHistory.forEach((p,i)=>{
-  const x=i*step;
-  const timeout=p===null;
-  const value=timeout?h-25:Math.max(15, h-(Math.min(p,300)/300*h));
-  ctx.beginPath();
-  ctx.arc(x,value,5,0,Math.PI*2);
-  ctx.fillStyle=timeout?'#ef4444':(p<=80?'#22c55e':p<=180?'#facc15':'#ef4444');
-  ctx.shadowBlur=14;ctx.shadowColor=ctx.fillStyle;
-  ctx.fill();
-  ctx.shadowBlur=0;
+   let val=(p===null)?0:Math.min(p,maxLatency);
+   const x=i*step;
+   const y=h-padBottom-(val/maxLatency)*(h-padTop-padBottom);
+   points.push({x,y,timeout:p===null});
  });
+
+ // line
  ctx.beginPath();
- pingHistory.forEach((p,i)=>{
-  const x=i*step;
-  const y=p===null?h-25:Math.max(15,h-(Math.min(p,300)/300*h));
-  if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+ points.forEach((pt,i)=>{
+   if(i===0) ctx.moveTo(pt.x,pt.y);
+   else ctx.lineTo(pt.x,pt.y);
  });
- ctx.lineWidth=3;
- ctx.strokeStyle='#00e5ff';
+ ctx.lineWidth=2;
+ ctx.strokeStyle='#22c55e';
+ ctx.shadowBlur=8;
+ ctx.shadowColor='#22c55e';
  ctx.stroke();
+ ctx.shadowBlur=0;
+
+ // points
+ points.forEach(pt=>{
+   ctx.beginPath();
+   ctx.arc(pt.x,pt.y,4,0,Math.PI*2);
+   ctx.fillStyle=pt.timeout?'#ef4444':'#22c55e';
+   ctx.shadowBlur=10;
+   ctx.shadowColor=ctx.fillStyle;
+   ctx.fill();
+   ctx.shadowBlur=0;
+ });
 }
 
 async function updateNetworkGraph(){
@@ -4012,5 +4116,101 @@ if(document.readyState==='loading'){
 })();
 </script>
 
+
+<style>
+/* FULL AREA GRAPH PATCH */
+#pingChart, canvas {
+    min-height: 220px;
+}
+</style>
+
+<script>
+(function(){
+    window.PARADISE_FULL_AREA_GRAPH = true;
+    window.PARADISE_GRAPH_PADDING_TOP = 25;
+    window.PARADISE_GRAPH_PADDING_BOTTOM = 35;
+
+    window.paradiseMapLatencyToY = function(latency, height){
+        const top = 25;
+        const bottom = height - 35;
+        const max = 120;
+        const value = Math.max(0, Math.min(max, latency || 0));
+        return bottom - ((value / max) * (bottom - top));
+    };
+})();
+</script>
+
+
+<style>
+/* GREEN ONLY GRAPH PATCH */
+.chart-line,
+.graph-line,
+.line-path {
+    stroke: #22c55e !important;
+}
+.chart-point,
+.graph-point,
+.point {
+    fill: #22c55e !important;
+    background: #22c55e !important;
+}
+.chart-fill {
+    background: rgba(34,197,94,.18) !important;
+}
+</style>
+
 </body>
 </html>
+<script>
+function paradisePingToLevel(ms){
+    if(ms === null || !Number.isFinite(ms)) return 1;
+    if(ms <= 30) return 3;
+    if(ms <= 50) return 5;
+    if(ms <= 70) return 7;
+    if(ms <= 90) return 9;
+    if(ms <= 110) return 11;
+    if(ms <= 130) return 13;
+    if(ms <= 160) return 15;
+    if(ms <= 200) return 18;
+    return 20;
+}
+function paradiseTimeoutPoint(){
+    return {level:1,color:"#ef4444",status:"TIMED OUT"};
+}
+</script>
+
+<script>
+let paradiseRelativePosition = 10;
+let paradiseLastPing = null;
+
+function paradiseRelativePingLevel(currentPing){
+    if(currentPing === null || !Number.isFinite(currentPing)){
+        paradiseRelativePosition = 1;
+        return {level:1,status:"TIMED OUT",color:"#ef4444"};
+    }
+    if(paradiseLastPing === null){
+        paradiseLastPing=currentPing;
+        return {level:paradiseRelativePosition,status:"ONLINE",color:"#22c55e"};
+    }
+    const diff=currentPing-paradiseLastPing;
+    paradiseRelativePosition += diff*2.5;
+    paradiseLastPing=currentPing;
+
+    if(paradiseRelativePosition<1) paradiseRelativePosition=1;
+    if(paradiseRelativePosition>20) paradiseRelativePosition=20;
+
+    return {level:Math.round(paradiseRelativePosition),status:"ONLINE",color:"#22c55e"};
+}
+</script>
+
+
+/* PARADISE RELATIVE PING GRAPH V4 EXTREME SPIKE */
+
+<script>
+const PARADISE_FIXED_MAX_LATENCY = 120;
+function paradiseFixedLatencyY(latency, chartHeight){
+    if (!Number.isFinite(latency)) return chartHeight;
+    const value = Math.max(0, Math.min(PARADISE_FIXED_MAX_LATENCY, latency));
+    return chartHeight - (value / PARADISE_FIXED_MAX_LATENCY) * chartHeight;
+}
+</script>

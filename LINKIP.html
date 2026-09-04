@@ -3967,5 +3967,50 @@ window.addEventListener('load',()=>{
 });
 })();
 </script>
+
+<script>
+/* CLOCK CLICK RECOVERY PATCH */
+(function(){
+function bindClockFix(){
+    const clock=document.getElementById('usaClock');
+    const popup=document.getElementById('clockPopup');
+
+    if(!clock || !popup) return;
+
+    clock.style.pointerEvents='auto';
+    clock.style.zIndex='9999999';
+    popup.style.zIndex='10000000';
+
+    clock.onclick=function(e){
+        e.stopPropagation();
+        popup.classList.toggle('show');
+        popup.setAttribute('aria-hidden',
+            String(!popup.classList.contains('show')));
+    };
+
+    document.querySelectorAll('.clockOption').forEach(btn=>{
+        btn.onclick=function(e){
+            e.stopPropagation();
+            const zone=this.dataset.clockZone;
+            if(!zone) return;
+
+            localStorage.setItem('paradiseSelectedClock',zone);
+
+            document.querySelectorAll('.clockOption')
+            .forEach(x=>x.classList.toggle('active',
+                x.dataset.clockZone===zone));
+
+            popup.classList.remove('show');
+        };
+    });
+}
+if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',bindClockFix);
+}else{
+    bindClockFix();
+}
+})();
+</script>
+
 </body>
 </html>

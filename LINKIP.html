@@ -2550,7 +2550,18 @@ body[data-theme="rgb"] #livePing{
  PART 1 - CORE
 ==========================================*/
 
-const $ = id => document.getElementById(id);
+const __paradiseDummyElement = {
+    value:'',
+    checked:false,
+    textContent:'',
+    innerHTML:'',
+    style:{width:'',height:''},
+    classList:{add(){},remove(){},toggle(){return false;}},
+    addEventListener(){},
+    setAttribute(){},
+    click(){},
+};
+const $ = id => document.getElementById(id) || __paradiseDummyElement;
 
 const APP = {
 
@@ -3697,6 +3708,7 @@ toast('Paradise Manager Auto Update Ready');
  const quality=document.getElementById('hudQuality');
  const chart=document.getElementById('hudChart');
  let history=[];
+ if(!main || !list || !latency || !quality || !chart) return;
  
  function getLatencyState(ms){
    ms=Number(ms);
@@ -3837,10 +3849,7 @@ async function unlockIPChangeSound(){
 
 function playIPChangeSound(){
     const context=getIPAudioContext();
-    if(!context) return;
-    if(context.state==='suspended'){
-        context.resume();
-    }
+    if(!context||context.state!=='running') return;
 
     const start=context.currentTime;
     const notes=[
@@ -3913,9 +3922,9 @@ let points=[];
 async function paradiseHUD(){
     try{
         const ip = await fetch("https://api.ipify.org?format=json").then(r=>r.json());
-        document.getElementById("hudIP").textContent = ip.ip;
+        const hudIP=document.getElementById("hudIP"); if(hudIP) hudIP.textContent = ip.ip;
     }catch(e){
-        document.getElementById("hudIP").textContent="Unavailable";
+        const hudIP=document.getElementById("hudIP"); if(hudIP) hudIP.textContent="Unavailable";
     }
 
     let start=performance.now();
@@ -3923,19 +3932,19 @@ async function paradiseHUD(){
         await fetch("https://www.google.com/favicon.ico",{mode:"no-cors",cache:"no-store"});
         let ping=Math.round(performance.now()-start);
         let lat=document.getElementById("hudLatency");
-        lat.textContent=ping+" ms";
+        if(lat) lat.textContent=ping+" ms";
 
         points.push(ping);
         if(points.length>20) points.shift();
-        document.getElementById("hudChart").textContent =
+        const hudChart=document.getElementById("hudChart"); if(hudChart) hudChart.textContent =
             points.map(x=>x<30?"▁":x<80?"▃":"▆").join("");
 
         let quality=ping<50?"Excellent 🟢":ping<150?"Normal 🟡":"Poor 🔴";
-        document.getElementById("hudQuality").textContent=quality;
+        const hudQuality=document.getElementById("hudQuality"); if(hudQuality) hudQuality.textContent=quality;
 
         let score=Math.max(10,100-Math.min(ping,90));
-        document.getElementById("hudScore").textContent=Math.round(score)+"%";
-        document.getElementById("hudBar").style.width=score+"%";
+        const hudScore=document.getElementById("hudScore"); if(hudScore) hudScore.textContent=Math.round(score)+"%";
+        const hudBar=document.getElementById("hudBar"); if(hudBar) hudBar.style.width=score+"%";
     }catch(e){}
 }
 paradiseHUD();
@@ -4162,6 +4171,111 @@ if(document.readyState==='loading'){
 }
 </style>
 
+
+<script>
+/* PARADISE STABILITY PATCH */
+window.addEventListener('error',function(e){
+    console.warn('Paradise optional module error:', e.message);
+});
+window.addEventListener('unhandledrejection',function(e){
+    console.warn('Paradise async module error:', e.reason);
+});
+</script>
+
+
+<script>
+/* ===== CLOCK FINAL REPAIR ===== */
+(function(){
+    function initClockRepair(){
+        const clock=document.getElementById('usaClock');
+        const popup=document.getElementById('clockPopup');
+        if(!clock || !popup) return;
+
+        // remove possible old handlers by using clone for clean click target
+        const newClock=clock.cloneNode(true);
+        clock.parentNode.replaceChild(newClock, clock);
+
+        const c=document.getElementById('usaClock');
+        const p=document.getElementById('clockPopup');
+
+        function openClock(){
+            p.classList.toggle('show');
+            p.setAttribute('aria-hidden', String(!p.classList.contains('show')));
+            c.setAttribute('aria-expanded', String(p.classList.contains('show')));
+        }
+
+        c.addEventListener('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            openClock();
+        });
+
+        c.addEventListener('keydown', function(e){
+            if(e.key==='Enter' || e.key===' '){
+                e.preventDefault();
+                openClock();
+            }
+        });
+
+        document.querySelectorAll('.clockOption').forEach(btn=>{
+            btn.addEventListener('click',function(e){
+                e.preventDefault();
+                e.stopPropagation();
+
+                const zone=this.dataset.clockZone;
+                if(!zone) return;
+
+                localStorage.setItem('paradiseSelectedClock',zone);
+
+                document.querySelectorAll('.clockOption')
+                .forEach(x=>x.classList.toggle('active',x===this));
+
+                const title=document.getElementById('clockTitle');
+                const date=document.getElementById('usaDate');
+                const time=document.getElementById('usaTime');
+
+                title.textContent=this.dataset.clockLabel || this.textContent.trim();
+
+                function refresh(){
+                    const now=new Date();
+                    date.textContent=now.toLocaleDateString('en-US',{
+                        timeZone:zone,
+                        weekday:'short',
+                        year:'numeric',
+                        month:'short',
+                        day:'2-digit'
+                    });
+                    time.textContent=now.toLocaleTimeString('en-US',{
+                        timeZone:zone,
+                        hour:'2-digit',
+                        minute:'2-digit',
+                        second:'2-digit',
+                        hour12:false
+                    });
+                }
+
+                refresh();
+                clearInterval(window.paradiseClockFixTimer);
+                window.paradiseClockFixTimer=setInterval(refresh,1000);
+
+                p.classList.remove('show');
+                p.setAttribute('aria-hidden','true');
+            });
+        });
+
+        // restore saved timezone
+        const saved=localStorage.getItem('paradiseSelectedClock');
+        const active=document.querySelector('.clockOption[data-clock-zone="'+saved+'"]');
+        if(active) active.click();
+    }
+
+    if(document.readyState==='loading'){
+        document.addEventListener('DOMContentLoaded',initClockRepair);
+    }else{
+        initClockRepair();
+    }
+})();
+</script>
 </body>
 </html>
 <script>

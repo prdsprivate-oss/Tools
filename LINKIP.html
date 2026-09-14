@@ -2139,6 +2139,24 @@ body[data-theme="rgb"] #livePing{
     <button type="button" class="clockOption" data-clock-zone="Europe/Madrid" data-clock-label="SPAIN">
         <span>🇪🇸 Spanyol</span><span class="clockCheck">✓</span>
     </button>
+    <button type="button" class="clockOption" data-clock-zone="Europe/Rome" data-clock-label="ITALY">
+        <span>🇮🇹 Italia</span><span class="clockCheck">✓</span>
+    </button>
+    <button type="button" class="clockOption" data-clock-zone="Europe/Kyiv" data-clock-label="UKRAINE">
+        <span>🇺🇦 Ukraina</span><span class="clockCheck">✓</span>
+    </button>
+    <button type="button" class="clockOption" data-clock-zone="America/Sao_Paulo" data-clock-label="BRAZIL">
+        <span>🇧🇷 Brazil</span><span class="clockCheck">✓</span>
+    </button>
+    <button type="button" class="clockOption" data-clock-zone="Europe/Warsaw" data-clock-label="POLAND">
+        <span>🇵🇱 Polandia</span><span class="clockCheck">✓</span>
+    </button>
+    <button type="button" class="clockOption" data-clock-zone="Europe/Amsterdam" data-clock-label="NETHERLANDS">
+        <span>🇳🇱 Belanda</span><span class="clockCheck">✓</span>
+    </button>
+    <button type="button" class="clockOption" data-clock-zone="Europe/Bucharest" data-clock-label="ROMANIA">
+        <span>🇷🇴 Romania</span><span class="clockCheck">✓</span>
+    </button>
 </div>
 <div class="app">
 
@@ -3163,7 +3181,13 @@ const CLOCKS={
     'America/New_York':'NEW YORK',
     'Europe/Berlin':'GERMANY',
     'Europe/Paris':'FRANCE',
-    'Europe/Madrid':'SPAIN'
+    'Europe/Madrid':'SPAIN',
+    'Europe/Rome':'ITALY',
+    'Europe/Kyiv':'UKRAINE',
+    'America/Sao_Paulo':'BRAZIL',
+    'Europe/Warsaw':'POLAND',
+    'Europe/Amsterdam':'NETHERLANDS',
+    'Europe/Bucharest':'ROMANIA'
 };
 
 let selectedClockZone=localStorage.getItem(CLOCK_STORAGE_KEY);
@@ -4274,6 +4298,21 @@ window.addEventListener('unhandledrejection',function(e){
     }else{
         initClockRepair();
     }
+})();
+</script>
+<script>
+/* CLOCK STABLE PATCH - keep selected country */
+(function(){
+    const key='paradiseSelectedClock';
+    window.addEventListener('load',()=>{
+        const saved=localStorage.getItem(key);
+        if(saved){
+            const btn=document.querySelector('.clockOption[data-clock-zone="'+saved+'"]');
+            if(btn){
+                document.querySelectorAll('.clockOption').forEach(x=>x.classList.toggle('active',x.dataset.clockZone===saved));
+            }
+        }
+    });
 })();
 </script>
 </body>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PARADISE Duplicate Filter</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left,#351149 0,transparent 35%),
+        radial-gradient(circle at top right,#421126 0,transparent 35%),
+        #0d0d11;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:30px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:800;
+    letter-spacing:1px;
+    background:linear-gradient(90deg,#f9ce34,#ee2a7b,#6228d7);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    color:#999;
+    margin-top:5px;
+    margin-bottom:25px;
+    font-size:13px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:18px;
+}
+
+.card{
+    background:#15151c;
+    border:1px solid #292933;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.result-card{
+    border-color:#286747;
+}
+
+.card-header{
+    padding:14px 15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #292933;
+}
+
+.title{
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:.7px;
+}
+
+.counter{
+    background:#262630;
+    color:#ccc;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+}
+
+.result-card .counter{
+    background:#153a29;
+    color:#67e49a;
+}
+
+textarea{
+    display:block;
+    width:100%;
+    height:430px;
+    resize:vertical;
+    background:#101015;
+    color:#eee;
+    border:0;
+    outline:0;
+    padding:15px;
+    font-family:Consolas,monospace;
+    font-size:13px;
+    line-height:1.55;
+}
+
+textarea::placeholder{
+    color:#555;
+}
+
+.card-footer{
+    display:flex;
+    gap:8px;
+    padding:12px;
+    border-top:1px solid #292933;
+}
+
+button{
+    border:0;
+    border-radius:8px;
+    padding:9px 14px;
+    cursor:pointer;
+    color:#fff;
+    font-weight:bold;
+    font-size:11px;
+    transition:.15s;
+}
+
+button:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.12);
+}
+
+.copy-btn{
+    flex:1;
+    background:#292933;
+}
+
+.clear-btn{
+    background:#321a20;
+    color:#ff8c9a;
+}
+
+.action{
+    margin:22px 0;
+}
+
+.filter-btn{
+    width:100%;
+    padding:14px;
+    font-size:14px;
+    letter-spacing:.5px;
+    background:linear-gradient(90deg,#833ab4,#e1306c,#f77737);
+    box-shadow:0 5px 20px rgba(225,48,108,.2);
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.stat{
+    background:#15151c;
+    border:1px solid #292933;
+    border-radius:12px;
+    padding:15px;
+}
+
+.stat-label{
+    color:#888;
+    font-size:11px;
+    margin-bottom:7px;
+}
+
+.stat-number{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.duplicate{color:#ff62ae}
+.clean{color:#66e49a}
+
+.status{
+    margin-top:15px;
+    min-height:20px;
+    text-align:center;
+    color:#999;
+    font-size:12px;
+}
+
+@media(max-width:900px){
+    .grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    textarea{height:250px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">PARADISE DUPLICATE FILTER</div>
+    <div class="subtitle">
+        Filter TEXT BARU berdasarkan TEXT MASTER — hasil hanya menampilkan data yang belum ada di Master
+    </div>
+
+    <div class="grid">
+
+        <!-- MASTER -->
+        <div class="card">
+            <div class="card-header">
+                <div class="title">TEXT MASTER</div>
+                <div class="counter">
+                    <span id="masterCount">0</span> FILE
+                </div>
+            </div>
+
+            <textarea id="master"
+                placeholder="Paste TEXT MASTER di sini..."></textarea>
+
+            <div class="card-footer">
+                <button class="copy-btn"
+                    onclick="copyText('master',this)">
+                    COPY MASTER
+                </button>
+
+                <button class="clear-btn"
+                    onclick="clearBox('master')">
+                    CLEAR
+                </button>
+            </div>
+        </div>
+
+
+        <!-- BARU -->
+        <div class="card">
+            <div class="card-header">
+                <div class="title">TEXT BARU</div>
+                <div class="counter">
+                    <span id="newCount">0</span> FILE
+                </div>
+            </div>
+
+            <textarea id="newData"
+                placeholder="Paste TEXT BARU yang ingin difilter..."></textarea>
+
+            <div class="card-footer">
+                <button class="copy-btn"
+                    onclick="copyText('newData',this)">
+                    COPY BARU
+                </button>
+
+                <button class="clear-btn"
+                    onclick="clearBox('newData')">
+                    CLEAR
+                </button>
+            </div>
+        </div>
+
+
+        <!-- HASIL BERSIH -->
+        <div class="card result-card">
+            <div class="card-header">
+                <div class="title">HASIL TIDAK DUPLIKAT</div>
+                <div class="counter">
+                    <span id="resultCount">0</span> FILE
+                </div>
+            </div>
+
+            <textarea id="result"
+                readonly
+                placeholder="File yang TIDAK ADA di Master akan muncul di sini..."></textarea>
+
+            <div class="card-footer">
+                <button class="copy-btn"
+                    onclick="copyText('result',this)">
+                    COPY HASIL
+                </button>
+
+                <button class="clear-btn"
+                    onclick="clearResult()">
+                    CLEAR
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="action">
+        <button class="filter-btn" onclick="filterData()">
+            FILTER SEKARANG
+        </button>
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-label">TOTAL MASTER</div>
+            <div class="stat-number" id="statMaster">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">TOTAL DATA BARU</div>
+            <div class="stat-number" id="statNew">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">DIBUANG / DUPLIKAT</div>
+            <div class="stat-number duplicate" id="statDuplicate">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">HASIL TIDAK DUPLIKAT</div>
+            <div class="stat-number clean" id="statClean">0</div>
+        </div>
+
+    </div>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+
+<script>
+
+const master = document.getElementById("master");
+const newData = document.getElementById("newData");
+const result = document.getElementById("result");
+const statusBox = document.getElementById("status");
+
+
+function getLines(text){
+    return text
+        .split(/\r?\n/)
+        .map(x => x.trim())
+        .filter(x => x !== "");
+}
+
+
+/* Normalisasi untuk perbandingan */
+function normalize(text){
+    return text.trim().toLowerCase();
+}
+
+
+function updateCounters(){
+
+    const m = getLines(master.value);
+    const n = getLines(newData.value);
+    const r = getLines(result.value);
+
+    document.getElementById("masterCount").textContent = m.length;
+    document.getElementById("newCount").textContent = n.length;
+    document.getElementById("resultCount").textContent = r.length;
+
+    document.getElementById("statMaster").textContent = m.length;
+    document.getElementById("statNew").textContent = n.length;
+}
+
+
+/* ===============================
+   FILTER
+================================ */
+
+function filterData(){
+
+    const masterLines = getLines(master.value);
+    const newLines = getLines(newData.value);
+
+    if(masterLines.length === 0){
+        statusBox.textContent = "TEXT MASTER masih kosong.";
+        return;
+    }
+
+    if(newLines.length === 0){
+        statusBox.textContent = "TEXT BARU masih kosong.";
+        return;
+    }
+
+
+    /* Master dijadikan database pembanding */
+
+    const masterSet = new Set(
+        masterLines.map(normalize)
+    );
+
+
+    const clean = [];
+    let duplicateCount = 0;
+
+    /*
+       seenNew mencegah data yang sama
+       berulang di hasil.
+    */
+
+    const seenNew = new Set();
+
+
+    newLines.forEach(item => {
+
+        const key = normalize(item);
+
+        /* Sudah ada di MASTER */
+        if(masterSet.has(key)){
+            duplicateCount++;
+            return;
+        }
+
+        /* Duplikat di dalam TEXT BARU sendiri */
+        if(seenNew.has(key)){
+            duplicateCount++;
+            return;
+        }
+
+        seenNew.add(key);
+
+        /* Hanya data benar-benar baru */
+        clean.push(item);
+
+    });
+
+
+    result.value = clean.join("\n");
+
+
+    document.getElementById("resultCount").textContent =
+        clean.length;
+
+    document.getElementById("statDuplicate").textContent =
+        duplicateCount;
+
+    document.getElementById("statClean").textContent =
+        clean.length;
+
+
+    updateCounters();
+
+
+    statusBox.innerHTML =
+        "✓ Selesai — <b>" +
+        duplicateCount +
+        "</b> data duplikat dibuang. " +
+        "<b>" +
+        clean.length +
+        "</b> data bersih tersisa.";
+
+}
+
+
+/* ===============================
+   COPY
+================================ */
+
+async function copyText(id,button){
+
+    const box = document.getElementById(id);
+
+    if(!box.value.trim()){
+        statusBox.textContent =
+            "Tidak ada data untuk dicopy.";
+        return;
+    }
+
+    try{
+
+        await navigator.clipboard.writeText(
+            box.value
+        );
+
+    }catch(e){
+
+        box.select();
+        document.execCommand("copy");
+
+    }
+
+
+    const old = button.textContent;
+
+    button.textContent = "✓ COPIED";
+
+    setTimeout(() => {
+        button.textContent = old;
+    },1000);
+
+}
+
+
+/* ===============================
+   CLEAR
+================================ */
+
+function clearBox(id){
+
+    document.getElementById(id).value = "";
+
+    result.value = "";
+
+    document.getElementById("statDuplicate").textContent = "0";
+    document.getElementById("statClean").textContent = "0";
+
+    statusBox.textContent = "";
+
+    updateCounters();
+}
+
+
+function clearResult(){
+
+    result.value = "";
+
+    document.getElementById("statDuplicate").textContent = "0";
+    document.getElementById("statClean").textContent = "0";
+
+    statusBox.textContent = "";
+
+    updateCounters();
+}
+
+
+/* COUNTER OTOMATIS */
+
+master.addEventListener("input",updateCounters);
+newData.addEventListener("input",updateCounters);
+
+
+/* CTRL + ENTER = FILTER */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.ctrlKey && e.key === "Enter"){
+
+        e.preventDefault();
+
+        filterData();
+
+    }
+
+});
+
+
+updateCounters();
+
+</script>
+
+</body>
+</html>

@@ -12,10 +12,11 @@
 
 .editor-trigger{padding:9px 13px;border-radius:10px;border:1px solid var(--border);background:var(--input);color:var(--text);font-size:13px;margin-bottom:22px}
 dialog{width:min(560px,calc(100% - 28px));max-height:90vh;overflow:auto;border:1px solid var(--border);border-radius:22px;background:var(--surface);color:var(--text);padding:26px;box-shadow:var(--shadow)}dialog::backdrop{background:#09071399;backdrop-filter:blur(4px)}dialog h2{font-size:22px;margin:0 0 8px}dialog p{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 20px}#wordList{min-height:260px}#editorMessage{color:var(--muted);font-size:13px;line-height:1.5;margin:12px 0}.editor-head{display:flex;justify-content:space-between;gap:15px}.close-editor{background:transparent;color:var(--muted);border:0;font-size:24px;padding:0 6px;align-self:flex-start}
+.gear{border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);width:42px;height:42px;font-size:23px;flex-shrink:0}.theme-toggle{margin-left:auto}.topbar{flex-wrap:wrap}dialog input[type="text"]{width:100%;padding:14px;border-radius:12px;background:var(--input);color:var(--text);border:1px solid var(--border);font:inherit}.editor-divider{border:0;border-top:1px solid var(--border);margin:25px 0}dialog h3{font-size:16px;margin:0 0 16px}.save-category{width:100%;padding:14px;border-radius:12px}.close-bottom{width:100%;padding:12px;margin-top:15px;border-radius:12px}
 </style></head><body>
 <main id="paradise-app">
-<header class="topbar"><div class="brand"><span class="brand-icon">✦</span>Paradise</div><div class="theme-toggle" role="group" aria-label="Tema tampilan"><button id="themeLight" type="button" onclick="setTheme('light')" aria-pressed="true">☀ Light</button><button id="themeDark" type="button" onclick="setTheme('dark')" aria-pressed="false">☾ Dark</button></div></header>
-<div class="container"><div class="eyebrow">TEXT GENERATOR</div>
+<header class="topbar"><div class="brand"><span class="brand-icon">✦</span>Paradise</div><div class="theme-toggle" role="group" aria-label="Tema tampilan"><button id="themeLight" type="button" onclick="setTheme('light')" aria-pressed="true">☀ Light</button><button id="themeDark" type="button" onclick="setTheme('dark')" aria-pressed="false">☾ Dark</button></div><button type="button" class="gear" onclick="openSettings()" aria-label="Pengaturan kata-kata dan kategori" title="Pengaturan">⚙</button></header>
+<div class="container"><div class="eyebrow">TEXT GENERATOR</div><h1>Status baru, ide baru.</h1><p class="subtitle">Pilih bahasa dan kategori, buat status, lalu salin dengan link pilihanmu.</p>
 <div class="settings"><div class="section"><label class="label" for="language">Bahasa</label><select id="language">
 
 <option value="">🌍 Pilih Bahasa</option>
@@ -47,7 +48,6 @@ dialog{width:min(560px,calc(100% - 28px));max-height:90vh;overflow:auto;border:1
 <option value="">📂 Pilih Kategori</option>
 <option value="profile">Profile</option>
 <option value="dm">DM - Inbox</option>
-<option value="dating">DATTING - Inbox</option>
 
         </select></div></div>
 <label class="check"><input type="checkbox" id="useEmoji" checked>Tambahkan emoji</label>
@@ -58,6 +58,21 @@ dialog{width:min(560px,calc(100% - 28px));max-height:90vh;overflow:auto;border:1
 </div><p class="footer">Link kosong? Yang disalin hanya statusmu.</p>
 <div id="notif" role="status" aria-live="polite">Berhasil disalin!</div>
 </main>
+<dialog id="wordEditor" aria-labelledby="editorTitle">
+<div class="editor-head"><h2 id="editorTitle">Pengaturan</h2><button type="button" class="close-editor" onclick="document.getElementById('wordEditor').close()" aria-label="Tutup pengaturan">×</button></div>
+<p>Edit kata-kata atau tambah kategori. Satu status per baris. Perubahan tersimpan di browser ini.</p>
+<h3>Edit Kata-kata</h3>
+<div class="section"><label class="label" for="editCategory">Kategori</label><select id="editCategory" onchange="loadEditorWords()"></select></div>
+<div class="section"><label class="label" for="wordList">Daftar status</label><textarea id="wordList" placeholder="Status pertama&#10;Status kedua"></textarea></div>
+<button type="button" class="primary save-category" onclick="saveWords()">Simpan Kata-kata</button>
+<p style="margin:10px 0 0">Simpan sebelum pindah kategori.</p>
+<hr class="editor-divider"><h3>Tambah Kategori</h3>
+<div class="section"><label class="label" for="newCategoryName">Nama kategori</label><input type="text" id="newCategoryName" placeholder="Contoh: Motivasi" maxlength="60"></div>
+<div class="section"><label class="label" for="newCategoryWords">Daftar status kategori baru</label><textarea id="newCategoryWords" placeholder="Status pertama&#10;Status kedua" style="min-height:140px"></textarea></div>
+<button type="button" class="primary save-category" onclick="addCategory()">Tambah Kategori</button>
+<div id="editorMessage" role="status" aria-live="polite"></div>
+<button type="button" class="secondary close-bottom" onclick="document.getElementById('wordEditor').close()">Tutup</button>
+</dialog>
 <script>
 
 /* ==================================================
@@ -772,15 +787,79 @@ const database = {
     ],
 
 };
-// Menu kategori mengikuti database di atas secara otomatis.
-const categoryMenu = document.getElementById("category");
-categoryMenu.replaceChildren();
-categoryMenu.add(new Option("Pilih Kategori", ""));
-for(const name of Object.keys(database)){
-    if(!Array.isArray(database[name]) || !database[name].length) continue;
-    const label=name === "dm" ? "DM - Inbox" : name.replace(/[_-]/g," ").replace(/\b\w/g,char=>char.toUpperCase());
-    categoryMenu.add(new Option(label,name));
+// Restore edited lists and user-created categories.
+try{
+    const saved=JSON.parse(localStorage.getItem("paradise-words") || "null");
+    if(saved && typeof saved === "object" && !Array.isArray(saved)){
+        for(const [name,words] of Object.entries(saved)){
+            if(!name.trim() || ["__proto__","constructor","prototype"].includes(name)) continue;
+            if(Array.isArray(words) && words.length && words.every(word=>typeof word === "string" && word.trim())){
+                database[name]=words.map(word=>word.trim());
+            }
+        }
+    }
+}catch(error){}
+function categoryLabel(name){return name === "dm" ? "DM - Inbox" : name.replace(/[_-]/g," ").replace(/\b\w/g,char=>char.toUpperCase());}
+function refreshCategories(preferred){
+    const menu=document.getElementById("category");
+    const previous=preferred || menu.value;
+    menu.replaceChildren();menu.add(new Option("Pilih Kategori",""));
+    const editor=document.getElementById("editCategory");
+    const oldEditor=editor.value;
+    editor.replaceChildren();
+    for(const name of Object.keys(database)){
+        if(!Array.isArray(database[name]) || !database[name].length) continue;
+        menu.add(new Option(categoryLabel(name),name));
+        editor.add(new Option(categoryLabel(name),name));
+    }
+    menu.value=Object.hasOwn(database,previous) ? previous : "";
+    editor.value=Object.hasOwn(database,oldEditor) ? oldEditor : Object.keys(database)[0];
 }
+function openSettings(){
+    refreshCategories();
+    const category=document.getElementById("category").value;
+    if(Object.hasOwn(database,category)) document.getElementById("editCategory").value=category;
+    loadEditorWords();
+    document.getElementById("wordEditor").showModal();
+}
+function loadEditorWords(){
+    const name=document.getElementById("editCategory").value;
+    document.getElementById("wordList").value=(database[name] || []).join("\n");
+    document.getElementById("editorMessage").textContent="";
+}
+function parseWords(value){return value.split(/\r?\n/).map(word=>word.trim()).filter(Boolean);}
+function persistWords(next){
+    try{localStorage.setItem("paradise-words",JSON.stringify(next));return true;}
+    catch(error){document.getElementById("editorMessage").textContent="Belum tersimpan. Penyimpanan browser tidak tersedia atau penuh.";return false;}
+}
+function saveWords(){
+    const name=document.getElementById("editCategory").value;
+    const words=parseWords(document.getElementById("wordList").value);
+    const message=document.getElementById("editorMessage");
+    if(!words.length){message.textContent="Isi minimal satu status.";return;}
+    if(!persistWords({...database,[name]:words})) return;
+    database[name]=words;
+    document.getElementById("wordList").value=words.join("\n");
+    message.textContent=words.length+" status berhasil disimpan.";
+}
+function addCategory(){
+    const name=document.getElementById("newCategoryName").value.trim();
+    const words=parseWords(document.getElementById("newCategoryWords").value);
+    const message=document.getElementById("editorMessage");
+    if(!name || name.length>60){message.textContent="Isi nama kategori (maksimal 60 karakter).";return;}
+    if(["__proto__","constructor","prototype"].includes(name.toLowerCase())){message.textContent="Gunakan nama kategori lain.";return;}
+    if(Object.keys(database).some(key=>key.toLowerCase()===name.toLowerCase())){message.textContent="Nama kategori sudah ada. Pilih kategori itu untuk mengedit.";return;}
+    if(!words.length){message.textContent="Isi minimal satu status untuk kategori baru.";return;}
+    if(!persistWords({...database,[name]:words})) return;
+    database[name]=words;
+    refreshCategories(name);
+    document.getElementById("editCategory").value=name;
+    loadEditorWords();
+    document.getElementById("newCategoryName").value="";
+    document.getElementById("newCategoryWords").value="";
+    message.textContent="Kategori "+name+" berhasil ditambahkan.";
+}
+refreshCategories();
 
 const emojiList = ["👉👌💖💦🔥🔞", "💦💦👉👉👌🍆🍑", "👉👌👉👌🍆🍑💦💦💦💦", "👉👌💦🔥👨💦💦🔞🔞", "🔞🔥👄🍆🍑👉👌💦🔞", "🥰👉💦👌🍑🍆🔥🔞🔞", "🍆🍆🍑🍑💦💦🔞🔞🥰🥰🥰", "🍆🍆🔥🔥📞💦💋💋🔥🔥", "🔞🍑🍑🍆🍆📞📞💦💦🔥🔥🔥", "🍆🍆🍑🍑💋📞🔞🔥🔥", "🔞🍆🍆🍑🍑🍑🍑💋💋💋", "🍆🍆🍑🍑💦💦💦🔥🔥🔞", "🔞🍑🍑🍆🍆💋💋💋💦🔥🔥🔞📞📞", "🔞🔞💦💦💦📞📞🍑🍑🍑", "💦💦💦💓🔞🔞🎞🎥📲🎞📌👉👌", "💦🌺🌲👉💋💦💋💦💋💦", "🔞🍆🍑👙📌💦💦💦💦💦🎥📲", "🔞👙📱📞🍆🍑📞💦📞💦", "🔞💦👙📞🔥🔥🔥🔥🔥🔥", "💦🎥🔞🍆🍑🍆🍑🍆", "🔞👙📲🎥💦💦💦💦🔥🔥🔞", "💦💦💦💯🔥🔥💦💦💦💯🔥🔥", "🥰🥰👉👌💦💦🥰🥰👉👌💦💦", "🛌🛌💝💝🛌🛌💝💝", "🥰🥰🤎🤎💦💦🥰🥰🤎🤎💦💦", "🩹🩹💦💦💦💦🩹🩹💦💦💦💦", "👉👌💦💦🔥👉👌💦💦🔥", "🔞🔞👉👌💦🤑🤑🤑🔞🔞👉👌💦🤑🤑🤑", "🛌👉👌💦💸🛌👉👌💦💸", "🛌👉👌💦🔞🔞🔞💸🛌👉👌💦🔞🔞🔞💸", "💦💦💦💦💦💦💯💯💸💸💦💦💦💦💦💦💯💯💸💸", "👉👉👌👌💦💦💯🔞", "🎬🎬🍆🍆🍑💦💦💯", "🍊🍊🍆💯🔞👌👉🔥", "🥰🛌💦💦🔥🔥🔥", "🍆🍊🔞🔞🔥🔥🔥🔥🔥", "🛌💝🎬🎬🎬💦💦💦💦", "🎥🎥🎥🎥🔞🔞🔞🔞", "🍊🍆🥰🎥🎥🎥🎥", "🔞🔞🔞🎥🎥💦💦🎬🎬🎬", "👉👌🍆🍆💦💦💦🎬🎬🎬🎬"];
 
@@ -850,8 +929,13 @@ async function generateText(){
 }
 
 async function copyText(){
-    const status = document.getElementById("result").value.trim();
-    const link = document.getElementById("linkInput").value.trim();
+    const resultBox = document.getElementById("result");
+    const linkBox = document.getElementById("linkInput");
+    const originalResult = resultBox.value;
+    const originalLink = linkBox.value;
+    const copiedGeneration = generationId;
+    const status = originalResult.trim();
+    const link = originalLink.trim();
     if(!status) return;
     const text = link ? status + " " + link : status;
     try{
@@ -866,6 +950,16 @@ async function copyText(){
             try{temp.select();if(!document.execCommand("copy")) throw new Error("Copy failed");}
             finally{temp.remove();if(previous) previous.focus();}
         }
+        // Clear only copied values; keep anything entered while clipboard was pending.
+        if(copiedGeneration === generationId && resultBox.value === originalResult){
+            ++generationId;
+            if(activeTranslation) activeTranslation.abort();
+            activeTranslation = null;
+            showLoading(false);
+            resultBox.value = "";
+            document.getElementById("translationStatus").textContent = "";
+        }
+        if(linkBox.value === originalLink) linkBox.value = "";
         const notif = document.getElementById("notif");
         notif.classList.add("show");
         clearTimeout(copyNoticeTimer);

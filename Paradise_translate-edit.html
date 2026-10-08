@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Paradise · Random Text</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root{color-scheme:light;--bg:#f3f2f8;--surface:#fff;--input:#f7f7fb;--text:#242139;--muted:#737084;--border:#e4e1ef;--accent:#7357df;--hover:#6243d1;--shadow:0 20px 70px #3326590d}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#15141c;--surface:#201e2a;--input:#292633;--text:#f2effb;--muted:#aaa4ba;--border:#393447;--accent:#a18aff;--hover:#b6a3ff;--shadow:0 20px 70px #0003}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Segoe UI,Arial,sans-serif;padding:40px 20px;transition:background .2s,color .2s}
+#paradise-app{max-width:800px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.brand{font-weight:750;letter-spacing:-.5px;font-size:24px}.brand-icon{display:inline-grid;place-items:center;width:36px;height:36px;background:var(--accent);color:var(--surface);border-radius:11px;margin-right:10px}.theme-toggle{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:13px}.theme-toggle button{padding:8px 12px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-size:13px}.theme-toggle button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.container{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:32px;box-shadow:var(--shadow)}.eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:10px}h1{font-size:30px;letter-spacing:-1px;margin:0 0 10px}.subtitle{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 28px}.settings{display:grid;grid-template-columns:1fr 1fr;gap:18px}.section{margin-bottom:22px}.label{display:block;font-size:13px;font-weight:650;margin-bottom:10px}select,textarea,#linkInput{width:100%;font:inherit;font-size:14px;color:var(--text);background:var(--input);border:1px solid var(--border);border-radius:12px;padding:14px;outline:none;transition:border-color .15s,box-shadow .15s}select:focus,textarea:focus,#linkInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}textarea{min-height:215px;resize:vertical;line-height:1.7}textarea::placeholder,input::placeholder{color:var(--muted)}.check{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px;margin:0 0 25px}.check input{accent-color:var(--accent);width:17px;height:17px}.result-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.result-heading .label{margin:0}.hint{font-size:12px;color:var(--muted)}#translationStatus{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:15px}#translationStatus:empty{display:none}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid var(--border);padding-top:22px}button{cursor:pointer;font:inherit;font-weight:650;transition:background .15s,transform .15s}button:active{transform:scale(.98)}button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.actions button{border-radius:12px;padding:15px 18px;font-size:14px}.primary{background:var(--accent);color:var(--surface);border:1px solid var(--accent)}.primary:hover{background:var(--hover)}.secondary{background:var(--input);color:var(--text);border:1px solid var(--border)}.secondary:hover{border-color:var(--accent)}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+#notif{position:fixed;bottom:25px;left:50%;transform:translate(-50%,15px);padding:13px 22px;background:var(--text);color:var(--surface);border-radius:12px;opacity:0;pointer-events:none;transition:.2s;z-index:10}#notif.show{opacity:1;transform:translate(-50%,0)}#loading{display:none;font-size:12px;color:var(--accent)}#loading.show{display:inline-flex;align-items:center;gap:6px}#loading::before{content:"";width:10px;height:10px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:560px){body{padding:22px 14px}.container{padding:22px 18px;border-radius:18px}.settings{grid-template-columns:1fr;gap:0}h1{font-size:26px}.brand{font-size:20px}.brand-icon{width:30px;height:30px;margin-right:6px}.theme-toggle button{padding:7px 9px}.topbar{gap:8px}.hint{display:none}.actions{gap:9px}.actions button{padding:14px 8px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){*,*::before{transition:none!important;animation:none!important}}
+
+.editor-trigger{padding:9px 13px;border-radius:10px;border:1px solid var(--border);background:var(--input);color:var(--text);font-size:13px;margin-bottom:22px}
+dialog{width:min(560px,calc(100% - 28px));max-height:90vh;overflow:auto;border:1px solid var(--border);border-radius:22px;background:var(--surface);color:var(--text);padding:26px;box-shadow:var(--shadow)}dialog::backdrop{background:#09071399;backdrop-filter:blur(4px)}dialog h2{font-size:22px;margin:0 0 8px}dialog p{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 20px}#wordList{min-height:260px}#editorMessage{color:var(--muted);font-size:13px;line-height:1.5;margin:12px 0}.editor-head{display:flex;justify-content:space-between;gap:15px}.close-editor{background:transparent;color:var(--muted);border:0;font-size:24px;padding:0 6px;align-self:flex-start}
+.gear{border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);width:42px;height:42px;font-size:23px;flex-shrink:0}.theme-toggle{margin-left:auto}.topbar{flex-wrap:wrap}dialog input[type="text"]{width:100%;padding:14px;border-radius:12px;background:var(--input);color:var(--text);border:1px solid var(--border);font:inherit}.editor-divider{border:0;border-top:1px solid var(--border);margin:25px 0}dialog h3{font-size:16px;margin:0 0 16px}.save-category{width:100%;padding:14px;border-radius:12px}.close-bottom{width:100%;padding:12px;margin-top:15px;border-radius:12px}
+</style></head><body>
+<main id="paradise-app">
+<header class="topbar"><div class="brand"><span class="brand-icon">✦</span>Paradise</div><div class="theme-toggle" role="group" aria-label="Tema tampilan"><button id="themeLight" type="button" onclick="setTheme('light')" aria-pressed="true">☀ Light</button><button id="themeDark" type="button" onclick="setTheme('dark')" aria-pressed="false">☾ Dark</button></div><button type="button" class="gear" onclick="openSettings()" aria-label="Pengaturan kata-kata dan kategori" title="Pengaturan">⚙</button></header>
+<div class="container"><div class="eyebrow">TEXT GENERATOR</div>
+<div class="settings"><div class="section"><label class="label" for="language">Bahasa</label><select id="language">
+
+<option value="">🌍 Pilih Bahasa</option>
+<option value="id">Indonesia</option>
+<option value="en">English</option>
+<option value="de">German</option>
+<option value="fr">French</option>
+<option value="es">Spanish</option>
+<option value="it">Italian</option>
+<option value="pt">Portuguese</option>
+<option value="ru">Russian</option>
+<option value="uk">Ukrainian</option>
+<option value="pl">Polish</option>
+<option value="tr">Turkish</option>
+<option value="ar">Arabic</option>
+<option value="ja">Japanese</option>
+<option value="ko">Korean</option>
+<option value="zh-CN">Chinese</option>
+<option value="nl">Dutch</option>
+<option value="vi">Vietnamese</option>
+<option value="th">Thai</option>
+<option value="tl">Filipino</option>
+<option value="sk">Slovakia</option>
+<option value="cs">Czech</option>
+<option value="el">Greece (Greek)</option>
+
+        </select></div><div class="section"><label class="label" for="category">Kategori</label><select id="category">
+
+<option value="">📂 Pilih Kategori</option>
+<option value="profile">Profile</option>
+<option value="dm">DM - Inbox</option>
+
+        </select></div></div>
+<label class="check"><input type="checkbox" id="useEmoji" checked>Tambahkan emoji</label>
+<div class="section"><div class="result-heading"><label class="label" for="result">Result</label><span id="loading" role="status">Menerjemahkan...</span><span class="hint">Bisa kamu edit sebelum disalin</span></div><textarea id="result" placeholder="Statusmu akan muncul di sini..."></textarea></div>
+<div class="section"><label class="label" for="linkInput">Link <span class="hint">· opsional</span></label><input id="linkInput" type="text" placeholder="Tempel link di sini" autocomplete="off"></div>
+<div id="translationStatus" role="status" aria-live="polite"></div>
+<div class="actions"><button type="button" class="primary" onclick="generateText()">✦ Generate</button><button type="button" class="secondary" onclick="copyText()">▣ Copy Result</button></div>
+</div><p class="footer">Link kosong? Yang disalin hanya statusmu.</p>
+<div id="notif" role="status" aria-live="polite">Berhasil disalin!</div>
+</main>
+<dialog id="wordEditor" aria-labelledby="editorTitle">
+<div class="editor-head"><h2 id="editorTitle">Pengaturan</h2><button type="button" class="close-editor" onclick="document.getElementById('wordEditor').close()" aria-label="Tutup pengaturan">×</button></div>
+<p>Edit kata-kata atau tambah kategori. Satu status per baris. Perubahan tersimpan di browser ini.</p>
+<h3>Edit Kata-kata</h3>
+<div class="section"><label class="label" for="editCategory">Kategori</label><select id="editCategory" onchange="loadEditorWords()"></select></div>
+<div class="section"><label class="label" for="wordList">Daftar status</label><textarea id="wordList" placeholder="Status pertama&#10;Status kedua"></textarea></div>
+<button type="button" class="primary save-category" onclick="saveWords()">Simpan Kata-kata</button>
+<p style="margin:10px 0 0">Simpan sebelum pindah kategori.</p>
+<hr class="editor-divider"><h3>Tambah Kategori</h3>
+<div class="section"><label class="label" for="newCategoryName">Nama kategori</label><input type="text" id="newCategoryName" placeholder="Contoh: Motivasi" maxlength="60"></div>
+<div class="section"><label class="label" for="newCategoryWords">Daftar status kategori baru</label><textarea id="newCategoryWords" placeholder="Status pertama&#10;Status kedua" style="min-height:140px"></textarea></div>
+<button type="button" class="primary save-category" onclick="addCategory()">Tambah Kategori</button>
+<div id="editorMessage" role="status" aria-live="polite"></div>
+<button type="button" class="secondary close-bottom" onclick="document.getElementById('wordEditor').close()">Tutup</button>
+</dialog>
+<script>
+
+/* ==================================================
+   EDIT KATA-KATA DI SINI
+   - Satu kalimat per baris, diapit tanda kutip.
+   - Pisahkan setiap kalimat dan kategori dengan koma.
+   - Tambah kategori baru dengan pola:
+     motivasi: [
+         "Tetap semangat",
+         "Terus mencoba"
+     ],
+   Kategori otomatis muncul di menu setelah file dibuka ulang.
+   ================================================== */
+const database = {
+    dm: [
+        "Halo! Semoga harimu menyenangkan.",
+        "Terima kasih sudah mampir, yuk ngobrol!",
+        "Ada kabar menarik yang ingin aku bagikan.",
+        "Kalau penasaran, lihat info lengkapnya di sini.",
+        "Senang bisa terhubung denganmu.",
+        "Yuk saling berbagi cerita dan inspirasi.",
+        "Aku tunggu kabar baik darimu.",
+        "Jangan lupa istirahat dan jaga semangat.",
+    ],
+
+    profile: [
+        "Menikmati perjalanan, satu langkah setiap hari.",
+        "Tempat berbagi cerita dan hal menarik.",
+        "Belajar, berkarya, dan terus mencoba.",
+        "Hal sederhana sering membawa kebahagiaan.",
+        "Kenali aku lebih dekat di sini.",
+        "Cerita baru, pengalaman baru, semangat baru.",
+        "Terima kasih sudah menjadi bagian dari perjalanan ini.",
+        "Temukan kabar dan informasi terbaru di sini.",
+    ],
+
+};
+// Restore edited lists and user-created categories.
+try{
+    const saved=JSON.parse(localStorage.getItem("paradise-words") || "null");
+    if(saved && typeof saved === "object" && !Array.isArray(saved)){
+        for(const [name,words] of Object.entries(saved)){
+            if(!name.trim() || ["__proto__","constructor","prototype"].includes(name)) continue;
+            if(Array.isArray(words) && words.length && words.every(word=>typeof word === "string" && word.trim())){
+                database[name]=words.map(word=>word.trim());
+            }
+        }
+    }
+}catch(error){}
+function categoryLabel(name){return name === "dm" ? "DM - Inbox" : name.replace(/[_-]/g," ").replace(/\b\w/g,char=>char.toUpperCase());}
+function refreshCategories(preferred){
+    const menu=document.getElementById("category");
+    const previous=preferred || menu.value;
+    menu.replaceChildren();menu.add(new Option("Pilih Kategori",""));
+    const editor=document.getElementById("editCategory");
+    const oldEditor=editor.value;
+    editor.replaceChildren();
+    for(const name of Object.keys(database)){
+        if(!Array.isArray(database[name]) || !database[name].length) continue;
+        menu.add(new Option(categoryLabel(name),name));
+        editor.add(new Option(categoryLabel(name),name));
+    }
+    menu.value=Object.hasOwn(database,previous) ? previous : "";
+    editor.value=Object.hasOwn(database,oldEditor) ? oldEditor : Object.keys(database)[0];
+}
+function openSettings(){
+    refreshCategories();
+    const category=document.getElementById("category").value;
+    if(Object.hasOwn(database,category)) document.getElementById("editCategory").value=category;
+    loadEditorWords();
+    document.getElementById("wordEditor").showModal();
+}
+function loadEditorWords(){
+    const name=document.getElementById("editCategory").value;
+    document.getElementById("wordList").value=(database[name] || []).join("\n");
+    document.getElementById("editorMessage").textContent="";
+}
+function parseWords(value){return value.split(/\r?\n/).map(word=>word.trim()).filter(Boolean);}
+function persistWords(next){
+    try{localStorage.setItem("paradise-words",JSON.stringify(next));return true;}
+    catch(error){document.getElementById("editorMessage").textContent="Belum tersimpan. Penyimpanan browser tidak tersedia atau penuh.";return false;}
+}
+function saveWords(){
+    const name=document.getElementById("editCategory").value;
+    const words=parseWords(document.getElementById("wordList").value);
+    const message=document.getElementById("editorMessage");
+    if(!words.length){message.textContent="Isi minimal satu status.";return;}
+    if(!persistWords({...database,[name]:words})) return;
+    database[name]=words;
+    document.getElementById("wordList").value=words.join("\n");
+    message.textContent=words.length+" status berhasil disimpan.";
+}
+function addCategory(){
+    const name=document.getElementById("newCategoryName").value.trim();
+    const words=parseWords(document.getElementById("newCategoryWords").value);
+    const message=document.getElementById("editorMessage");
+    if(!name || name.length>60){message.textContent="Isi nama kategori (maksimal 60 karakter).";return;}
+    if(["__proto__","constructor","prototype"].includes(name.toLowerCase())){message.textContent="Gunakan nama kategori lain.";return;}
+    if(Object.keys(database).some(key=>key.toLowerCase()===name.toLowerCase())){message.textContent="Nama kategori sudah ada. Pilih kategori itu untuk mengedit.";return;}
+    if(!words.length){message.textContent="Isi minimal satu status untuk kategori baru.";return;}
+    if(!persistWords({...database,[name]:words})) return;
+    database[name]=words;
+    refreshCategories(name);
+    document.getElementById("editCategory").value=name;
+    loadEditorWords();
+    document.getElementById("newCategoryName").value="";
+    document.getElementById("newCategoryWords").value="";
+    message.textContent="Kategori "+name+" berhasil ditambahkan.";
+}
+refreshCategories();
+
+const emojiList = ["✨", "🌻", "😊", "💬", "🌈", "🙌", "📌", "💛"];
+
+/* GENERATE EMOJI PREFIX */
+function getEmoji(){
+    return emojiList[Math.floor(Math.random() * emojiList.length)];
+}
+
+/* LOADING */
+function showLoading(state){
+    document.getElementById("loading").classList.toggle("show", state);
+}
+
+/* Translation cache: successful responses only, bounded memory. */
+const translationCache = new Map();
+let activeTranslation = null;
+let generationId = 0;
+let copyNoticeTimer;
+
+async function generateText(){
+    const lang = document.getElementById("language").value;
+    const category = document.getElementById("category").value;
+    if(!lang){ alert("Pilih bahasa dulu!"); return; }
+    if(!database[category]){ alert("Pilih kategori dulu!"); return; }
+    const id = ++generationId;
+    if(activeTranslation) activeTranslation.abort();
+    activeTranslation = null;
+    const result = document.getElementById("result");
+    const status = document.getElementById("translationStatus");
+    const useEmoji = document.getElementById("useEmoji").checked;
+    const original = database[category][Math.floor(Math.random()*database[category].length)];
+    const prefix = useEmoji ? getEmoji()+" " : "";
+    result.value = prefix + original;
+    status.textContent = "";
+    showLoading(false);
+    if(lang === "id") return;
+    const key = lang + "\n" + original;
+    if(translationCache.has(key)){
+        result.value = prefix + translationCache.get(key);
+        return;
+    }
+    const controller = new AbortController();
+    activeTranslation = controller;
+    let timedOut = false;
+    const timer = setTimeout(()=>{timedOut=true;controller.abort();},6000);
+    showLoading(true);
+    try{
+        const query = new URLSearchParams({client:"gtx",sl:"id",tl:lang,dt:"t",q:original});
+        const response = await fetch("https://translate.googleapis.com/translate_a/single?"+query,{signal:controller.signal});
+        if(!response.ok) throw new Error("Translation unavailable");
+        const data = await response.json();
+        if(!Array.isArray(data[0])) throw new Error("Invalid translation");
+        const translated = data[0].map(part=>part[0] || "").join("");
+        if(!translated.trim()) throw new Error("Empty translation");
+        if(id !== generationId) return;
+        if(translationCache.size >= 500) translationCache.delete(translationCache.keys().next().value);
+        translationCache.set(key,translated);
+        result.value = prefix + translated;
+    }catch(error){
+        if(id === generationId){
+            status.textContent = timedOut ? "Translate terlalu lama. Status Indonesia tetap tersedia; coba Generate lagi." : "Translate gagal. Status Indonesia tetap tersedia; coba Generate lagi.";
+        }
+    }finally{
+        clearTimeout(timer);
+        if(id === generationId){ activeTranslation=null;showLoading(false); }
+    }
+}
+
+async function copyText(){
+    const status = document.getElementById("result").value.trim();
+    const link = document.getElementById("linkInput").value.trim();
+    if(!status) return;
+    const text = link ? status + " " + link : status;
+    try{
+        try{
+            if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("Clipboard unavailable");
+            await navigator.clipboard.writeText(text);
+        }catch(error){
+            const previous = document.activeElement;
+            const temp = document.createElement("textarea");
+            temp.value=text;temp.style.cssText="position:fixed;left:-9999px;top:0";
+            document.body.appendChild(temp);
+            try{temp.select();if(!document.execCommand("copy")) throw new Error("Copy failed");}
+            finally{temp.remove();if(previous) previous.focus();}
+        }
+        const notif = document.getElementById("notif");
+        notif.classList.add("show");
+        clearTimeout(copyNoticeTimer);
+        copyNoticeTimer=setTimeout(()=>notif.classList.remove("show"),2000);
+    }catch(error){alert("Tidak bisa menyalin. Periksa izin clipboard browser.");}
+}
+
+
+function setTheme(theme){
+    if(theme !== "light" && theme !== "dark") theme="light";
+    document.documentElement.dataset.theme=theme;
+    document.getElementById("themeLight").setAttribute("aria-pressed",String(theme === "light"));
+    document.getElementById("themeDark").setAttribute("aria-pressed",String(theme === "dark"));
+    try{localStorage.setItem("paradise-theme",theme);}catch(error){}
+}
+let initialTheme="light";
+try{initialTheme=localStorage.getItem("paradise-theme") || "light";}catch(error){}
+setTheme(initialTheme);
+</script></body></html>

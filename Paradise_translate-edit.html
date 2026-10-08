@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Paradise · Random Text</title>
-<link rel="icon" type="image/png" href="favicon.png">
 <style>
 :root{color-scheme:light;--bg:#f3f2f8;--surface:#fff;--input:#f7f7fb;--text:#242139;--muted:#737084;--border:#e4e1ef;--accent:#7357df;--hover:#6243d1;--shadow:0 20px 70px #3326590d}
 :root[data-theme="dark"]{color-scheme:dark;--bg:#15141c;--surface:#201e2a;--input:#292633;--text:#f2effb;--muted:#aaa4ba;--border:#393447;--accent:#a18aff;--hover:#b6a3ff;--shadow:0 20px 70px #0003}
@@ -17,7 +16,7 @@ dialog{width:min(560px,calc(100% - 28px));max-height:90vh;overflow:auto;border:1
 </style></head><body>
 <main id="paradise-app">
 <header class="topbar"><div class="brand"><span class="brand-icon">✦</span>Paradise</div><div class="theme-toggle" role="group" aria-label="Tema tampilan"><button id="themeLight" type="button" onclick="setTheme('light')" aria-pressed="true">☀ Light</button><button id="themeDark" type="button" onclick="setTheme('dark')" aria-pressed="false">☾ Dark</button></div><button type="button" class="gear" onclick="openSettings()" aria-label="Pengaturan kata-kata dan kategori" title="Pengaturan">⚙</button></header>
-<div class="container"><div class="eyebrow">TEXT GENERATOR</div>
+<div class="container"><div class="eyebrow">TEXT GENERATOR</div><h1>Status baru, ide baru.</h1><p class="subtitle">Pilih bahasa dan kategori, buat status, lalu salin dengan link pilihanmu.</p>
 <div class="settings"><div class="section"><label class="label" for="language">Bahasa</label><select id="language">
 
 <option value="">🌍 Pilih Bahasa</option>
@@ -253,8 +252,13 @@ async function generateText(){
 }
 
 async function copyText(){
-    const status = document.getElementById("result").value.trim();
-    const link = document.getElementById("linkInput").value.trim();
+    const resultBox = document.getElementById("result");
+    const linkBox = document.getElementById("linkInput");
+    const originalResult = resultBox.value;
+    const originalLink = linkBox.value;
+    const copiedGeneration = generationId;
+    const status = originalResult.trim();
+    const link = originalLink.trim();
     if(!status) return;
     const text = link ? status + " " + link : status;
     try{
@@ -269,6 +273,16 @@ async function copyText(){
             try{temp.select();if(!document.execCommand("copy")) throw new Error("Copy failed");}
             finally{temp.remove();if(previous) previous.focus();}
         }
+        // Clear only copied values; keep anything entered while clipboard was pending.
+        if(copiedGeneration === generationId && resultBox.value === originalResult){
+            ++generationId;
+            if(activeTranslation) activeTranslation.abort();
+            activeTranslation = null;
+            showLoading(false);
+            resultBox.value = "";
+            document.getElementById("translationStatus").textContent = "";
+        }
+        if(linkBox.value === originalLink) linkBox.value = "";
         const notif = document.getElementById("notif");
         notif.classList.add("show");
         clearTimeout(copyNoticeTimer);
